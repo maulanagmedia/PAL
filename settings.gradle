@@ -1,0 +1,1 @@
+include ':app', ':appcustommodule', ':locationmanager', ':thermalbluetoothprinter'
