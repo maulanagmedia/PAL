@@ -63,6 +63,7 @@ public class DaftarSODetail extends AppCompatActivity {
 
     //Variabel bluetooth printer
     private PalPrinter printerManager;
+    private String namaSales = "", kodeArea = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +139,8 @@ public class DaftarSODetail extends AppCompatActivity {
                             JSONObject obj = new JSONObject(result).getJSONObject("nota");
                             customer = new CustomerModel(obj.getString("kode_pelanggan"),
                                     obj.getString("nama_pelanggan"));
+                            namaSales = obj.getString("nama_sales");
+                            kodeArea = obj.getString("kode_area");
                             txt_nama.setText(customer.getNama());
                             txt_piutang.setText(Converter.doubleToRupiah(obj.getDouble("total")));
                             txt_nota.setText(nota.getId());
@@ -214,14 +217,18 @@ public class DaftarSODetail extends AppCompatActivity {
 
                         for(BarangModel b : listBarang){
                             String nama = b.getNama();
-                            nama += b.getNo_batch().isEmpty()?" (-)" : " (" + b.getNo_batch() + "}";
+                            //nama += b.getNo_batch().isEmpty()?" (-)" : " (" + b.getNo_batch() + "}";
                             listItem.add(new Item(nama, b.getJumlah(), b.getHarga()));
                             total_diskon += b.getDiskon();
                         }
 
-                        Transaksi transaksi = new Transaksi(txt_nama.getText().toString(),
-                                AppSharedPreferences.getNama(DaftarSODetail.this),
-                                txt_nota.getText().toString(), new Date(), new Date(), listItem);
+                        Transaksi transaksi = new Transaksi(
+                                txt_nama.getText().toString()
+                                ,namaSales + " ( " + kodeArea + " )"
+                                ,txt_nota.getText().toString()
+                                ,new Date()
+                                ,new Date()
+                                ,listItem);
                         transaksi.setTunai(nota.getTotal());
                         transaksi.setDiskon(total_diskon);
 
@@ -240,6 +247,7 @@ public class DaftarSODetail extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         if(printerManager != null){
+
             printerManager.stopService();
         }
         super.onDestroy();

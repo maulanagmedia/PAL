@@ -24,6 +24,7 @@ public class PalPrinter extends NotaPrinter {
 
     public void printNota(Transaksi transaksi){
         final int NAMA_MAX = 31;
+        final int NAMA_HARGA = 31;
         final int JUMLAH_MAX = 4;
         final int HARGA_TOTAL_MAX = 11;
 

@@ -197,7 +197,7 @@ public class RiwayatDetail extends AppCompatActivity {
 
                         for(BarangModel b : listBarang){
                             String nama = b.getNama();
-                            nama += b.getNo_batch().isEmpty()?" (-)" : " (" + b.getNo_batch() + "}";
+                            //nama += b.getNo_batch().isEmpty()?" (-)" : " (" + b.getNo_batch() + "}";
                             listItem.add(new Item(nama, b.getJumlah(), b.getHarga()));
                             total_diskon += b.getDiskon();
                         }
