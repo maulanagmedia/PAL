@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -60,10 +62,12 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
     public TextView txt_tempo;
     public AppCompatSpinner spn_bayar;
     private ProgressBar pb_map;
+    private List<String> listCaraBayar = new ArrayList<>();
 
     //Variabel lokasi
     private GoogleLocationManager manager;
     private Location current_location;
+    private ArrayAdapter<String> adapterCB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +90,13 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         txt_tempo = findViewById(R.id.txt_tempo);
         pb_map = findViewById(R.id.pb_map);
 
-        spn_bayar.setSelection(AppKeranjangPenjualan.getInstance().getCara_bayar());
+        adapterCB = new ArrayAdapter<String>(PenjualanNota.this,
+                R.layout.simple_list, R.id.text1, listCaraBayar);
+
+        spn_bayar.setAdapter(adapterCB);
+        //listCaraBayar.add("pilih salah satu..");
+
+        //spn_bayar.setSelection(AppKeranjangPenjualan.getInstance().getCara_bayar());
         txt_tempo.setText(AppKeranjangPenjualan.getInstance().getTempo());
 
         //Inisialisasi nilai UI
@@ -136,9 +146,9 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                 if(current_location == null){
                     Toast.makeText(PenjualanNota.this, "Lokasi tidak terdeteksi", Toast.LENGTH_SHORT).show();
                 }
-                else if(spn_bayar.getSelectedItemPosition() == 0){
+                /*else if(spn_bayar.getSelectedItemPosition() == 0){
                     Toast.makeText(PenjualanNota.this, "Pilih cara bayar terlebih dahulu", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 /*else if(spn_bayar.getSelectedItemPosition() > 1 && txt_tempo.getText().toString().equals("")){
                     Toast.makeText(PenjualanNota.this, "Tanggal tempo belum terisi", Toast.LENGTH_SHORT).show();
                 }*/
@@ -166,6 +176,52 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         manager = new GoogleLocationManager(this, this);
         manager.startLocationUpdates();
         pb_map.setVisibility(View.VISIBLE);
+
+        getCaraBayar();
+    }
+
+    private void getCaraBayar() {
+
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_CARA_BAYAR,
+                ApiVolleyManager.METHOD_GET, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        try{
+                            //Inisialisasi Header
+
+                            JSONArray array = new JSONArray(result);
+                            for(int i = 0; i < array.length(); i++){
+                                JSONObject item = array.getJSONObject(i);
+                                listCaraBayar.add(item.getString("text"));
+                            }
+
+                            adapterCB.notifyDataSetChanged();
+                        }
+                        catch (JSONException e){
+
+                            Toast.makeText(PenjualanNota.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
     }
 
     @Override
@@ -228,7 +284,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         body.add("barang", new JSONArray(array_barang));
         body.add("user_latitude", current_location.getLatitude());
         body.add("user_longitude", current_location.getLongitude());
-        body.add("cara_bayar", spn_bayar.getSelectedItem().toString());
+        body.add("cara_bayar", spn_bayar.getSelectedItem().toString().toLowerCase());
 
         Log.d(Constant.TAG, body.create().toString());
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading, new AppLoading.CancelListener() {

@@ -23,9 +23,9 @@ public class PalPrinter extends NotaPrinter {
     }
 
     public void printNota(Transaksi transaksi){
-        final int NAMA_MAX = 31;
-        final int NAMA_HARGA = 31;
+        final int NAMA_MAX = 21;
         final int JUMLAH_MAX = 4;
+        final int HARGA_MAX = 10;
         final int HARGA_TOTAL_MAX = 11;
 
         if(bluetoothDevice == null){
@@ -58,7 +58,7 @@ public class PalPrinter extends NotaPrinter {
             outputStream.write(PrintFormatter.DEFAULT_STYLE);
             outputStream.write(String.format("Outlet      :  %s\n", transaksi.getOutlet()).getBytes());
             outputStream.write(String.format("Sales       :  %s\n", transaksi.getSales()).getBytes());
-            outputStream.write(String.format("No. Nota    :  %s\n", transaksi.getNo_nota()).getBytes());
+            outputStream.write(String.format("No. PS      :  %s\n", transaksi.getNo_nota()).getBytes());
             if(transaksi.getJatuh_tempo() != null){
                 String stringJatuhTempo = dateFormat.format(transaksi.getJatuh_tempo());
                 outputStream.write(String.format("Jatuh Tempo :  %s\n", stringJatuhTempo).getBytes());
@@ -69,15 +69,16 @@ public class PalPrinter extends NotaPrinter {
             //PROSES CETAK TRANSAKSI
             outputStream.write("------------------------------------------------\n".getBytes());
             outputStream.write(PrintFormatter.ALIGN_LEFT);
-            outputStream.write("Nama Barang                    Jumlah      Total\n".getBytes());
+            outputStream.write("Nama Barang          Jumlah     Harga      Total\n".getBytes());
             outputStream.write("------------------------------------------------\n".getBytes());
             outputStream.write(PrintFormatter.ALIGN_LEFT);
 
             List<Item> listItem = transaksi.getListItem();
             for(int i = 0; i < listItem.size(); i++){
                 Item t =  listItem.get(i);
-                String nama = t.getNama() + " @" + RupiahFormatter.getRupiah(t.getHarga());
+                String nama = t.getNama();
                 String jumlah = String.valueOf(t.getJumlah());
+                String harga = RupiahFormatter.getRupiah(t.getHarga());
                 String harga_total = RupiahFormatter.getRupiah(t.getHarga()*t.getJumlah());
 
                 int n = 1;
@@ -87,17 +88,21 @@ public class PalPrinter extends NotaPrinter {
                 if(jumlah.length() > JUMLAH_MAX){
                     n = Math.max((int)Math.ceil((double)jumlah.length()/(double)JUMLAH_MAX), n);
                 }
+                if(harga.length() > HARGA_MAX){
+                    n = Math.max((int)Math.ceil((double)harga.length()/(double)HARGA_MAX), n);
+                }
                 if(harga_total.length() > HARGA_TOTAL_MAX){
                     n = Math.max((int)Math.ceil((double)harga_total.length()/(double)HARGA_TOTAL_MAX), n);
                 }
 
                 String[] nama_array = leftAligned(nama, NAMA_MAX, n);
                 String[] jumlah_array = rightAligned(jumlah, JUMLAH_MAX, n);
+                String[] harga_array = rightAligned(harga, HARGA_MAX, n);
                 String[] harga_total_array = rightAligned(harga_total, HARGA_TOTAL_MAX, n);
 
                 for(int j = 0; j < n; j++){
-                    outputStream.write(String.format(Locale.getDefault(), "%s %s %s\n",
-                            nama_array[j], jumlah_array[j], harga_total_array[j]).getBytes());
+                    outputStream.write(String.format(Locale.getDefault(), "%s %s %s%s\n",
+                            nama_array[j], jumlah_array[j], harga_array[j], harga_total_array[j]).getBytes());
                 }
 
                 jum += t.getHarga()*t.getJumlah();
@@ -145,8 +150,10 @@ public class PalPrinter extends NotaPrinter {
             outputStream.write(PrintFormatter.NEW_LINE);
 
             outputStream.write(PrintFormatter.ALIGN_LEFT);
-            String ppn = "DPP : " + RupiahFormatter.getRupiah(Math.round(transaksi.getTunai() * 10/ 11)) +
-                    "  PPN : " + RupiahFormatter.getRupiah(Math.round(transaksi.getTunai() / 11));
+            /*String ppn = "DPP : " + RupiahFormatter.getRupiah(Math.round(transaksi.getTunai() * 10/ 11)) +
+                    "  PPN : " + RupiahFormatter.getRupiah(Math.round(transaksi.getTunai() / 11));*/
+
+            String ppn = "Harga sudah termasuk PPN 10% kecuali Benih dibebaskan dari PPN";
             outputStream.write(ppn.getBytes());
 
             outputStream.write(PrintFormatter.NEW_LINE);

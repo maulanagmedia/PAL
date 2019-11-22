@@ -60,6 +60,7 @@ public class RiwayatDetail extends AppCompatActivity {
     //Variabel data barang
     private List<BarangModel> listBarang = new ArrayList<>();
     private BarangDetailAdapter adapter;
+    private String namaSales = "", kodeArea = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +134,8 @@ public class RiwayatDetail extends AppCompatActivity {
                             txt_nama.setText(obj.getString("nama_pelanggan"));
                             txt_piutang.setText(Converter.doubleToRupiah(obj.getDouble("total")));
                             txt_nota.setText(nota.getId());
+                            namaSales = obj.getString("nama_sales");
+                            kodeArea = obj.getString("kode_area");
 
                             if(init){
                                 listBarang.clear();
@@ -202,9 +205,12 @@ public class RiwayatDetail extends AppCompatActivity {
                             total_diskon += b.getDiskon();
                         }
 
-                        Transaksi transaksi = new Transaksi(txt_nama.getText().toString(),
-                                AppSharedPreferences.getNama(RiwayatDetail.this),
-                                txt_nota.getText().toString(), new Date(), listItem);
+                        Transaksi transaksi = new Transaksi(
+                                txt_nama.getText().toString()
+                                ,namaSales + " ( " + kodeArea + " )"
+                                ,txt_nota.getText().toString()
+                                ,new Date()
+                                ,listItem);
                         transaksi.setTunai(nota.getTotal());
                         transaksi.setDiskon(total_diskon);
 

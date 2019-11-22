@@ -157,8 +157,7 @@
                             android:textSize="@dimen/sp18"
                             android:textStyle="bold"
                             android:layout_marginTop="@dimen/dp5"
-                            android:padding="@dimen/dp5"
-                            android:entries="@array/array_cara_bayar"/>
+                            android:padding="@dimen/dp5"/>
 
                         <RelativeLayout
                             android:visibility="gone"
