@@ -103,6 +103,8 @@ public class LoginActivity extends AppCompatActivity {
                                     jsonresult.getString("nama"), jsonresult.getString("kode_gudang"),
                                     jsonresult.getString("kode_regional"), jsonresult.getString("nama_regional"),
                                     jsonresult.getString("jabatan"), jsonresult.getString("posisi"));
+
+                            AppSharedPreferences.setKodeArea(LoginActivity.this, jsonresult.getString("kode_area"));
                         }
                         catch (JSONException e){
                             Toast.makeText(LoginActivity.this, R.string.error_json, Toast.LENGTH_SHORT).show();

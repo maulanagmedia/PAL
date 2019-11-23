@@ -25,6 +25,7 @@
                                               <map>
                                                 <entry key="color" value="000000" />
                                                 <entry key="opacityPercent" value="80" />
+                                                <entry key="paddingPercent" value="-5" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -35,7 +36,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/D:/APPLICATION/Android_Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_settings_overscan_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_history_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -58,10 +59,10 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="imageAsset" value="D:\GMEDIA\PAL\PAL Resource\V2\Icon\refresh.png" />
-                                      <entry key="outputName" value="ic_green_scan" />
+                                      <entry key="imageAsset" value="$APPLICATION_HOME_DIR$/bin/D:\GMEDIA\PAL\PAL Resource\V2\Icon\refresh.png" />
+                                      <entry key="outputName" value="ic_riwayat" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="029446" />
+                                      <entry key="themeColor" value="ffffff" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -88,7 +89,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="50" />
+                                                <entry key="scalingPercent" value="86" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -99,9 +100,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="f7f8f3" />
-                                      <entry key="backgroundImage" value="D:\GMEDIA\PAL\PAL Resource\launcher.png" />
-                                      <entry key="foregroundImage" value="D:\GMEDIA\PAL\PAL Resource\launcher.png" />
+                                      <entry key="backgroundImage" value="$APPLICATION_HOME_DIR$/bin/D:\GMEDIA\PAL\PAL Resource\launcher.png" />
+                                      <entry key="foregroundImage" value="$PROJECT_DIR$/../../../../pal.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -124,22 +124,11 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
-                                      <entry key="clipartAsset">
-                                        <value>
-                                          <PersistentState>
-                                            <option name="values">
-                                              <map>
-                                                <entry key="url" value="jar:file:/D:/APPLICATION/Android_Studio/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_my_location_black_24dp.xml" />
-                                              </map>
-                                            </option>
-                                          </PersistentState>
-                                        </value>
-                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="imageAsset" value="D:\GMEDIA\PAL\PAL Resource\launcher.png" />
+                                      <entry key="imageAsset" value="$APPLICATION_HOME_DIR$/bin/D:\GMEDIA\PAL\PAL Resource\launcher.png" />
                                       <entry key="outputName" value="lokasi_sekarang" />
                                     </map>
                                   </option>
@@ -167,6 +156,11 @@
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>

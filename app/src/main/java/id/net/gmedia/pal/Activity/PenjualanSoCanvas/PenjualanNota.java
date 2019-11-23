@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import id.net.gmedia.pal.Activity.Riwayat;
 import id.net.gmedia.pal.MainActivity;
 import id.net.gmedia.pal.Model.BarangModel;
 import id.net.gmedia.pal.Adapter.PenjualanNotaAdapter;
+import id.net.gmedia.pal.Model.CaraBayarModel;
 import id.net.gmedia.pal.PetaOutlet;
 import id.net.gmedia.pal.R;
 import id.net.gmedia.pal.Util.AppKeranjangPenjualan;
@@ -62,12 +64,13 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
     public TextView txt_tempo;
     public AppCompatSpinner spn_bayar;
     private ProgressBar pb_map;
-    private List<String> listCaraBayar = new ArrayList<>();
+    private List<CaraBayarModel> listCaraBayar = new ArrayList<>();
 
     //Variabel lokasi
     private GoogleLocationManager manager;
     private Location current_location;
-    private ArrayAdapter<String> adapterCB;
+    private ArrayAdapter adapterCB;
+    private String crBayar = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +93,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         txt_tempo = findViewById(R.id.txt_tempo);
         pb_map = findViewById(R.id.pb_map);
 
-        adapterCB = new ArrayAdapter<String>(PenjualanNota.this,
+        adapterCB = new ArrayAdapter(PenjualanNota.this,
                 R.layout.simple_list, R.id.text1, listCaraBayar);
 
         spn_bayar.setAdapter(adapterCB);
@@ -177,6 +180,21 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         manager.startLocationUpdates();
         pb_map.setVisibility(View.VISIBLE);
 
+        spn_bayar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+                CaraBayarModel item = (CaraBayarModel) parent.getItemAtPosition(position);
+                crBayar = item.getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         getCaraBayar();
     }
 
@@ -201,7 +219,15 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                             JSONArray array = new JSONArray(result);
                             for(int i = 0; i < array.length(); i++){
                                 JSONObject item = array.getJSONObject(i);
-                                listCaraBayar.add(item.getString("text"));
+                                listCaraBayar.add(new CaraBayarModel(
+                                        item.getString("id")
+                                        ,item.getString("text")
+                                ));
+
+                                if(i == 0){
+
+                                    crBayar = item.getString("id");
+                                }
                             }
 
                             adapterCB.notifyDataSetChanged();
@@ -284,7 +310,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         body.add("barang", new JSONArray(array_barang));
         body.add("user_latitude", current_location.getLatitude());
         body.add("user_longitude", current_location.getLongitude());
-        body.add("cara_bayar", spn_bayar.getSelectedItem().toString().toLowerCase());
+        body.add("cara_bayar", crBayar);
 
         Log.d(Constant.TAG, body.create().toString());
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading, new AppLoading.CancelListener() {

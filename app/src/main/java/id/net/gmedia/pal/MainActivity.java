@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         //Inisialisasi data user
-        txt_nama.setText(AppSharedPreferences.getNama(this));
+        txt_nama.setText(AppSharedPreferences.getNama(this) + " ("+ AppSharedPreferences.getKodeArea(this)+")");
         String temp = "NIP : " + AppSharedPreferences.getId(this);
         txt_nip.setText(temp);
         temp = "Regional : " + AppSharedPreferences.getNamaRegional(this);

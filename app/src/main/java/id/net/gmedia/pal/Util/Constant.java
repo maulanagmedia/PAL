@@ -144,6 +144,8 @@ public class Constant {
     public final static String URL_RETUR_KONFIRMASI_LIST = BASE_URL + "penjualan/req_retur_jual_sales";
     public final static String URL_SETORAN_HISTORY = BASE_URL + "piutang/histori_setoran";
     public final static String URL_CARA_BAYAR = BASE_URL + "/master/cara_bayar";
+    public final static String URL_BANK = BASE_URL + "/master/bank";
+    public final static String URL_PIUTANG_DISPENSASI = BASE_URL + "/piutang/list_request_dispensasi_piutang";
 
     //Token heaader dengan enkripsi
     public static Map<String, String> getTokenHeader(String id){

@@ -19,9 +19,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +49,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import id.net.gmedia.pal.Model.CaraBayarModel;
 import id.net.gmedia.pal.Model.SetoranModel;
 import id.net.gmedia.pal.Model.UploadModel;
 import id.net.gmedia.pal.R;
@@ -80,11 +84,14 @@ public class SetoranSales extends AppCompatActivity {
     private EditText txt_nominal, txt_keterangan;
     private ProgressBar bar_bukti;
     private ImageView overlay_bukti, img_bukti;
+    private Spinner spn_bank;
 
     //Variabel data setoran
     private List<SetoranModel> listSetoran = new ArrayList<>();
     private SetoranSalesAdapter adapter;
-
+    private List<CaraBayarModel> listBank = new ArrayList<>();
+    private ArrayAdapter adapterBank;
+    private String selectedBank = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +169,24 @@ public class SetoranSales extends AppCompatActivity {
                 overlay_bukti = dialog_upload.findViewById(R.id.overlay_bukti);
                 img_bukti = dialog_upload.findViewById(R.id.img_bukti);
                 bar_bukti = dialog_upload.findViewById(R.id.bar_bukti);
+                spn_bank = (Spinner) dialog_upload.findViewById(R.id.spn_bank);
+
+                spn_bank.setAdapter(adapterBank);
+
+                spn_bank.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+                        CaraBayarModel item = (CaraBayarModel) parent.getItemAtPosition(position);
+                        selectedBank = item.getId();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
 
                 txt_nominal.setText(String.format(Locale.getDefault(), "%.0f", total));
 
@@ -215,8 +240,63 @@ public class SetoranSales extends AppCompatActivity {
         adapter = new SetoranSalesAdapter(listSetoran);
         rv_setoran.setAdapter(adapter);
 
+        adapterBank = new ArrayAdapter(SetoranSales.this,
+                R.layout.simple_list, R.id.text1, listBank);
+
         //muat data setoran
         loadSetoran();
+    }
+
+    private void getBank() {
+
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_BANK,
+                ApiVolleyManager.METHOD_GET, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        try{
+                            //Inisialisasi Header
+
+                            JSONArray array = new JSONArray(result);
+                            for(int i = 0; i < array.length(); i++){
+                                JSONObject item = array.getJSONObject(i);
+                                listBank.add(new CaraBayarModel(
+                                        item.getString("id")
+                                        ,item.getString("text")
+                                ));
+
+                                if(i == 0){
+
+                                    selectedBank = item.getString("id");
+                                }
+                            }
+
+                            adapterBank.notifyDataSetChanged();
+                        }
+                        catch (JSONException e){
+
+                            Toast.makeText(SetoranSales.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        Toast.makeText(SetoranSales.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
     }
 
     private void loadSetoran(){
@@ -236,6 +316,8 @@ public class SetoranSales extends AppCompatActivity {
                         txt_total.setText(str_total);
 
                         AppLoading.getInstance().stopLoading();
+
+                        getBank();
                     }
 
                     @Override
@@ -263,6 +345,8 @@ public class SetoranSales extends AppCompatActivity {
 
                         adapter.notifyDataSetChanged();
                         AppLoading.getInstance().stopLoading();
+
+                        getBank();
                     }
 
                     @Override
@@ -345,6 +429,7 @@ public class SetoranSales extends AppCompatActivity {
         body.add("id_gambar_bukti", upload.getId());
         body.add("nominal", Double.parseDouble(txt_nominal.getText().toString()));
         body.add("keterangan", txt_keterangan.getText().toString());
+        body.add("id_bank", selectedBank);
 
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_UPLOAD_BUKTI, ApiVolleyManager.METHOD_POST,
                 Constant.getTokenHeader(AppSharedPreferences.getId(this)), body.create(),

@@ -204,29 +204,68 @@ public class Customer extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_search, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) searchItem.getActionView();
+        if(act_code == Constant.ACT_DISPENSASI){
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                search = s;
-                loadCustomer(true);
+            menuInflater.inflate(R.menu.menu_search_riwayat, menu);
 
-                return true;
-            }
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            final SearchView searchView = (SearchView) searchItem.getActionView();
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (!searchView.isIconified() && TextUtils.isEmpty(s)) {
-                    search = "";
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    search = s;
                     loadCustomer(true);
+
+                    return true;
                 }
-                return true;
-            }
-        });
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (!searchView.isIconified() && TextUtils.isEmpty(s)) {
+                        search = "";
+                        loadCustomer(true);
+                    }
+                    return true;
+                }
+            });
+
+            MenuItem riwayatItem = menu.findItem(R.id.action_riwayat);
+            riwayatItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return false;
+                }
+            });
+
+        }else{
+
+            menuInflater.inflate(R.menu.menu_search, menu);
+
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            final SearchView searchView = (SearchView) searchItem.getActionView();
+
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    search = s;
+                    loadCustomer(true);
+
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    if (!searchView.isIconified() && TextUtils.isEmpty(s)) {
+                        search = "";
+                        loadCustomer(true);
+                    }
+                    return true;
+                }
+            });
+        }
+
 
         return true;
     }

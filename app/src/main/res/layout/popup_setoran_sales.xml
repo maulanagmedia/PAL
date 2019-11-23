@@ -90,7 +90,7 @@
             android:layout_width="@dimen/upload_layout_width"
             android:layout_height="@dimen/upload_layout_height"
             android:layout_gravity="center"
-            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintBottom_toTopOf="@+id/ll_bank"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -133,6 +133,37 @@
 
         </RelativeLayout>
 
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/ll_bank"
+            app:layout_constraintBottom_toTopOf="@+id/textView6"
+            app:layout_constraintStart_toStartOf="@+id/vertical1"
+            app:layout_constraintEnd_toStartOf="@+id/vertical2"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Bank"
+                android:textSize="@dimen/sp14"
+                android:textStyle="bold"/>
+
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/spn_bank"
+                android:layout_toEndOf="@id/img_bayar"
+                android:layout_below="@id/lbl_bayar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp18"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/dp10"
+                android:padding="@dimen/dp5"/>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
@@ -143,7 +174,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/txt_keterangan"
             app:layout_constraintStart_toStartOf="@+id/vertical1"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
+            app:layout_constraintTop_toBottomOf="@+id/ll_bank" />
 
         <EditText
             android:id="@+id/txt_keterangan"
