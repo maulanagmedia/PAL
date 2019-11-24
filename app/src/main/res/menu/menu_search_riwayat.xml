@@ -7,8 +7,7 @@
         android:id="@+id/action_riwayat"
         android:icon="@drawable/ic_riwayat"
         app:showAsAction="always|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        android:title="Search"/>
+        android:title="Riwayat"/>
 
     <item
         android:id="@+id/action_search"

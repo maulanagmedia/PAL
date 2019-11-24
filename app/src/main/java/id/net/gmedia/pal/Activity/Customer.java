@@ -1,5 +1,6 @@
 package id.net.gmedia.pal.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import id.net.gmedia.pal.Activity.DispensasiPiutangAct.RiwayatDispensasiPiutang;
 import id.net.gmedia.pal.Adapter.CustomerAdapter;
 import id.net.gmedia.pal.Model.CustomerModel;
 import id.net.gmedia.pal.R;
@@ -235,7 +237,10 @@ public class Customer extends AppCompatActivity {
             riwayatItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    return false;
+
+                    Intent intent = new Intent(Customer.this, RiwayatDispensasiPiutang.class);
+                    startActivity(intent);
+                    return true;
                 }
             });
 
