@@ -1,8 +1,11 @@
 package id.net.gmedia.pal.Activity.PenjualanSoCanvas;
 
 import android.content.Intent;
+import android.os.Trace;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,13 +20,19 @@ import com.leonardus.irfan.ApiVolleyManager;
 import com.leonardus.irfan.AppLoading;
 import com.leonardus.irfan.AppRequestCallback;
 import com.leonardus.irfan.Converter;
+import com.leonardus.irfan.ItemValidation;
 import com.leonardus.irfan.JSONBuilder;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.TreeMap;
 
 import id.net.gmedia.pal.Model.BarangModel;
 import id.net.gmedia.pal.Model.SatuanModel;
@@ -45,7 +54,17 @@ public class PenjualanDetail extends AppCompatActivity {
     //Variabel Ui
     private Spinner spn_satuan;
     private EditText txt_jumlah, txt_diskon, txt_jumlah_canvas;
+    private TextView txt_nama_pelanggan, txt_nama_barang, txt_harga_satuan;
     private TextView txt_stok, txt_budget, txt_stok_canvas;
+    private EditText edtHargaSatuan;
+    private ItemValidation iv = new ItemValidation();
+    private String currentString = "";
+    private String total = "0";
+    private String hargaBarang = "";
+    private boolean isValid = true;
+    private Timer timerHarga;
+    private boolean isTyping = false;
+    private HashMap<String, String> listHarga = new HashMap<String, String>();
     //TextView txt_total;
 
     @Override
@@ -60,7 +79,6 @@ public class PenjualanDetail extends AppCompatActivity {
         }
 
         //Inisialisasi UI
-        TextView txt_nama_pelanggan, txt_nama_barang, txt_harga_satuan;
         spn_satuan = findViewById(R.id.spn_satuan);
         txt_jumlah = findViewById(R.id.txt_jumlah);
         txt_nama_pelanggan = findViewById(R.id.txt_nama_pelanggan);
@@ -71,6 +89,7 @@ public class PenjualanDetail extends AppCompatActivity {
         txt_budget = findViewById(R.id.txt_budget);
         txt_jumlah_canvas = findViewById(R.id.txt_jumlah_canvas);
         txt_stok_canvas = findViewById(R.id.txt_stok_canvas);
+        edtHargaSatuan = (EditText) findViewById(R.id.edt_harga_satuan);
         /*txt_total = findViewById(R.id.txt_total);
         txt_total.setText(Converter.doubleToRupiah(total));*/
 
@@ -130,6 +149,9 @@ public class PenjualanDetail extends AppCompatActivity {
                         + Integer.parseInt(txt_jumlah.getText().toString()) > 20){
                     Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari 20", Toast.LENGTH_SHORT).show();
                 }
+                else if(!isValid){
+                    Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari 20", Toast.LENGTH_SHORT).show();
+                }
                 else{
                     //cek harga total barang
                     cekTotal();
@@ -141,11 +163,107 @@ public class PenjualanDetail extends AppCompatActivity {
         initBudget();
         //muat data satuan barang
         initSatuan();
+
+        edtHargaSatuan.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                if (timerHarga != null) {
+                    timerHarga.cancel();
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(!s.toString().equals(currentString)){
+
+                    String cleanString = s.toString().replaceAll("[,.]", "");
+                    edtHargaSatuan.removeTextChangedListener(this);
+
+                    String formatted = iv.ChangeToCurrencyFormat(cleanString);
+
+                    currentString = formatted;
+                    edtHargaSatuan.setText(formatted);
+                    edtHargaSatuan.setSelection(formatted.length());
+
+                    edtHargaSatuan.addTextChangedListener(this);
+
+
+                    if(s.length() > 0){
+                        timerHarga = new Timer();
+                        timerHarga.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+
+                                isTyping = true;
+                                try {
+                                    Thread.sleep(400);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        getHargaTotal();
+                                    }
+                                });
+                            }
+                        }, 600);
+                    }
+                }
+            }
+        });
+
+        edtHargaSatuan.setText(iv.doubleToStringRound(barang.getHarga()));
+
+        txt_jumlah.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                getHargaTotal();
+            }
+        });
+
+        txt_jumlah_canvas.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                getHargaTotal();
+            }
+        });
     }
 
     private void cekTotal(){
         //cek harga total barang yang akan ditambahkan
-        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+        /*AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
         JSONBuilder body = new JSONBuilder();
         body.add("kode_pelanggan", AppKeranjangPenjualan.getInstance().getCustomer().getId());
         body.add("kode_barang", edit == -1?barang.getId():AppKeranjangPenjualan.getInstance().getBarang(edit).getId());
@@ -171,7 +289,7 @@ public class PenjualanDetail extends AppCompatActivity {
                     @Override
                     public void onSuccess(String result) {
                         try{
-                            double total = new JSONObject(result).getDouble("total_harga");
+                            total = new JSONObject(result).getDouble("total_harga");
                             double diskon = txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString());
                             if(total < diskon){
                                 Toast.makeText(PenjualanDetail.this,
@@ -190,6 +308,81 @@ public class PenjualanDetail extends AppCompatActivity {
 
                     @Override
                     public void onFail(String message) {
+                        Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));*/
+
+        double diskon = txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString());
+        if(iv.parseNullDouble(total) < diskon){
+            Toast.makeText(PenjualanDetail.this,
+                    "Diskon tidak boleh melebihi total harga", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            tambahBarang(iv.parseNullDouble(total));
+        }
+    }
+
+    private void getHargaTotal(){
+        //cek harga total barang yang akan ditambahkan
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+        JSONBuilder body = new JSONBuilder();
+        body.add("kode_pelanggan", AppKeranjangPenjualan.getInstance().getCustomer().getId());
+        body.add("kode_barang", edit == -1 ? barang.getId() : AppKeranjangPenjualan.getInstance().getBarang(edit).getId());
+        if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_SO){
+            int jumlah_potong = txt_jumlah_canvas.getText().toString().equals("")?0: iv.parseNullInteger(txt_jumlah_canvas.getText().toString());
+            body.add("jumlah", iv.parseNullInteger(txt_jumlah.getText().toString()) + jumlah_potong);
+        }
+        else{
+            body.add("jumlah", iv.parseNullInteger(txt_jumlah.getText().toString()));
+        }
+        body.add("satuan", spn_satuan.getSelectedItem().toString());
+        body.add("harga_edit", edtHargaSatuan.getText().toString().replaceAll("[,.]", ""));
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_VALIDASI_EDIT_HARGA, ApiVolleyManager.METHOD_POST,
+                Constant.getTokenHeader(AppSharedPreferences.getId(this)), body.create(),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        isValid = false;
+                        Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+
+                        try{
+
+                            listHarga.clear();
+                            isValid = true;
+                            hargaBarang = new JSONObject(result).getString("harga_barang");
+                            total = new JSONObject(result).getString("total_harga");
+
+                            JSONArray ja = new JSONObject(result).getJSONArray("harga_satuan");
+
+                            for(int i = 0; i < ja.length(); i++){
+
+                                JSONObject jo = ja.getJSONObject(i);
+                                listHarga.put(
+                                        jo.getString("satuan")
+                                        ,jo.getString("harga")
+                                );
+                            }
+
+                        }
+                        catch (JSONException e){
+                            Toast.makeText(PenjualanDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                        }
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+
+                        isValid = false;
                         Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
                         AppLoading.getInstance().stopLoading();
                     }
@@ -260,6 +453,19 @@ public class PenjualanDetail extends AppCompatActivity {
                     String stok_canvas = barang.getListSatuanCanvas().get(position).getJumlah() + " " + spn_satuan.getItemAtPosition(position).toString();
                     txt_stok_canvas.setText(stok_canvas);
                 }
+
+                String selectedHarga = listHarga.get(spn_satuan.getItemAtPosition(position).toString());
+
+                if(selectedHarga != null){
+
+                    barang.setHarga(iv.parseNullDouble(selectedHarga));
+                    txt_harga_satuan.setText(Converter.doubleToRupiah(barang.getHarga()));
+                    edtHargaSatuan.setText(selectedHarga);
+                }else{
+
+                    getHargaTotal();
+                }
+
             }
 
             @Override
@@ -286,6 +492,8 @@ public class PenjualanDetail extends AppCompatActivity {
             barang.setDiskon(txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString()));
             barang.setSatuan(spn_satuan.getSelectedItem().toString());
             barang.setSubtotal(subtotal);
+            barang.setHargaEdit(hargaBarang);
+            barang.setTotal(total);
             AppKeranjangPenjualan.getInstance().pakai_budget(txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString()));
 
             AppKeranjangPenjualan.getInstance().addBarang(barang);

@@ -184,7 +184,6 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-
                 CaraBayarModel item = (CaraBayarModel) parent.getItemAtPosition(position);
                 crBayar = item.getId();
             }
@@ -302,6 +301,8 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
             obj.add("diskon", b.getDiskon());
             obj.add("satuan", b.getSatuan());
             obj.add("no_batch", b.getNo_batch());
+            obj.add("harga", b.getHargaEdit());
+            obj.add("total_harga", b.getTotal());
             array_barang.add(obj.create());
         }
 

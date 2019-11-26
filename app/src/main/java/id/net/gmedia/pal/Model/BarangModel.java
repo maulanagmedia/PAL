@@ -21,6 +21,7 @@ public class BarangModel {
 
     private double subtotal = 0;
     private String satuan = "";
+    private String hargaEdit = "0", total = "0";
 
     public BarangModel(String id, String nama){
         this.id = id;
@@ -211,5 +212,26 @@ public class BarangModel {
 
     public String getTipe() {
         return tipe;
+    }
+
+    public String getHargaEdit() {
+        return hargaEdit;
+    }
+
+    public void setHargaEdit(String hargaEdit) {
+        this.hargaEdit = hargaEdit;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public void setHarga(double harga){
+
+        this.harga = harga;
     }
 }

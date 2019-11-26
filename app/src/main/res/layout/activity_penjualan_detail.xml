@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/penjualan_detail_harga_satuan"
+                android:text="@string/harga_satuan_asli"
                 android:padding="@dimen/dp5"
                 android:textSize="@dimen/sp14"/>
 
@@ -114,6 +114,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp5"
+                android:textStyle="bold"
+                android:textSize="@dimen/sp16" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/harga_satuan_edit"
+                android:padding="@dimen/dp5"
+                android:textSize="@dimen/sp14"/>
+
+            <EditText
+                android:id="@+id/edt_harga_satuan"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="@dimen/sp16" />
 
@@ -150,6 +165,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
+                        android:text="1"
                         android:textSize="@dimen/sp16"/>
 
             </android.support.design.widget.TextInputLayout>

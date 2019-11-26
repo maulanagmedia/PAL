@@ -56,6 +56,8 @@
     <string name="penjualan_detail_beli">Beli</string>
     <string name="penjualan_detail_jarak">"( Jarak dengan outlet : - Km )"</string>
     <string name="penjualan_detail_harga_satuan">Harga Satuan</string>
+    <string name="harga_satuan_asli">Harga Satuan Asli</string>
+    <string name="harga_satuan_edit">Harga Satuan</string>
 
     <string name="login_lupa_password">"Lupa password? "</string>
     <string name="login_klik_disini">"Klik disini"</string>
