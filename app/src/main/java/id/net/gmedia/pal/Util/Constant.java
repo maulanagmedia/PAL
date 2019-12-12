@@ -143,10 +143,12 @@ public class Constant {
     public final static String URL_RETUR_CANVAS = BASE_URL + "penjualan/request_retur_barang_canvas";
     public final static String URL_RETUR_KONFIRMASI_LIST = BASE_URL + "penjualan/req_retur_jual_sales";
     public final static String URL_SETORAN_HISTORY = BASE_URL + "piutang/histori_setoran";
-    public final static String URL_CARA_BAYAR = BASE_URL + "/master/cara_bayar";
-    public final static String URL_BANK = BASE_URL + "/master/bank";
-    public final static String URL_PIUTANG_DISPENSASI = BASE_URL + "/piutang/list_request_dispensasi_piutang";
-    public final static String URL_VALIDASI_EDIT_HARGA = BASE_URL + "/penjualan/validasi_edit_harga";
+    public final static String URL_CARA_BAYAR = BASE_URL + "master/cara_bayar";
+    public final static String URL_CARA_BAYAR_PIUTANG= BASE_URL + "master/cara_bayar_bayar_piutang";
+    public final static String URL_AKUN_BAYAR_PIUTANG= BASE_URL + "master/akun_by_tipe_bayar";
+    public final static String URL_BANK = BASE_URL + "master/bank";
+    public final static String URL_PIUTANG_DISPENSASI = BASE_URL + "piutang/list_request_dispensasi_piutang";
+    public final static String URL_VALIDASI_EDIT_HARGA = BASE_URL + "penjualan/validasi_edit_harga";
 
     //Token heaader dengan enkripsi
     public static Map<String, String> getTokenHeader(String id){

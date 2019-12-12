@@ -140,17 +140,17 @@ public class PenjualanDetail extends AppCompatActivity {
                     Toast.makeText(PenjualanDetail.this, "Jumlah barang tidak boleh melebihi stok canvas", Toast.LENGTH_SHORT).show();
                 }
                 else if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_SO &&
-                        diskon > 0 && AppKeranjangPenjualan.getInstance().getTotalBarangDiskon(edit)
-                        + Integer.parseInt(txt_jumlah.getText().toString()) + jumlah_canvas > 20){
+                        diskon > 0 && /*AppKeranjangPenjualan.getInstance().getTotalBarangDiskon(edit)
+                        +*/ Integer.parseInt(txt_jumlah.getText().toString()) + jumlah_canvas > 20){
                     //txt_total.setText(Converter.doubleToRupiah(Integer.parseInt(txt_jumlah.getText().toString()) * barang.getHarga()));
                     Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari 20", Toast.LENGTH_SHORT).show();
                 }
-                else if(diskon > 0 && AppKeranjangPenjualan.getInstance().getTotalBarangDiskon(edit)
-                        + Integer.parseInt(txt_jumlah.getText().toString()) > 20){
+                else if(diskon > 0 && /*AppKeranjangPenjualan.getInstance().getTotalBarangDiskon(edit)
+                        +*/ Integer.parseInt(txt_jumlah.getText().toString()) > 20){
                     Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari 20", Toast.LENGTH_SHORT).show();
                 }
                 else if(!isValid){
-                    Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari 20", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PenjualanDetail.this, "Harap tunggu hingga jumlah harga termuat", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     //cek harga total barang

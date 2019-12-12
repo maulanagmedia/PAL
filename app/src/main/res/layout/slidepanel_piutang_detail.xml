@@ -55,6 +55,7 @@
 
                 <RadioGroup
                     android:id="@+id/rb_parent"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:theme="@style/GreenViewTheme"
@@ -89,6 +90,18 @@
                          android:text="Retur" />-->
 
                 </RadioGroup>
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/spn_bayar"
+                    android:layout_toEndOf="@id/img_bayar"
+                    android:layout_below="@id/lbl_bayar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/sp18"
+                    android:textStyle="bold"
+                    android:layout_marginTop="@dimen/dp5"
+                    android:padding="@dimen/dp5"/>
+
             </LinearLayout>
 
             <LinearLayout

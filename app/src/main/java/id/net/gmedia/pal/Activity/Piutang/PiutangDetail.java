@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,7 +56,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import id.net.gmedia.pal.Activity.PenjualanSoCanvas.PenjualanNota;
 import id.net.gmedia.pal.MainActivity;
+import id.net.gmedia.pal.Model.CaraBayarModel;
 import id.net.gmedia.pal.Model.CustomerModel;
 import id.net.gmedia.pal.Model.PiutangModel;
 import id.net.gmedia.pal.Model.UploadModel;
@@ -109,6 +113,10 @@ public class PiutangDetail extends AppCompatActivity {
     private Spinner spn_akun_tunai, spn_akun_bank, spn_nomor_giro;
     private View img_refresh;
 
+    private AppCompatSpinner spn_bayar;
+    private List<CaraBayarModel> listCaraBayar = new ArrayList<>();
+    private ArrayAdapter adapterCB;
+
     //Variabel data akun tunai & bank
     private List<SimpleObjectModel> listAkunTunai;
     private List<SimpleObjectModel> listAkunBank;
@@ -123,6 +131,7 @@ public class PiutangDetail extends AppCompatActivity {
     private List<PiutangModel> listPiutang = new ArrayList<>();
     private PiutangDetailAdapter adapter;
     private List<JSONObject> listBayar;
+    private String crBayar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +172,11 @@ public class PiutangDetail extends AppCompatActivity {
         bar_bukti = findViewById(R.id.bar_bukti);
         img_refresh = findViewById(R.id.img_refresh);
         pb_map = findViewById(R.id.pb_map);
+
+        spn_bayar = (AppCompatSpinner) findViewById(R.id.spn_bayar);
+        adapterCB = new ArrayAdapter(PiutangDetail.this,
+                R.layout.simple_list, R.id.text1, listCaraBayar);
+        spn_bayar.setAdapter(adapterCB);
 
         //Inisialisasi Spinner akun tunai
         spinner_item_tunai = new ArrayList<>();
@@ -210,7 +224,7 @@ public class PiutangDetail extends AppCompatActivity {
         rb_parent.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-               updateLayoutPembayaran(checkedId);
+               //updateLayoutPembayaran(checkedId);
             }
         });
 
@@ -362,7 +376,8 @@ public class PiutangDetail extends AppCompatActivity {
                     }
                     else{
                         layout_pembayaran.setVisibility(View.VISIBLE);
-                        updateLayoutPembayaran(rb_parent.getCheckedRadioButtonId());
+                        //updateLayoutPembayaran(rb_parent.getCheckedRadioButtonId());
+                        updateDetailCaraBayar();
                     }
 
                     if(manager == null){
@@ -451,19 +466,19 @@ public class PiutangDetail extends AppCompatActivity {
                 if(current_location == null){
                     Toast.makeText(PiutangDetail.this, "Lokasi tidak terdeteksi", Toast.LENGTH_SHORT).show();
                 }
-                else if(!retur && type.equals("tunai") && spn_akun_tunai.getSelectedItemPosition() == -1){
+                else if(!retur && crBayar.equals("T") && spn_akun_tunai.getSelectedItemPosition() == -1){
                     Toast.makeText(PiutangDetail.this, "Akun belum dipilih", Toast.LENGTH_SHORT).show();
                 }
-                else if(!retur && type.equals("bank") && spn_akun_bank.getSelectedItemPosition() == -1){
+                else if(!retur && crBayar.equals("TF") && spn_akun_bank.getSelectedItemPosition() == -1){
                     Toast.makeText(PiutangDetail.this, "Akun belum dipilih", Toast.LENGTH_SHORT).show();
                 }
-                else if(!retur && type.equals("giro") && spn_nomor_giro.getSelectedItemPosition() == -1){
+                else if(!retur && crBayar.equals("BG") && spn_nomor_giro.getSelectedItemPosition() == -1){
                     Toast.makeText(PiutangDetail.this, "Nomor giro kosong", Toast.LENGTH_SHORT).show();
                 }
-                else if(!retur && type.equals("bank") && upload == null){
+                else if(!retur && crBayar.equals("TF") && upload == null){
                     Toast.makeText(PiutangDetail.this, "Bukti transfer belum di-upload", Toast.LENGTH_SHORT).show();
                 }
-                else if(!retur && type.equals("bank") && !upload.isUploaded()){
+                else if(!retur && crBayar.equals("TF") && !upload.isUploaded()){
                     Toast.makeText(PiutangDetail.this, "Bukti transfer belum selesai ter-upload", Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -481,6 +496,180 @@ public class PiutangDetail extends AppCompatActivity {
 
         //muat data piutang
         loadPiutang(true);
+
+        spn_bayar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                CaraBayarModel item = (CaraBayarModel) parent.getItemAtPosition(position);
+                crBayar = item.getId();
+
+                updateDetailCaraBayar();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        getCaraBayar();
+    }
+
+    private void getCaraBayar() {
+
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_CARA_BAYAR_PIUTANG,
+                ApiVolleyManager.METHOD_GET, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        try{
+                            //Inisialisasi Header
+
+                            JSONArray array = new JSONArray(result);
+                            for(int i = 0; i < array.length(); i++){
+                                JSONObject item = array.getJSONObject(i);
+                                listCaraBayar.add(new CaraBayarModel(
+                                        item.getString("id")
+                                        ,item.getString("text")
+                                ));
+
+                                if(i == 0){
+
+                                    crBayar = item.getString("id");
+                                    updateDetailCaraBayar();
+                                }
+                            }
+
+                            adapterCB.notifyDataSetChanged();
+                        }
+                        catch (JSONException e){
+
+                            Toast.makeText(PiutangDetail.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        Toast.makeText(PiutangDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
+    }
+
+    private void getAccountByCB(final String kode) {
+
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+
+        JSONBuilder body = new JSONBuilder();
+        body.add("tipe", kode);
+
+        ApiVolleyManager.getInstance().addRequest(this
+                , Constant.URL_AKUN_BAYAR_PIUTANG
+                , ApiVolleyManager.METHOD_POST
+                , Constant.getTokenHeader(AppSharedPreferences.getId(this))
+                , body.create(),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+
+                        AppLoading.getInstance().stopLoading();
+                        try{
+                            if(kode.equals("T")){
+                                listAkunTunai = new ArrayList<>();
+                                JSONArray array = new JSONArray(result);
+                                for(int i = 0; i < array.length(); i++){
+                                    listAkunTunai.add(new SimpleObjectModel(array.getJSONObject(i).getString("kode_akun"),
+                                            array.getJSONObject(i).getString("nama_akun")));
+                                    spinner_item_tunai.add(array.getJSONObject(i).getString("nama_akun"));
+                                }
+
+                                spinner_adapter_tunai.notifyDataSetChanged();
+                            }
+                            else if(kode.equals("TF")){
+                                listAkunBank = new ArrayList<>();
+                                JSONArray array = new JSONArray(result);
+                                for(int i = 0; i < array.length(); i++){
+                                    listAkunBank.add(new SimpleObjectModel(array.getJSONObject(i).getString("kode_akun"),
+                                            array.getJSONObject(i).getString("nama_akun")));
+                                    spinner_item_bank.add(array.getJSONObject(i).getString("nama_akun"));
+                                }
+
+                                spinner_adapter_bank.notifyDataSetChanged();
+                            }
+                        }
+                        catch (JSONException e){
+                            Toast.makeText(PiutangDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        Toast.makeText(PiutangDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
+    }
+
+    private void updateDetailCaraBayar(){
+
+        switch (crBayar){
+            case "T":
+                layout_tunai.setVisibility(View.VISIBLE);
+                layout_bank.setVisibility(View.GONE);
+                layout_giro.setVisibility(View.GONE);
+                //type = "tunai";
+
+                if(listAkunTunai == null){
+                    getAccountByCB(crBayar);
+                }
+                break;
+            case "TF":
+                layout_tunai.setVisibility(View.GONE);
+                layout_bank.setVisibility(View.VISIBLE);
+                layout_giro.setVisibility(View.GONE);
+                //type = "bank";
+
+                if(listAkunBank == null){
+                    getAccountByCB(crBayar);
+                }
+                break;
+            case "BG":
+                //type = "giro";
+                layout_tunai.setVisibility(View.GONE);
+                layout_bank.setVisibility(View.GONE);
+                layout_giro.setVisibility(View.VISIBLE);
+
+                if(listNomorGiro == null){
+                    loadGiro();
+                }
+                break;
+            default:
+                layout_tunai.setVisibility(View.VISIBLE);
+                layout_bank.setVisibility(View.GONE);
+                layout_giro.setVisibility(View.GONE);
+                //type = "";
+                break;
+        }
     }
 
     /*private void cetakPiutang(){
@@ -524,7 +713,7 @@ public class PiutangDetail extends AppCompatActivity {
 
         JSONBuilder body = new JSONBuilder();
         body.add("kode_pelanggan", customer.getId());
-        body.add("filter", tempo?"tempo":"");
+        body.add("filter", tempo ? "tempo" :"");
         body.add("status", "");
         body.add("start", loadMoreScrollListener.getLoaded());
         body.add("limit", 10);
@@ -696,7 +885,7 @@ public class PiutangDetail extends AppCompatActivity {
                 }));
     }
 
-    private void updateLayoutPembayaran(int id){
+    /*private void updateLayoutPembayaran(int id){
         switch (id){
             case R.id.rb_tunai:
                 layout_tunai.setVisibility(View.VISIBLE);
@@ -741,7 +930,7 @@ public class PiutangDetail extends AppCompatActivity {
                 type = "";
                 break;
         }
-    }
+    }*/
 
     private void initPembayaranPiutang(){
         //Inisialisasi jumlah piutang
@@ -790,18 +979,19 @@ public class PiutangDetail extends AppCompatActivity {
         body.add("kode_pelanggan", customer.getId());
 
         if(!retur){
-            body.add("cara_bayar", type.equals("bank")?"transfer":type);
+            //body.add("cara_bayar", type.equals("bank")?"transfer":type);
+            body.add("cara_bayar", crBayar);
 
-            switch (type) {
-                case "giro":
+            switch (crBayar) {
+                case "BG":
                     body.add("nomor_giro", listNomorGiro.get(spn_nomor_giro.
                             getSelectedItemPosition()).getId());
                     break;
-                case "tunai":
+                case "T":
                     body.add("kode_akun", listAkunTunai.get(spn_akun_tunai.
                             getSelectedItemPosition()).getId());
                     break;
-                case "bank":
+                case "TF":
                     body.add("kode_akun", listAkunBank.get(spn_akun_bank.
                             getSelectedItemPosition()).getId());
                     body.add("id_gambar_bukti", upload.getId());
@@ -809,13 +999,13 @@ public class PiutangDetail extends AppCompatActivity {
             }
         }
         else{
-            body.add("cara_bayar", "credit_note");
+            body.add("cara_bayar", "CN");
         }
 
         body.add("keterangan", txt_keterangan.getText().toString());
         body.add("user_latitude", current_location.getLatitude());
         body.add("user_longitude", current_location.getLongitude());
-        //System.out.println(body.create());
+        System.out.println(body.create());
 
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_PIUTANG_PELUNASAN,
                 ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
@@ -859,7 +1049,7 @@ public class PiutangDetail extends AppCompatActivity {
         }
     }
 
-    private void loadAkun(){
+    /*private void loadAkun(){
         //Membaca data akun dari Web Service
         String parameter = String.format(Locale.getDefault(), "?tipe=%s", type);
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_MASTER_AKUN + parameter,
@@ -902,7 +1092,7 @@ public class PiutangDetail extends AppCompatActivity {
                         Toast.makeText(PiutangDetail.this, message, Toast.LENGTH_SHORT).show();
                     }
                 }));
-    }
+    }*/
 
     private void loadGiro(){
         //Membaca data nomor giro dari Web Service
