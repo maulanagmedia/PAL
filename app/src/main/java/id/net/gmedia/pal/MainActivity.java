@@ -16,9 +16,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,7 @@ import com.leonardus.irfan.DialogFactory;
 import com.leonardus.irfan.JSONBuilder;
 import com.leonardus.irfan.bluetoothprinter.BluetoothPrinter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -62,6 +66,7 @@ import id.net.gmedia.pal.Activity.StokCanvas;
 import id.net.gmedia.pal.Adapter.MainSliderAdapter;
 import id.net.gmedia.pal.Util.AppSharedPreferences;
 import id.net.gmedia.pal.Util.Constant;
+import id.net.gmedia.pal.Util.OptionItem;
 import ss.com.bannerslider.Slider;
 
 public class MainActivity extends AppCompatActivity {
@@ -81,6 +86,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean exit = false;
 
     private Dialog sub_menu;
+    private TextView tvUbahArea;
+    private Spinner spArea;
+    private Button btnBatal, btnSimpan;
+    private List<OptionItem> listArea = new ArrayList<>();
+    private ArrayAdapter<OptionItem> adapterArea;
+    private final String TAG = "MAIN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +110,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Inisialisasi UI
-        TextView txt_nama, txt_nip, txt_regional;
+        final TextView txt_nama, txt_nip, txt_regional;
         txt_nama = findViewById(R.id.txt_nama);
         txt_nip = findViewById(R.id.txt_nip);
         txt_regional = findViewById(R.id.txt_regional);
+        tvUbahArea = (TextView) findViewById(R.id.tv_ubah_area);
         slider = findViewById(R.id.slider);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
@@ -113,11 +125,109 @@ public class MainActivity extends AppCompatActivity {
         temp = "Regional : " + AppSharedPreferences.getNamaRegional(this);
         txt_regional.setText(temp);
 
+        if(AppSharedPreferences.getGantiArea(this).equals("1")){
+
+            tvUbahArea.setVisibility(View.VISIBLE);
+        }else{
+
+            tvUbahArea.setVisibility(View.GONE);
+        }
+
         //Inisialisasi toolbar
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null){
             getSupportActionBar().setTitle("");
         }
+
+        tvUbahArea.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog dialog = DialogFactory.getInstance().createDialog(MainActivity.this,
+                        R.layout.popup_main_ubah_area, 80);
+
+                spArea = (Spinner) dialog.findViewById(R.id.sp_area);
+                btnBatal = (Button) dialog.findViewById(R.id.btn_batal);
+                btnSimpan = (Button) dialog.findViewById(R.id.btn_simpan);
+
+                btnBatal.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+
+                adapterArea = new ArrayAdapter<>(
+                        MainActivity.this, android.R.layout.simple_spinner_item, listArea);
+                adapterArea.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spArea.setAdapter(adapterArea);
+
+                getArea();
+
+                btnSimpan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(adapterArea != null){
+
+                            final OptionItem item = (OptionItem) adapterArea.getItem(spArea.getSelectedItemPosition());
+                            Log.d(TAG, "onClick: " + item.getValue());
+
+                            AlertDialog dialogBuilder = new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Konfrimasi")
+                                    .setMessage("Apakah anda yakin mengubah area?")
+                                    .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogx, int which) {
+
+                                            AppLoading.getInstance().showLoading(MainActivity.this, R.layout.popup_progress_bar);
+
+                                            JSONBuilder body = new JSONBuilder();
+                                            body.add("kode_area", item.getValue());
+
+                                            ApiVolleyManager.getInstance().addRequest(MainActivity.this, Constant.URL_UPDATE_CABANG,
+                                                    ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(MainActivity.this)),
+                                                    body.create(), new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                                                        @Override
+                                                        public void onEmpty(String message) {
+                                                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                                                            AppLoading.getInstance().stopLoading();
+                                                        }
+
+                                                        @Override
+                                                        public void onSuccess(String result) {
+                                                            Toast.makeText(MainActivity.this, "Area berhasil diubah", Toast.LENGTH_SHORT).show();
+                                                            AppLoading.getInstance().stopLoading();
+                                                            dialog.dismiss();
+
+                                                            AppSharedPreferences.setKodeArea(MainActivity.this, item.getValue());
+                                                            txt_nama.setText(AppSharedPreferences.getNama(MainActivity.this) + " ("+ AppSharedPreferences.getKodeArea(MainActivity.this)+")");
+                                                        }
+
+                                                        @Override
+                                                        public void onFail(String message) {
+                                                            Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                                                            AppLoading.getInstance().stopLoading();
+                                                        }
+                                                    }));
+                                        }
+                                    })
+                                    .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                        }
+                                    })
+                                    .show();
+
+                        }
+                    }
+                });
+
+            }
+        });
 
         //Edit password
         findViewById(R.id.img_edit).setOnClickListener(new View.OnClickListener() {
@@ -685,6 +795,60 @@ public class MainActivity extends AppCompatActivity {
                     public void onFail(String message) {
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                         AppLoading.getInstance().stopLoading();
+                    }
+                }));
+    }
+
+    private void getArea(){
+        //Kirim password baru ke Web Service
+        AppLoading.getInstance().showLoading(this, R.layout.popup_progress_bar);
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_MASTER_CABANG,
+                ApiVolleyManager.METHOD_GET, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        AppLoading.getInstance().stopLoading();
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        adapterArea.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+
+                        AppLoading.getInstance().stopLoading();
+                        listArea.clear();
+
+                        try {
+
+                            JSONArray jResut = new JSONArray(result);
+                            int selected = 0;
+
+                            for (int i = 0; i < jResut.length(); i++){
+
+                                JSONObject jo = jResut.getJSONObject(i);
+                                listArea.add(new OptionItem(
+                                        jo.getString("kode")
+                                        ,jo.getString("area")
+                                ));
+
+                                if(jo.getString("kode").equals(AppSharedPreferences.getKodeArea(MainActivity.this))) selected = i;
+                            }
+
+                            spArea.setSelection(selected);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        adapterArea.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+
+                        AppLoading.getInstance().stopLoading();
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        adapterArea.notifyDataSetChanged();
                     }
                 }));
     }

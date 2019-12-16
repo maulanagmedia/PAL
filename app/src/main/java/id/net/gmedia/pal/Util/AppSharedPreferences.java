@@ -15,6 +15,7 @@ public class AppSharedPreferences {
     private static final String POSISI_PREF = "posisi";
     private static final String FCM_PREF = "fcm_id";
     private static final String KODE_AREA = "kode_area";
+    private static final String KODE_GANTI_AREA = "ganti_area";
 
     private static SharedPreferences getPreferences(Context context){
         return PreferenceManager.getDefaultSharedPreferences(context);
@@ -61,6 +62,10 @@ public class AppSharedPreferences {
         return getPreferences(context).getString(KODE_AREA, "");
     }
 
+    public static String getGantiArea(Context context) {
+        return getPreferences(context).getString(KODE_GANTI_AREA, "");
+    }
+
     public static void setFcmId(Context context, String fcm){
         SharedPreferences.Editor editor = getPreferences(context).edit();
         editor.putString(FCM_PREF, fcm);
@@ -70,6 +75,12 @@ public class AppSharedPreferences {
     public static void setKodeArea(Context context, String kodeArea){
         SharedPreferences.Editor editor = getPreferences(context).edit();
         editor.putString(KODE_AREA, kodeArea);
+        editor.apply();
+    }
+
+    public static void setGantiArea(Context context, String gantiArea){
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        editor.putString(KODE_GANTI_AREA, gantiArea);
         editor.apply();
     }
 
