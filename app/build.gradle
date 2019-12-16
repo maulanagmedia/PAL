@@ -15,8 +15,8 @@ android {
         targetSdkVersion 28
         // Jika aplikasi memiliki lebih dari 65k (65.536) method
         multiDexEnabled true
-        versionCode 13
-        versionName "1.4.4"
+        versionCode 14
+        versionName "1.4.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
