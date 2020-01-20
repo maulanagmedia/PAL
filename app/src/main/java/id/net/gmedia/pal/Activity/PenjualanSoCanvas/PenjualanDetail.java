@@ -65,6 +65,7 @@ public class PenjualanDetail extends AppCompatActivity {
     private Timer timerHarga;
     private boolean isTyping = false;
     private HashMap<String, String> listHarga = new HashMap<String, String>();
+    private String lastInvalidMessage = "";
     //TextView txt_total;
 
     @Override
@@ -150,7 +151,10 @@ public class PenjualanDetail extends AppCompatActivity {
                     Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari 20", Toast.LENGTH_SHORT).show();
                 }
                 else if(!isValid){
-                    Toast.makeText(PenjualanDetail.this, "Harap tunggu hingga jumlah harga termuat", Toast.LENGTH_SHORT).show();
+                    if(lastInvalidMessage.isEmpty()){
+                        lastInvalidMessage = "Harap tunggu hingga jumlah harga termuat";
+                    }
+                    Toast.makeText(PenjualanDetail.this, lastInvalidMessage, Toast.LENGTH_SHORT).show();
                 }
                 else{
                     //cek harga total barang
@@ -346,6 +350,7 @@ public class PenjualanDetail extends AppCompatActivity {
                     public void onEmpty(String message) {
 
                         isValid = false;
+                        lastInvalidMessage = message;
                         Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
                         AppLoading.getInstance().stopLoading();
                     }
@@ -383,6 +388,7 @@ public class PenjualanDetail extends AppCompatActivity {
                     public void onFail(String message) {
 
                         isValid = false;
+                        lastInvalidMessage = message;
                         Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
                         AppLoading.getInstance().stopLoading();
                     }

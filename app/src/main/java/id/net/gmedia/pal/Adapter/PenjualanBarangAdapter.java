@@ -61,18 +61,25 @@ public class PenjualanBarangAdapter extends RecyclerView.Adapter<PenjualanBarang
         viewHolder.item_penjualan_barang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(AppKeranjangPenjualan.getInstance().isBarangBelumAda(barang.getId())){
+
+                // di hapus untuk issue bahwa barang beda umur tidak dapat di input
+                /*if(AppKeranjangPenjualan.getInstance().isBarangBelumAda(barang.getId())){
                     Gson gson = new Gson();
                     Intent i = new Intent(activity, PenjualanDetail.class);
                     i.putExtra(Constant.EXTRA_BARANG, gson.toJson(barang));
-                    /*if(!((PenjualanBarang)activity).no_bukti.equals("")){
+                    *//*if(!((PenjualanBarang)activity).no_bukti.equals("")){
                         i.putExtra(Constant.EXTRA_NO_NOTA, ((PenjualanBarang)activity).no_bukti);
-                    }*/
+                    }*//*
                     activity.startActivity(i);
                 }
                 else {
                     Toast.makeText(activity, "Barang sudah ada di penjualan anda", Toast.LENGTH_SHORT).show();
-                }
+                }*/
+
+                Gson gson = new Gson();
+                Intent i = new Intent(activity, PenjualanDetail.class);
+                i.putExtra(Constant.EXTRA_BARANG, gson.toJson(barang));
+                activity.startActivity(i);
             }
         });
 

@@ -435,12 +435,20 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                     location.getLongitude(), AppKeranjangPenjualan.getInstance().getCustomer().getLatitude(),
                     AppKeranjangPenjualan.getInstance().getCustomer().getLongitude());
             String string_lokasi = "( Jarak dengan outlet : ";
-            if(distance >= 1){
-                string_lokasi +=  String.format(Locale.getDefault(), "%.2f Km )", distance);
+
+            if(distance * 1000 > 100){
+
+                string_lokasi += "lokasi belum di setting";
+            }else{
+
+                if(distance >= 1){
+                    string_lokasi +=  String.format(Locale.getDefault(), "%.2f Km )", distance);
+                }
+                else{
+                    string_lokasi +=  String.format(Locale.getDefault(), "%.2f m )", distance * 1000);
+                }
             }
-            else{
-                string_lokasi +=  String.format(Locale.getDefault(), "%.2f m )", distance * 1000);
-            }
+
             txt_jarak.setText(string_lokasi);
             current_location = location;
         }
