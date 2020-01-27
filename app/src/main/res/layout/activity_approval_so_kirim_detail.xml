@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.Approval.ApprovalPODetail">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            android:background="@android:color/transparent">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbarFadeDuration="1000"
+                app:scrimAnimationDuration="1000"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/sp12">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/txt_tanggal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="Tanggal Kirim:"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp20"
+                        android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/gray"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="@dimen/dp5"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/dp10"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:text="Total Margin"/>
+                            <TextView
+                                android:id="@+id/txt_nota"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/green_accent"
+                                android:gravity="center"
+                                android:text="1234444"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_margin="@dimen/dp5"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/dp10"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:textColor="@color/black"
+                                android:text="Tonase"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/green_accent"
+                                android:gravity="center"
+                                android:id="@+id/txt_tonase"
+                                android:text="40kg"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/dp5"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/dp10"
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:gravity="center"
+                                android:text="Total 10% Margin"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/txt_sepuluh_persen_margin"
+                                android:textColor="@color/green_accent"
+                                android:gravity="center"
+                                android:text="1234444"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp10"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:text="Biaya Kiriman:"/>
+                        <TextView
+                            android:id="@+id/txt_estimasi_biaya"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/green_accent"
+                            android:textSize="@dimen/sp12"
+                            android:text="120.000"/>
+
+                    <include
+                        android:id="@+id/include"
+                        layout="@layout/view_divider"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp2"
+                        android:layout_marginStart="@dimen/dp20"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:layout_marginEnd="@dimen/dp20"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline4"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_harga" />
+
+                    <TextView
+                        android:id="@+id/lbl_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp15"
+                        android:gravity="center"
+                        android:text="Sub Total"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/sp12"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline4"
+                        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+                    <TextView
+                        android:id="@+id/txt_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/sp14"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline4"
+                        app:layout_constraintTop_toBottomOf="@+id/lbl_total" />
+                    </LinearLayout>
+
+                   <!-- <RelativeLayout
+                        android:id="@+id/layout_customer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/dp15">
+
+                        <ImageView
+                            android:id="@+id/img_nota"
+                            android:contentDescription="@string/piutang"
+                            android:layout_margin="@dimen/dp10"
+                            android:layout_width="@dimen/small_icon_size"
+                            android:layout_height="@dimen/small_icon_size"
+                            android:src="@drawable/no_nota"/>
+
+                        <TextView
+                            android:id="@+id/lbl_nota"
+                            android:layout_alignTop="@id/img_nota"
+                            android:layout_toEndOf="@id/img_nota"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/detail_nomor_nota"
+                            android:textSize="@dimen/sp16" />
+
+                        <TextView
+                            android:id="@+id/txt_nota"
+                            android:layout_toEndOf="@id/img_nota"
+                            android:layout_below="@id/lbl_nota"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp18"
+                            android:textStyle="bold" />
+
+
+                        <ImageView
+                            android:id="@+id/img_total"
+                            android:contentDescription="@string/piutang"
+                            android:layout_below="@id/txt_nota"
+                            android:layout_margin="@dimen/dp10"
+                            android:layout_width="@dimen/small_icon_size"
+                            android:layout_height="@dimen/small_icon_size"
+                            android:src="@drawable/icon_piutang"/>
+
+                        <TextView
+                            android:id="@+id/lbl_total"
+                            android:layout_alignTop="@id/img_total"
+                            android:layout_toEndOf="@id/img_total"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Total"
+                            android:textSize="@dimen/sp16" />
+
+                        <TextView
+                            android:id="@+id/txt_total"
+                            android:layout_toEndOf="@id/img_total"
+                            android:layout_below="@id/lbl_total"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/sp18"
+                            android:textStyle="bold" />
+
+
+
+                    </RelativeLayout>-->
+                </LinearLayout>
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_po"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/layout_penjualan"
+            android:paddingBottom="@dimen/dp15"
+            android:background="@color/white"
+            android:clipToPadding="false"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</RelativeLayout>

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/sp12"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp20"
+        android:background="@drawable/layout_po"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/lbl_nama"
+            android:layout_marginLeft="@dimen/sp10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Nama Pelanggan:"
+            android:textSize="@dimen/sp12"
+            app:layout_constraintEnd_toStartOf="@+id/lbl_jumlah"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="0.55"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_nama"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/sp10"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="@dimen/sp14"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/txt_jumlah"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/lbl_nama"
+            app:layout_constraintTop_toBottomOf="@+id/lbl_nama" />
+
+        <TextView
+            android:id="@+id/lbl_harga"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/sp10"
+            android:text="Nama Barang:"
+            android:textSize="@dimen/sp12"
+            app:layout_constraintEnd_toStartOf="@+id/lbl_ppn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="0.55"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toBottomOf="@+id/txt_nama" />
+
+        <TextView
+            android:id="@+id/txt_nama_barang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/sp10"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textSize="@dimen/sp14"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/txt_ppn"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/lbl_harga"
+            app:layout_constraintTop_toBottomOf="@+id/lbl_harga" />
+
+        <TextView
+            android:id="@+id/lbl_jumlah"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/sp10"
+            android:textColor="@color/black"
+            android:text="Kode Area:"
+            android:textSize="@dimen/sp12"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_weight="0.4"
+            app:layout_constraintStart_toEndOf="@+id/lbl_nama"
+            app:layout_constraintTop_toTopOf="@+id/lbl_nama" />
+
+         <TextView
+             android:id="@+id/txt_kode_area"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_marginLeft="@dimen/sp10"
+             android:ellipsize="end"
+             android:minLines="1"
+             android:textSize="@dimen/sp14"
+             android:textStyle="bold"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="0.5"
+             app:layout_constraintStart_toEndOf="@+id/txt_nama"
+             app:layout_constraintStart_toStartOf="@+id/lbl_jumlah"
+             app:layout_constraintTop_toBottomOf="@+id/lbl_jumlah" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/dp5"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Jumlah"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_jml"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_accent"
+                android:gravity="center"
+                android:text="1234444"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/dp5"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="Tonase"/>
+
+            <TextView
+                android:id="@+id/txt_tonase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="40kg"
+                android:textColor="@color/green_accent" />
+        </LinearLayout>
+        </LinearLayout>
+
+        <include
+            android:id="@+id/include"
+            layout="@layout/view_divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp2"
+            android:layout_marginStart="@dimen/dp20"
+            android:layout_marginTop="@dimen/dp15"
+            android:layout_marginEnd="@dimen/dp20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toBottomOf="@+id/txt_harga" />
+
+        <TextView
+            android:id="@+id/lbl_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp15"
+            android:gravity="center"
+            android:text="Sub Total"
+            android:textColor="@color/green"
+            android:textSize="@dimen/sp12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toBottomOf="@+id/include" />
+
+        <TextView
+            android:id="@+id/txt_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/green"
+            android:textSize="@dimen/sp14"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toBottomOf="@+id/lbl_total" />
+
+         <!--<TextView
+             android:id="@+id/lbl_ppn"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:textStyle="bold"
+             android:layout_marginLeft="@dimen/sp10"
+             android:text="PPN"
+             android:textSize="@dimen/sp12"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_weight="0.4"
+             app:layout_constraintStart_toEndOf="@+id/lbl_harga"
+             app:layout_constraintTop_toTopOf="@+id/lbl_harga" />
+
+         <TextView
+             android:id="@+id/txt_ppn"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginLeft="@dimen/sp10"
+             android:ellipsize="end"
+             android:maxLines="2"
+             android:textSize="@dimen/sp14"
+             android:textStyle="bold"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintHorizontal_bias="0.5"
+             app:layout_constraintStart_toEndOf="@+id/txt_harga"
+             app:layout_constraintStart_toStartOf="@+id/lbl_ppn"
+             app:layout_constraintTop_toBottomOf="@+id/lbl_ppn" />-->
+    </LinearLayout>
+
+</LinearLayout>

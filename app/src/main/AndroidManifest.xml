@@ -105,6 +105,12 @@
             android:name=".Activity.Approval.ApprovalReturDetail"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Activity.Approval.ApprovalSOKirim1"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.Approval.ApprovalSOKirimDetail"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".Activity.Approval.ApprovalRetur"
             android:screenOrientation="portrait" />
         <activity

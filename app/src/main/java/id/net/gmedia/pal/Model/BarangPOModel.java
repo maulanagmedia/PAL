@@ -9,6 +9,11 @@ public class BarangPOModel extends BarangModel {
         this.ppn = ppn;
     }
 
+    public BarangPOModel(String id, String nama, String nama_barang, String jml, String tonase, double subtotal){
+        super(id, nama, nama_barang, jml, tonase, subtotal);
+        this.ppn = ppn;
+    }
+
     public double getPpn() {
         return ppn;
     }

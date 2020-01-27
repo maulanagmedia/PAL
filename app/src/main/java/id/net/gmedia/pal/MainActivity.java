@@ -47,6 +47,7 @@ import id.net.gmedia.pal.Activity.Approval.ApprovalPelanggan;
 import id.net.gmedia.pal.Activity.Approval.ApprovalPenambahanPlafon;
 import id.net.gmedia.pal.Activity.Approval.ApprovalPengajuanMutasi;
 import id.net.gmedia.pal.Activity.Approval.ApprovalRetur;
+import id.net.gmedia.pal.Activity.Approval.ApprovalSOKirim1;
 import id.net.gmedia.pal.Activity.Approval.ApprovalSo;
 import id.net.gmedia.pal.Activity.BlacklistCustomer;
 import id.net.gmedia.pal.Activity.Customer;
@@ -623,7 +624,7 @@ public class MainActivity extends AppCompatActivity {
                             createDialog(MainActivity.this,
                                     R.layout.popup_main_approval, 90);
 
-                    View btn_customer, btn_so, btn_po, btn_retur, btn_dispensasi, btn_login, btn_plafon, btn_mutasi;
+                    View btn_customer, btn_so, btn_po, btn_retur, btn_dispensasi, btn_login, btn_plafon, btn_mutasi, btn_kirimanso;
                     btn_customer = sub_menu.findViewById(R.id.btn_customer);
                     btn_so = sub_menu.findViewById(R.id.btn_so);
                     btn_po = sub_menu.findViewById(R.id.btn_po);
@@ -632,6 +633,7 @@ public class MainActivity extends AppCompatActivity {
                     btn_login = sub_menu.findViewById(R.id.btn_login);
                     btn_plafon = sub_menu.findViewById(R.id.btn_plafon);
                     btn_mutasi = sub_menu.findViewById(R.id.btn_mutasi);
+                    btn_kirimanso = sub_menu.findViewById(R.id.btn_kirimanso);
 
                     btn_so.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -666,6 +668,7 @@ public class MainActivity extends AppCompatActivity {
                         btn_dispensasi.setVisibility(View.VISIBLE);
                         btn_login.setVisibility(View.VISIBLE);
                         btn_mutasi.setVisibility(View.VISIBLE);
+                        btn_kirimanso.setVisibility(View.VISIBLE);
 
                         btn_customer.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -706,6 +709,14 @@ public class MainActivity extends AppCompatActivity {
                                 sub_menu.dismiss();
                             }
                         });
+
+                        btn_kirimanso.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(new Intent(MainActivity.this, ApprovalSOKirim1.class));
+                                sub_menu.dismiss();
+                            }
+                        });
                     }
 
                     sub_menu.show();
@@ -743,6 +754,11 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
                 case "request_barang_canvas" : {
+                    Intent i = new Intent(this, ApprovalPengajuanMutasi.class);
+                    startActivity(i);
+                    break;
+                }
+                case "kiriman_so" : {
                     Intent i = new Intent(this, ApprovalPengajuanMutasi.class);
                     startActivity(i);
                     break;

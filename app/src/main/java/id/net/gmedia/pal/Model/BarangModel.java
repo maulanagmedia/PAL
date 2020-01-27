@@ -7,11 +7,15 @@ public class BarangModel {
     private String id;
     private String nama;
     private double harga = 0;
+    private  String nama_barang = "";
+    private String kode_area = "";
+    private String tonase = "";
 
     private String no_batch = "";
 
     private String kode = "";
     private int jumlah = 0;
+    private String jml = "";
     private double diskon = 0;
     private int jumlah_potong = 0;
     private String tipe = "";
@@ -41,6 +45,15 @@ public class BarangModel {
         this.harga = harga;
         this.tipe = tipe;
         this.no_batch = no_batch;
+    }
+
+    public BarangModel(String id, String nama, String nama_barang, String jml, String tonase, double subtotal){
+        this.id = id;
+        this.nama = nama;
+        this.nama_barang = nama_barang;
+        this.jml = jml;
+        this.tonase = tonase;
+        this.subtotal = subtotal;
     }
 
     public BarangModel(String id, String nama, double harga, int jumlah, String satuan, double diskon, double subtotal){
@@ -128,6 +141,14 @@ public class BarangModel {
         return nama;
     }
 
+    public String getJml(){
+        return jml;
+    }
+
+    public String getTonase (){
+        return tonase;
+    }
+
     public double getHarga() {
         return harga;
     }
@@ -212,6 +233,10 @@ public class BarangModel {
 
     public String getTipe() {
         return tipe;
+    }
+
+    public String getNama_barang (){
+        return nama_barang;
     }
 
     public String getHargaEdit() {
