@@ -25,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonArray;
 import com.leonardus.irfan.ApiVolleyManager;
 import com.leonardus.irfan.AppLoading;
 import com.leonardus.irfan.AppRequestCallback;
@@ -32,6 +33,7 @@ import com.leonardus.irfan.Converter;
 import com.leonardus.irfan.DialogFactory;
 import com.leonardus.irfan.JSONBuilder;
 import com.leonardus.irfan.bluetoothprinter.BluetoothPrinter;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,12 +41,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import id.net.gmedia.pal.Activity.Approval.ApprovalDispensasiPiutang;
 import id.net.gmedia.pal.Activity.Approval.ApprovalLoginPengganti;
 import id.net.gmedia.pal.Activity.Approval.ApprovalPO;
 import id.net.gmedia.pal.Activity.Approval.ApprovalPelanggan;
 import id.net.gmedia.pal.Activity.Approval.ApprovalPenambahanPlafon;
+import id.net.gmedia.pal.Activity.Approval.ApprovalPenambahanPlafonDetail;
 import id.net.gmedia.pal.Activity.Approval.ApprovalPengajuanMutasi;
 import id.net.gmedia.pal.Activity.Approval.ApprovalRetur;
 import id.net.gmedia.pal.Activity.Approval.ApprovalSOKirim1;
@@ -65,6 +69,8 @@ import id.net.gmedia.pal.Activity.Riwayat;
 import id.net.gmedia.pal.Activity.SetoranSales;
 import id.net.gmedia.pal.Activity.StokCanvas;
 import id.net.gmedia.pal.Adapter.MainSliderAdapter;
+import id.net.gmedia.pal.Model.CustomerModel;
+import id.net.gmedia.pal.Model.PurchaseOrderModel;
 import id.net.gmedia.pal.Util.AppSharedPreferences;
 import id.net.gmedia.pal.Util.Constant;
 import id.net.gmedia.pal.Util.OptionItem;
@@ -78,16 +84,21 @@ public class MainActivity extends AppCompatActivity {
     private Dialog dialogVersion;
     private String link = "";
     private String version = "";
+    private String bulan = "";
+    private String Tahun = "";
 
+    private PurchaseOrderModel m;
     //Variabel slider
     private List<String> listImage = new ArrayList<>();
     private Slider slider;
 
     //Variabel flag double click exit
     private boolean exit = false;
-
+    private SlidingUpPanelLayout suplContainer;
+    private ImageView im;
     private Dialog sub_menu;
-    private TextView tvUbahArea;
+    private TextView tvUbahArea, ivicon, tgl, target1, archive1, persen1, sisa1, target2, archive2, persen2, sisa2, jmlnota, nip, nama;
+    private TextView bln, thn;
     private Spinner spArea;
     private Button btnBatal, btnSimpan;
     private List<OptionItem> listArea = new ArrayList<>();
@@ -110,6 +121,23 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+       ivicon = findViewById(R.id.iv_icon);
+       tgl = findViewById(R.id.tgl);
+        //inisial UI Target
+        target1 = findViewById(R.id.tv_target1);
+        archive1 = findViewById(R.id.tv_archive1);
+        persen1 = findViewById(R.id.tv_persen1);
+        sisa1 = findViewById(R.id.tv_sisa1);
+//        tgl =  findViewById(R.id.tgl);
+//        thn = findViewById(R.id.thn);
+        nama= findViewById(R.id.nama);
+        nip = findViewById(R.id.nip1);
+
+        target2 = findViewById(R.id.tv_target2);
+        archive2= findViewById(R.id.tv_archive2);
+        persen2 = findViewById(R.id.tv_persen2);
+        sisa2 = findViewById(R.id.tv_sisa2);
+        jmlnota = findViewById(R.id.tv_nota);
         //Inisialisasi UI
         final TextView txt_nama, txt_nip, txt_regional;
         txt_nama = findViewById(R.id.txt_nama);
@@ -725,8 +753,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //startActivity(new Intent(MainActivity.this, Merchandiser.class));
+       /* suplContainer.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+
+                if(newState == SlidingUpPanelLayout.PanelState.COLLAPSED){
+
+                    im.setImageResource(R.drawable.ic_down);
+                }else{
+
+                    im.setImageResource(R.drawable.ic_up);
+                }
+            }
+        });*/
+
         initSlider();
+        getTarget();
     }
+
 
     private void handleNotif(){
         //masuk intent dari notif
@@ -1025,6 +1074,59 @@ public class MainActivity extends AppCompatActivity {
                         Log.e(Constant.TAG, message);
                     }
                 }));
+    }
+
+    private void getTarget() {
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_TARGET_ARCHIVE,
+                ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+
+                    @Override
+                    public void onEmpty(String message) {
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().showLoading(MainActivity.this, R.layout.popup_loading);
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        JSONObject JSONObject1;
+                        try{
+                            JSONObject1 = new JSONObject(result);
+                            JSONObject1.getString("nip");
+                            JSONObject1.getString("nama");
+                            tgl.setText(JSONObject1.getString("bulan")+ "/"+ (JSONObject1.getString("tahun")));
+
+                            JSONObject bulanan = JSONObject1.getJSONObject("achv_bulan");
+                            target1.setText(Converter.doubleToRupiah(bulanan.getDouble("target")));
+                            archive1.setText(Converter.doubleToRupiah(bulanan.getDouble("nominal_achieve")));
+                            persen1.setText(bulanan.getString("persen_achieve"));
+                            sisa1.setText(Converter.doubleToRupiah(bulanan.getDouble("sisa_target")));
+
+                            JSONObject tahunan = JSONObject1.getJSONObject("achv_tahun");
+                            target2.setText(tahunan.getString("target"));
+                            archive2.setText(Converter.doubleToRupiah(tahunan.getDouble("nominal_achieve")));
+                            persen2.setText(tahunan.getString("persen_achieve"));
+                            sisa2.setText(Converter.doubleToRupiah(tahunan.getDouble("sisa_target")));
+                            jmlnota.setText(tahunan.getString("jumlah_nota"));
+                        }
+                        catch (JSONException e){
+                            Toast.makeText(MainActivity.this, R.string.error_json, Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                        }
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
+
+
+
     }
 
     private void checkIsDialogShowing(){

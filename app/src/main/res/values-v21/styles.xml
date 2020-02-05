@@ -20,6 +20,20 @@
     <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
 
     </style>
+<!--
+    <style name="Subtitle">
+        <item name="android:textSize">@dimen/text14</item>
+        <item name="android:layout_marginRight">@dimen/padding2</item>
+        <item name="android:layout_marginLeft">@dimen/padding2</item>
+        <item name="android:textColor">@color/color_black</item>
+    </style>
+
+    <style name="TitleText2">
+        <item name="android:textSize">@dimen/text12</item>
+        <item name="android:layout_marginRight">@dimen/padding2</item>
+        <item name="android:layout_marginLeft">@dimen/padding2</item>
+        <item name="android:textColor">@color/color_black</item>
+    </style>-->
 
 
     <!-- Base application theme. -->

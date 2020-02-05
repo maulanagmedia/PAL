@@ -28,6 +28,7 @@ public class DispensasiPiutang extends AppCompatActivity {
 
     //Variabel global id Customer
     private String id_customer;
+    private EditText nominal;
 
     //Variabel UI
     private EditText txt_keterangan;
@@ -95,7 +96,6 @@ public class DispensasiPiutang extends AppCompatActivity {
                     public void onSuccess(String result) {
                         try{
                             JSONObject response = new JSONObject(result);
-
                             txt_customer.setText(response.getJSONObject("pelanggan").getString("nama"));
 
                             JSONObject penjualan = response.getJSONObject("penjualan");
@@ -128,6 +128,7 @@ public class DispensasiPiutang extends AppCompatActivity {
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
         JSONBuilder body = new JSONBuilder();
         body.add("kode_pelanggan", id_customer);
+        body.add("nominal_dispensasi", nominal.getText().toString());
         body.add("keterangan_dispensasi", txt_keterangan.getText().toString());
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_DISPENSASI_REQUEST,
                 ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(this)),

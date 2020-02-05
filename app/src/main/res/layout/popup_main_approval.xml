@@ -335,14 +335,13 @@
                 </android.support.design.card.MaterialCardView>
 
                 <android.support.design.card.MaterialCardView
-                    android:id="@+id/btn_kirimanso"
                     android:layout_width="match_parent"
-                    android:visibility="gone"
                     android:layout_height="@dimen/approval_button_height"
                     app:cardCornerRadius="@dimen/dp10"
                     android:layout_margin="@dimen/dp10">
 
                     <LinearLayout
+                        android:id="@+id/btn_kirimanso"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="#AA4"

@@ -155,6 +155,8 @@ public class Constant {
     public final static String URL_SO_KIRIM = BASE_URL+"Gudang/list_approval_kirima_so/" ;
     public final static String URL_MASTER_APPROVAL_KIRIM = BASE_URL+"master/kode_approval/kiriman_so/";
     public final static String URL_DETAIL_SO_KIRIM = BASE_URL + "Gudang/detail_approval_kiriman_so/";
+    public final static String URL_TARGET_ARCHIVE = BASE_URL + "target/achievement_sales/";
+
 
     //Token heaader dengan enkripsi
     public static Map<String, String> getTokenHeader(String id){

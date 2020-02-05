@@ -15,8 +15,8 @@ android {
         targetSdkVersion 28
         // Jika aplikasi memiliki lebih dari 65k (65.536) method
         multiDexEnabled true
-        versionCode 14
-        versionName "1.4.6"
+        versionCode 15
+        versionName "1.5.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -62,11 +62,13 @@ dependencies {
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0@aar'
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
     // Jika aplikasi memiliki lebih dari 65k (65.536) method
     implementation 'com.android.support:multidex:1.0.3'
     implementation project(path: ':locationmanager')
     implementation project(path: ':appcustommodule')
     implementation project(path: ':thermalbluetoothprinter')
+
 }
 
 apply plugin: 'com.google.gms.google-services'

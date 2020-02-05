@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/sp12"
+    android:layout_margin="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -11,6 +11,7 @@
         android:padding="@dimen/dp20"
         android:background="@drawable/layout_po"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/lbl_nama"
             android:layout_marginLeft="@dimen/sp10"
@@ -190,33 +191,6 @@
             app:layout_constraintStart_toStartOf="@+id/guideline4"
             app:layout_constraintTop_toBottomOf="@+id/lbl_total" />
 
-         <!--<TextView
-             android:id="@+id/lbl_ppn"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:textStyle="bold"
-             android:layout_marginLeft="@dimen/sp10"
-             android:text="PPN"
-             android:textSize="@dimen/sp12"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintHorizontal_weight="0.4"
-             app:layout_constraintStart_toEndOf="@+id/lbl_harga"
-             app:layout_constraintTop_toTopOf="@+id/lbl_harga" />
-
-         <TextView
-             android:id="@+id/txt_ppn"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginLeft="@dimen/sp10"
-             android:ellipsize="end"
-             android:maxLines="2"
-             android:textSize="@dimen/sp14"
-             android:textStyle="bold"
-             app:layout_constraintEnd_toEndOf="parent"
-             app:layout_constraintHorizontal_bias="0.5"
-             app:layout_constraintStart_toEndOf="@+id/txt_harga"
-             app:layout_constraintStart_toStartOf="@+id/lbl_ppn"
-             app:layout_constraintTop_toBottomOf="@+id/lbl_ppn" />-->
     </LinearLayout>
 
 </LinearLayout>

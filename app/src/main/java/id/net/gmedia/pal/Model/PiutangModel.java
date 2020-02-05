@@ -8,6 +8,7 @@ public class PiutangModel {
     private String id;
     private String nama;
     private double jumlah;
+    private double sisa_piutang;
 
     private String tanggal;
     private String tanggal_tempo;
@@ -16,13 +17,14 @@ public class PiutangModel {
 
     private boolean selected = false;
 
-    public PiutangModel(String id, String nama, double jumlah, double terbayar, String tanggal, String tanggal_tempo, int type){
+    public PiutangModel(String id, String nama, double jumlah, double terbayar, String tanggal, String tanggal_tempo, double sisa_piutang, int type){
         this.id = id;
         this.nama = nama;
         this.jumlah = jumlah;
         this.terbayar = terbayar;
         this.tanggal = tanggal;
         this.tanggal_tempo = tanggal_tempo;
+        this.sisa_piutang = sisa_piutang;
         this.type = type;
     }
 
@@ -67,6 +69,10 @@ public class PiutangModel {
 
     public double getJumlah() {
         return jumlah;
+    }
+
+    public double getSisa_piutang(){
+        return sisa_piutang;
     }
 
     public double getPiutangSisa() {

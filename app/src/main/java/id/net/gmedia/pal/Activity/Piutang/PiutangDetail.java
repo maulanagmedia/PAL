@@ -757,7 +757,7 @@ public class PiutangDetail extends AppCompatActivity {
                                 int type = nota.getString("tipe").equals("canvas")?Constant.PENJUALAN_CANVAS:Constant.PENJUALAN_SO;
                                 listPiutang.add(new PiutangModel(nota.getString("nomor_nota"),
                                         nota.getString("nomor_nota"), nota.getDouble("piutang"), nota.getDouble("bayar"),
-                                        nota.getString("tanggal"), nota.getString("tanggal_tempo"), type));
+                                        nota.getString("tanggal"), nota.getString("tanggal_tempo"), nota.getDouble("sisa_piutang"), type));
                             }
 
                             loadMoreScrollListener.finishLoad(array.length());

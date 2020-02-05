@@ -50,6 +50,7 @@ public class PiutangDetailAdapter extends RecyclerView.Adapter<PiutangDetailAdap
         piutangDetailViewHolder.txt_tanggal.setText(piutang.getTanggal());
         piutangDetailViewHolder.txt_tanggal_tempo.setText(piutang.getTanggal_tempo());
         piutangDetailViewHolder.txt_tempo.setText(String.valueOf(piutang.getTempo()));
+        piutangDetailViewHolder.txt_sisa.setText(Converter.doubleToRupiah(piutang.getSisa_piutang()));
 
         if(piutang.isSelected()){
             piutangDetailViewHolder.cb_piutang.setChecked(true);
@@ -146,7 +147,7 @@ public class PiutangDetailAdapter extends RecyclerView.Adapter<PiutangDetailAdap
     class PiutangDetailViewHolder extends RecyclerView.ViewHolder {
 
         MaterialCardView item_piutang_detail;
-        TextView txt_nama_piutang, txt_piutang, txt_tanggal, txt_tanggal_tempo, txt_tempo, txt_terbayar;
+        TextView txt_nama_piutang, txt_piutang, txt_tanggal, txt_tanggal_tempo, txt_tempo, txt_terbayar, txt_sisa;
         CheckBox cb_piutang;
 
         PiutangDetailViewHolder(@NonNull View itemView) {
@@ -159,6 +160,7 @@ public class PiutangDetailAdapter extends RecyclerView.Adapter<PiutangDetailAdap
             txt_tanggal_tempo = itemView.findViewById(R.id.txt_tanggal_tempo);
             txt_tempo = itemView.findViewById(R.id.txt_tempo);
             cb_piutang = itemView.findViewById(R.id.cb_piutang);
+            txt_sisa = itemView.findViewById(R.id.txt_sisa);
         }
     }
 }
