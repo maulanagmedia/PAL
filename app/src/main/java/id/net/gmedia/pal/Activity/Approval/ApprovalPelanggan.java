@@ -18,6 +18,7 @@ import com.leonardus.irfan.AppLoading;
 import com.leonardus.irfan.AppRequestCallback;
 import com.leonardus.irfan.DialogFactory;
 import com.leonardus.irfan.JSONBuilder;
+import com.leonardus.irfan.SimpleObjectModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,8 @@ public class ApprovalPelanggan extends AppCompatActivity {
     //Variabel data Customer
     private AdapterApprovalPelanggan adapter;
     private List<CustomerModel> listCustomer = new ArrayList<>();
+    //Variabel approval
+    private List<SimpleObjectModel> listApproval = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +62,75 @@ public class ApprovalPelanggan extends AppCompatActivity {
 
         //muat data Customer
         loadCustomer();
+        loadApproval();
     }
 
-    public void showApproval(final String id){
+    public void loadApproval() {
+            //Memuat data respon approval dari Web Service
+            ApiVolleyManager.getInstance().addRequest(this,
+                    Constant.URL_MASTER_APPROVAL_CUSTOMER, ApiVolleyManager.METHOD_GET,
+                    Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                    new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                        @Override
+                        public void onEmpty(String message) {
+                            listApproval.clear();
+                            adapter.setListApproval(listApproval);
+                        }
+
+                        @Override
+                        public void onSuccess(String result) {
+                            try{
+                                listApproval.clear();
+
+                                JSONArray approval = new JSONObject(result).getJSONArray("approval");
+                                for(int i = 0; i < approval.length(); i++){
+                                    listApproval.add(new SimpleObjectModel(approval.getJSONObject(i).getString("kode"),
+                                            approval.getJSONObject(i).getString("nama")));
+                                }
+
+                                adapter.setListApproval(listApproval);
+                            }
+                            catch (JSONException e){
+                                Toast.makeText(ApprovalPelanggan.this, R.string.error_json, Toast.LENGTH_SHORT).show();
+                                Log.e(Constant.TAG, e.getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void onFail(String message) {
+                            Toast.makeText(ApprovalPelanggan.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    }));
+        }
+
+    public void responApproval1 (String kode_pelanggan, String id_approval){
+        //Kirim respon approval
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+        JSONBuilder body = new JSONBuilder();
+        body.add("kode_pelanggan", kode_pelanggan);
+        body.add("kode_approval", id_approval);
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_MASTER_APPROV_PELANGGAN, ApiVolleyManager.METHOD_POST,
+                Constant.getTokenHeader(AppSharedPreferences.getId(this)), body.create(),
+                new AppRequestCallback(new AppRequestCallback.SimpleRequestListener() {
+                    @Override
+                    public void onSuccess(String result) {
+                        Toast.makeText(ApprovalPelanggan.this, result, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+
+                        //Muat ulang data
+                        loadCustomer();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        Toast.makeText(ApprovalPelanggan.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
+    }
+
+/*    public void showApproval(final String id){
         //menampilkan dialog approval
         final Dialog dialog = DialogFactory.getInstance().
                 createDialog(this, R.layout.popup_approval, 80, 30);
@@ -112,7 +181,7 @@ public class ApprovalPelanggan extends AppCompatActivity {
         });
 
         dialog.show();
-    }
+    }*/
 
     private void loadCustomer(){
         //Memuat data Customer dari Web Service

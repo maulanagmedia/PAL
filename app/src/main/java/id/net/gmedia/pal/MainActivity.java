@@ -1098,20 +1098,21 @@ public class MainActivity extends AppCompatActivity {
                             tgl.setText(JSONObject1.getString("bulan")+ "/"+ (JSONObject1.getString("tahun")));
 
                             JSONObject bulanan = JSONObject1.getJSONObject("achv_bulan");
-                            target1.setText(Converter.doubleToRupiah(bulanan.getDouble("target")));
-                            archive1.setText(Converter.doubleToRupiah(bulanan.getDouble("nominal_achieve")));
+                            target1.setText(bulanan.getString("target"));
+                            //target1.setText(Converter.doubleToRupiah(bulanan.getDouble("target")));
+                            archive1.setText(bulanan.getString("nominal_achieve"));
                             persen1.setText(bulanan.getString("persen_achieve"));
-                            sisa1.setText(Converter.doubleToRupiah(bulanan.getDouble("sisa_target")));
+                            sisa1.setText(bulanan.getString("sisa_target"));
 
                             JSONObject tahunan = JSONObject1.getJSONObject("achv_tahun");
                             target2.setText(tahunan.getString("target"));
-                            archive2.setText(Converter.doubleToRupiah(tahunan.getDouble("nominal_achieve")));
+                            archive2.setText(tahunan.getString("nominal_achieve"));
                             persen2.setText(tahunan.getString("persen_achieve"));
-                            sisa2.setText(Converter.doubleToRupiah(tahunan.getDouble("sisa_target")));
+                            sisa2.setText(tahunan.getString("sisa_target"));
                             jmlnota.setText(tahunan.getString("jumlah_nota"));
                         }
                         catch (JSONException e){
-                            Toast.makeText(MainActivity.this, R.string.error_json, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(MainActivity.this, R.string.error_json, Toast.LENGTH_SHORT).show();
                             Log.e(Constant.TAG, e.getMessage());
                         }
 
@@ -1120,7 +1121,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFail(String message) {
-                        Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                         AppLoading.getInstance().stopLoading();
                     }
                 }));

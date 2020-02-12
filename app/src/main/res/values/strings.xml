@@ -26,6 +26,7 @@
     <string name="upload_ktp">Upload Ktp</string>
 
     <string name="error_json">Terjadi kesalahan saat memuat data</string>
+    <string name="hapus">Hapus</string>
 
     <string name="customer_detail_map">Tahan untuk memindahkan lokasi pada map</string>
     <string name="customer_detail_nama">Nama</string>

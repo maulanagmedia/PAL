@@ -63,6 +63,7 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+//   implementation 'com.fxn769:pix:1.4.4'
     // Jika aplikasi memiliki lebih dari 65k (65.536) method
     implementation 'com.android.support:multidex:1.0.3'
     implementation project(path: ':locationmanager')

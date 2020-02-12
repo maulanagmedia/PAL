@@ -53,6 +53,8 @@ public class Constant {
     public final static int ACT_PENAMBAHAN_PLAFON = 105;
     public final static int ACT_DAFTAR_PELUNASAN = 106;
 
+    public static final int CODE_UPLOAD = 909;
+
     public final static int PENJUALAN_SO = 123;
     public final static int PENJUALAN_CANVAS = 321;
 
@@ -156,6 +158,8 @@ public class Constant {
     public final static String URL_MASTER_APPROVAL_KIRIM = BASE_URL+"master/kode_approval/kiriman_so/";
     public final static String URL_DETAIL_SO_KIRIM = BASE_URL + "Gudang/detail_approval_kiriman_so/";
     public final static String URL_TARGET_ARCHIVE = BASE_URL + "target/achievement_sales/";
+    public final static String URL_MASTER_APPROVAL_CUSTOMER = BASE_URL+"master/kode_approval/customer";
+    public final static String URL_MASTER_APPROV_PELANGGAN = BASE_URL+"customer/approve_pelanggan/";
 
 
     //Token heaader dengan enkripsi
