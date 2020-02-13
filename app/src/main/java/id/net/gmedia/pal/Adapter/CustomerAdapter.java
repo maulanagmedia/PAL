@@ -2,8 +2,8 @@ package id.net.gmedia.pal.Adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import id.net.gmedia.pal.Activity.Approval.ApprovalPelanggan;
 import id.net.gmedia.pal.Activity.Customer;
 import id.net.gmedia.pal.Activity.CustomerDetail;
 import id.net.gmedia.pal.Activity.DaftarPelunasan;

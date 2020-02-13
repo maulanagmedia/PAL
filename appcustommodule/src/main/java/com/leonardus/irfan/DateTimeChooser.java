@@ -3,7 +3,7 @@ package com.leonardus.irfan;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.support.annotation.StyleRes;
+import androidx.annotation.StyleRes;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 

@@ -15,11 +15,11 @@
     app:umanoScrollableView="@id/layout_piutang_detail"
     tools:context=".Activity.Piutang.PiutangDetail">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -27,13 +27,13 @@
             app:layout_constraintBottom_toTopOf="@+id/layout_lunasi"
             app:layout_constraintTop_toTopOf="parent">
 
-            <android.support.design.widget.AppBarLayout
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 app:elevation="0dp">
 
-                <android.support.design.widget.CollapsingToolbarLayout
+                <com.google.android.material.appbar.CollapsingToolbarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scrollbarFadeDuration="1000"
@@ -171,14 +171,14 @@
                             android:textSize="10sp"
                             android:text="Tekan icon gambar untuk mengupload foto"/>
 
-                        <android.support.v7.widget.RecyclerView
+                        <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerView"
                             android:layout_below="@+id/tv_txt"
                             android:layout_margin="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="150dp"
                             android:orientation="horizontal">
-                        </android.support.v7.widget.RecyclerView>
+                        </androidx.recyclerview.widget.RecyclerView>
 
                         <include
                             layout="@layout/layout_tipe_penjualan"
@@ -195,12 +195,12 @@
 
                     </LinearLayout>
 
-                </android.support.design.widget.CollapsingToolbarLayout>
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-            </android.support.design.widget.AppBarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
 
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_piutang"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -209,9 +209,9 @@
                 android:paddingBottom="@dimen/dp20"
                 app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
-        </android.support.design.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <LinearLayout
             android:id="@+id/layout_lunasi"
@@ -260,7 +260,7 @@
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

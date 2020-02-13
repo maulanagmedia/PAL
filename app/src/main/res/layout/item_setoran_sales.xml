@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/sp18" />
 
-    <android.support.v7.widget.GridLayout
+    <androidx.gridlayout.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:columnCount="3"
@@ -92,5 +92,5 @@
             android:text="Tunai"
             android:textColor="#000"
             android:textSize="@dimen/sp14" />
-    </android.support.v7.widget.GridLayout>
+    </androidx.gridlayout.widget.GridLayout>
 </RelativeLayout>

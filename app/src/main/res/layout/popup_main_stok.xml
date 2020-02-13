@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <android.support.design.card.MaterialCardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/btn_stok"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/approval_button_height"
@@ -85,9 +85,9 @@
 
                     </LinearLayout>
 
-                </android.support.design.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
-                <android.support.design.card.MaterialCardView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/btn_pengajuan"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/approval_button_height"
@@ -120,7 +120,7 @@
 
                     </LinearLayout>
 
-                </android.support.design.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
 
@@ -128,4 +128,4 @@
 
     </LinearLayout>
 
-</android.support.design.card.MaterialCardView>
+</com.google.android.material.card.MaterialCardView>

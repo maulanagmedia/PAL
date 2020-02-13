@@ -1,28 +1,22 @@
 package id.net.gmedia.pal.Adapter;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.leonardus.irfan.Converter;
 
 import java.util.List;
 
-import id.net.gmedia.pal.Activity.Approval.ApprovalPODetail;
-import id.net.gmedia.pal.Activity.Approval.ApprovalPOEdit;
 import id.net.gmedia.pal.Model.BarangPOModel;
 import id.net.gmedia.pal.R;
-import id.net.gmedia.pal.Util.Constant;
 
 public class ApprovalPODetailAdapter extends RecyclerView.Adapter<ApprovalPODetailAdapter.ApprovalPODetailViewHolder> {
 

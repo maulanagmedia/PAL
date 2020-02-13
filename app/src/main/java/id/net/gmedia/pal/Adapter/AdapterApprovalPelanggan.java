@@ -1,10 +1,9 @@
 package id.net.gmedia.pal.Adapter;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -19,12 +18,9 @@ import com.leonardus.irfan.SimpleObjectModel;
 
 import java.util.List;
 
-import id.net.gmedia.pal.Activity.Approval.ApprovalPO;
 import id.net.gmedia.pal.Activity.Approval.ApprovalPelanggan;
-import id.net.gmedia.pal.Activity.Approval.ApprovalSOKirim1;
 import id.net.gmedia.pal.Activity.CustomerDetail;
 import id.net.gmedia.pal.Model.CustomerModel;
-import id.net.gmedia.pal.Model.PurchaseOrderModel;
 import id.net.gmedia.pal.R;
 import id.net.gmedia.pal.Util.Constant;
 

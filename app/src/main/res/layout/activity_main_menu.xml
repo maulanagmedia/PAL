@@ -18,11 +18,11 @@
     sothree:umanoShadowHeight="4dp">
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -140,7 +140,7 @@
         </RelativeLayout>
 
 
-         <android.support.v4.widget.NestedScrollView
+         <androidx.core.widget.NestedScrollView
              android:id="@+id/scroll_view"
              android:layout_width="match_parent"
              android:layout_height="0dp"
@@ -153,11 +153,11 @@
              app:layout_constraintTop_toBottomOf="@+id/layout_tunai"
              app:layout_constraintVertical_bias="0.0">
 
-             <android.support.constraint.ConstraintLayout
+             <androidx.constraintlayout.widget.ConstraintLayout
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content">
 
-                 <android.support.v7.widget.GridLayout
+                 <androidx.gridlayout.widget.GridLayout
                      android:layout_width="match_parent"
                      android:layout_height="wrap_content"
                      android:layout_centerInParent="true"
@@ -181,7 +181,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -208,7 +208,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -235,7 +235,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -262,7 +262,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -289,7 +289,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -316,7 +316,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -342,7 +342,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -369,7 +369,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -397,7 +397,7 @@
                          app:layout_columnWeight="1"
                          app:layout_rowWeight="1">
 
-                         <android.support.v7.widget.AppCompatImageView
+                         <androidx.appcompat.widget.AppCompatImageView
                              android:layout_width="match_parent"
                              android:layout_height="0dp"
                              android:layout_weight="1"
@@ -415,14 +415,14 @@
 
                      </LinearLayout>
 
-                 </android.support.v7.widget.GridLayout>
+                 </androidx.gridlayout.widget.GridLayout>
 
 
-             </android.support.constraint.ConstraintLayout>
-         </android.support.v4.widget.NestedScrollView>
+             </androidx.constraintlayout.widget.ConstraintLayout>
+         </androidx.core.widget.NestedScrollView>
 
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <LinearLayout

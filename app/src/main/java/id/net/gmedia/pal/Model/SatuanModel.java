@@ -1,6 +1,6 @@
 package id.net.gmedia.pal.Model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class SatuanModel {
     private String satuan;

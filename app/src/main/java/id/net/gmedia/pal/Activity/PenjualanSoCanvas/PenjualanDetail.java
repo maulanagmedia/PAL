@@ -1,8 +1,8 @@
 package id.net.gmedia.pal.Activity.PenjualanSoCanvas;
 
 import android.content.Intent;
-import android.os.Trace;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.TreeMap;
 
 import id.net.gmedia.pal.Model.BarangModel;
 import id.net.gmedia.pal.Model.SatuanModel;

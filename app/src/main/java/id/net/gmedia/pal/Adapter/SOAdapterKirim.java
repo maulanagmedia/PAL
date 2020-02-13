@@ -2,10 +2,10 @@ package id.net.gmedia.pal.Adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.card.MaterialCardView;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import com.google.android.material.card.MaterialCardView;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,10 +22,8 @@ import com.leonardus.irfan.SimpleObjectModel;
 import java.util.List;
 
 import id.net.gmedia.pal.Activity.Approval.ApprovalPO;
-import id.net.gmedia.pal.Activity.Approval.ApprovalPODetail;
 import id.net.gmedia.pal.Activity.Approval.ApprovalSOKirim1;
 import id.net.gmedia.pal.Activity.Approval.ApprovalSOKirimDetail;
-import id.net.gmedia.pal.Activity.DaftarSO.DaftarSODetail;
 import id.net.gmedia.pal.Model.PurchaseOrderModel;
 import id.net.gmedia.pal.R;
 import id.net.gmedia.pal.Util.Constant;

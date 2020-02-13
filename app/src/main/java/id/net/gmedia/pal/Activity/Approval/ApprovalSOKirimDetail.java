@@ -1,10 +1,10 @@
 package id.net.gmedia.pal.Activity.Approval;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -15,7 +15,6 @@ import com.leonardus.irfan.ApiVolleyManager;
 import com.leonardus.irfan.AppLoading;
 import com.leonardus.irfan.AppRequestCallback;
 import com.leonardus.irfan.Converter;
-import com.leonardus.irfan.JSONBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,11 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import id.net.gmedia.pal.Adapter.ApprovalPODetailAdapter;
 import id.net.gmedia.pal.Adapter.ApprovalSOKirimDetailAdapter;
 import id.net.gmedia.pal.Model.BarangPOModel;
 import id.net.gmedia.pal.Model.PurchaseOrderModel;
-import id.net.gmedia.pal.Model.SatuanModel;
 import id.net.gmedia.pal.R;
 import id.net.gmedia.pal.Util.AppSharedPreferences;
 import id.net.gmedia.pal.Util.Constant;

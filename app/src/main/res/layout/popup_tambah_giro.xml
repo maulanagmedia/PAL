@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,7 +26,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimary"/>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp10"
@@ -40,9 +40,9 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp16"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp10"
@@ -56,9 +56,9 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/sp16"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp10"
@@ -73,7 +73,7 @@
                     android:imeOptions="actionNext"
                     android:textSize="@dimen/sp16"/>
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!--<LinearLayout
                 android:id="@+id/layout_tgl_terbit"
@@ -145,4 +145,4 @@
         </LinearLayout>
 
     </ScrollView>
-</android.support.design.card.MaterialCardView>
+</com.google.android.material.card.MaterialCardView>

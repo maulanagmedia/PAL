@@ -1,7 +1,7 @@
 package id.net.gmedia.pal.Activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,8 +16,6 @@ import com.leonardus.irfan.JSONBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
 
 import id.net.gmedia.pal.MainActivity;
 import id.net.gmedia.pal.R;

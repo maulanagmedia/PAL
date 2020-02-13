@@ -1,10 +1,10 @@
 package id.net.gmedia.pal.Activity;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import com.leonardus.irfan.ApiVolleyManager;
 import com.leonardus.irfan.AppLoading;
 import com.leonardus.irfan.AppRequestCallback;
-import com.leonardus.irfan.Converter;
 import com.leonardus.irfan.JSONBuilder;
 
 import org.json.JSONArray;
@@ -21,7 +20,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import id.net.gmedia.pal.Adapter.DaftarPelunasanAdapter;
 import id.net.gmedia.pal.Model.CustomerModel;

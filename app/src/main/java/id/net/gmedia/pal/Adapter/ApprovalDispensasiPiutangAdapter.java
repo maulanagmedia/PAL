@@ -1,9 +1,8 @@
 package id.net.gmedia.pal.Adapter;
 
-import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import com.leonardus.irfan.SimpleObjectModel;
 import java.util.List;
 
 import id.net.gmedia.pal.Activity.Approval.ApprovalDispensasiPiutang;
-import id.net.gmedia.pal.Activity.Approval.ApprovalPO;
 import id.net.gmedia.pal.Model.DispensasiPiutangModel;
 import id.net.gmedia.pal.R;
 
