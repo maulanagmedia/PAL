@@ -207,7 +207,7 @@
                 android:background="@color/white"
                 android:clipToPadding="false"
                 android:paddingBottom="@dimen/dp20"
-                app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             </androidx.recyclerview.widget.RecyclerView>
 
