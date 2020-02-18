@@ -528,6 +528,7 @@ public class CustomerDetail extends AppCompatActivity implements OnMapReadyCallb
         //Inisialisasi animasi popup
         anim_popin = AnimationUtils.loadAnimation(this, R.anim.anim_pop_in);
         anim_popout = AnimationUtils.loadAnimation(this, R.anim.anim_pop_out);
+
         anim_popout.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

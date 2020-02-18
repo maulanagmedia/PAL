@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp20"
+            app:cardCornerRadius="@dimen/dp30"
+            android:elevation="@dimen/dp20">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp20"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/txt_alasan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp20"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="@dimen/sp14"
+                android:hint="Masukan Alasan Penolakan Anda"/>
+
+            <TextView
+                android:id="@+id/btn_kirim"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/style_black_bordered_textview"
+                android:layout_marginTop="@dimen/dp20"
+                android:layout_marginRight="40dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginBottom="@dimen/dp10"
+                android:text="Kirim"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+
+</RelativeLayout>

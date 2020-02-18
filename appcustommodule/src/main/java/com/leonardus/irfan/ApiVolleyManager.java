@@ -152,7 +152,7 @@ public class ApiVolleyManager {
                 } else if (error instanceof TimeoutError) {
                     message = "Tidak dapat menyambungkan dalam batas waktu yang ditentukan";
                 } else{
-                    message = "Terjadi kesalahan koneksi";
+                    message = "Data Tidak ditemukan!!!";
                 }
 
                 callback.onError(message);
@@ -226,7 +226,7 @@ public class ApiVolleyManager {
                 } else if (error instanceof TimeoutError) {
                     message = "Tidak dapat menyambungkan dalam batas waktu yang ditentukan";
                 } else{
-                    message = "Terjadi kesalahan koneksi";
+                    message = "Data Tidak Ditemukan!!!";
                 }
 
                 callback.onError(message);

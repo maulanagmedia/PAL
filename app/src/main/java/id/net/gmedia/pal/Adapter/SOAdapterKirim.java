@@ -1,16 +1,23 @@
 package id.net.gmedia.pal.Adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import com.google.android.material.card.MaterialCardView;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +41,7 @@ public class SOAdapterKirim extends RecyclerView.Adapter<SOAdapterKirim.Approval
     private List<PurchaseOrderModel> listPO;
     private List<SimpleObjectModel> listApproval;
     private Activity activity;
+    private final String TAG = "Testing";
 
     public SOAdapterKirim(Activity activity, List<PurchaseOrderModel> listPO){
         this.activity = activity;
@@ -98,8 +106,32 @@ public class SOAdapterKirim extends RecyclerView.Adapter<SOAdapterKirim.Approval
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                ((ApprovalSOKirim1)activity).responApproval1(id, listApproval.get(menuItem.getItemId()).getId());
+            public boolean onMenuItemClick(final MenuItem menuItem) {
+                if (listApproval.get(menuItem.getItemId()).getId().equals("9")){
+                    // jika Tolak
+                    final Dialog dialog = new Dialog(activity);
+                    dialog.setContentView(R.layout.pop_up_dialog_reject);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    final TextView btnKirim = dialog.findViewById(R.id.btn_kirim);
+                    final EditText edtAlasan = dialog.findViewById(R.id.txt_alasan);
+                    btnKirim.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((ApprovalSOKirim1)activity).responApproval1(id, listApproval.get(menuItem.getItemId()).getId(),edtAlasan.getText().toString());
+                            dialog.dismiss();
+                            Intent intent = new Intent(activity,ApprovalSOKirim1.class);
+                        }
+
+                    });
+
+                    dialog.show();
+
+                }
+                else {
+                    ((ApprovalSOKirim1)activity).responApproval1(id, listApproval.get(menuItem.getItemId()).getId(),"");
+
+                }
+                Log.d(TAG, "onMenuItemClick: "+listApproval.get(menuItem.getItemId()).getId());
                 return false;
             }
         });

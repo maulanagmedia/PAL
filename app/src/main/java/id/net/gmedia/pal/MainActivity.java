@@ -178,8 +178,8 @@ public class MainActivity extends AppCompatActivity {
                 btnBatal.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         dialog.cancel();
+
                     }
                 });
                 dialog.show();

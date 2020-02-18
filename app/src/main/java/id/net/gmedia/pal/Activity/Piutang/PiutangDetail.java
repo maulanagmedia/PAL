@@ -1,8 +1,13 @@
 package id.net.gmedia.pal.Activity.Piutang;
 
 import android.app.Dialog;
+import android.app.MediaRouteButton;
+import android.app.Notification;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -11,27 +16,36 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Pix;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -44,6 +58,7 @@ import com.leonardus.irfan.DialogFactory;
 import com.leonardus.irfan.JSONBuilder;
 import com.leonardus.irfan.LoadMoreScrollListener;
 import com.leonardus.irfan.SimpleObjectModel;
+import com.otaliastudios.zoom.ZoomLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
@@ -56,6 +71,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import id.net.gmedia.pal.Activity.CustomerDetail;
 import id.net.gmedia.pal.MainActivity;
 import id.net.gmedia.pal.Model.CaraBayarModel;
 import id.net.gmedia.pal.Model.CustomerModel;
@@ -79,6 +95,20 @@ public class PiutangDetail extends AppCompatActivity {
     private String type = "tunai";
     //Variabel global Customer
     public CustomerModel customer;
+    private ImageView img_galeri_selected;
+    private int selectedImage = 0;
+
+    private int imgHeight = 0;
+    private int imgWidth = 0;
+    private ZoomLayout layout_zoom;
+    private ConstraintLayout layout_overlay;
+    private LinearLayout layout_galeri_selected;
+
+    private final int UPLOAD_KTP = 999;
+    private final int UPLOAD_OUTLET = 998;
+
+    //Variabel penampung list gambar yang ditampilkan di galeri (popup)
+    private List<String> listImage = new ArrayList<>();
 
     //Variabel filter & loadmore
     private boolean tempo = false;
@@ -101,6 +131,17 @@ public class PiutangDetail extends AppCompatActivity {
 
     private double jum_pembayaran;
     private double jum_retur;
+    private ImageView  listImgPhoto;
+    private RecyclerView listImgFile;
+
+    //flag apakah galeri sedang menampilkan foto detail secara popup atau tidak
+    private boolean detail = false;
+    private Animation anim_popin, anim_popout;
+
+    private UploadModel fotoKtp;
+    private List<UploadModel> pendingFotoOutlet = new ArrayList<>();
+    private List<String> listFotoKtp = new ArrayList<>();
+    private List<String> listFotoOutlet = new ArrayList<>();
 
     //Variabel UI
     private LinearLayout layout_tunai, layout_bank, layout_giro, layout_pembayaran;
@@ -126,11 +167,14 @@ public class PiutangDetail extends AppCompatActivity {
     private List<String> spinner_item_giro;
     private ArrayAdapter<String> spinner_adapter_giro;
 
+
     //Variabel data piutang
     private List<PiutangModel> listPiutang = new ArrayList<>();
     private PiutangDetailAdapter adapter;
     private List<JSONObject> listBayar;
     private String crBayar;
+    private ImageView pht;
+    private Button btn_next, btn_previous;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +254,8 @@ public class PiutangDetail extends AppCompatActivity {
                 loadPiutang(false);
             }
         };
+
+
 
         //button upload bukti transfer piutang
         findViewById(R.id.img_upload_bukti).setOnClickListener(new View.OnClickListener() {
@@ -355,6 +401,31 @@ public class PiutangDetail extends AppCompatActivity {
                 });
 
                 dialog.show();
+            }
+        });
+
+
+        pht = (ImageView) findViewById(R.id.img_photo);
+        pht.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(Intent.createChooser(new Intent().
+                        setAction(Intent.ACTION_GET_CONTENT).
+                        setType("image/*"), "Select Image"), UPLOAD_OUTLET );
+
+               /* if(listFotoOutlet.size() < 5){
+                    Pix.start(PiutangDetail.this, UPLOAD_OUTLET, 5 - listFotoOutlet.size());
+                }*/
+
+            }
+        });
+
+
+        listImgFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //tampilkan foto outlet
+                //initView(listFotoOutlet);
             }
         });
 
@@ -512,9 +583,103 @@ public class PiutangDetail extends AppCompatActivity {
             }
         });
 
+       // initGaleri();
         getCaraBayar();
     }
 
+   /* private void initGaleri(){
+        //Inisialisasi popup detail foto galeri
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        imgWidth = displayMetrics.widthPixels - displayMetrics.widthPixels/7;
+        imgHeight = displayMetrics.heightPixels - displayMetrics.heightPixels/5;
+
+        //Inisialisasi animasi popup
+        anim_popin = AnimationUtils.loadAnimation(this, R.anim.anim_pop_in);
+        anim_popout = AnimationUtils.loadAnimation(this, R.anim.anim_pop_out);
+
+        anim_popout.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                detail=false;
+                layout_overlay.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        layout_overlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout_galeri_selected.startAnimation(anim_popout);
+                //img_galeri_selected.startAnimation(anim_popout);
+            }
+        });
+
+        //Next foto dalam galeri
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedImage < listImage.size() - 1){
+                    selectedImage++;
+                }
+                else{
+                    selectedImage = 0;
+                }
+
+                Glide.with(PiutangDetail.this).load(listImage.get(selectedImage)).
+                        apply(new RequestOptions().override(imgWidth, imgHeight)).into(img_galeri_selected);
+            }
+        });
+
+        //Previous foto dalam galeri
+        btn_previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedImage > 0){
+                    selectedImage--;
+
+                }
+                else{
+                    selectedImage = listImage.size() - 1;
+                }
+
+                Glide.with(PiutangDetail.this).load(listImage.get(selectedImage)).
+                        apply(new RequestOptions().override(imgWidth, imgHeight)).into(img_galeri_selected);
+            }
+        });
+    }
+*/
+   /* private void initView(List<String> images){
+        //Fungsi untuk menampilkan foto secara popup
+        if(images.size() > 0){
+            if(images.size() == 1){
+                btn_next.setVisibility(View.INVISIBLE);
+                btn_previous.setVisibility(View.INVISIBLE);
+            }
+            else{
+                btn_next.setVisibility(View.VISIBLE);
+                btn_previous.setVisibility(View.VISIBLE);
+            }
+
+            listImage = images;
+            Glide.with(this).load(listImage.get(0)).apply(new RequestOptions().
+                    override(imgWidth, imgHeight)).into(img_galeri_selected);
+            layout_zoom.zoomTo(1, false);
+            layout_overlay.setVisibility(View.VISIBLE);
+            detail = true;
+
+            layout_galeri_selected.startAnimation(anim_popin);
+            //img_galeri_selected.startAnimation(anim_popin);
+        }
+    }*/
     private void getCaraBayar() {
 
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);

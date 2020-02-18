@@ -179,14 +179,15 @@ public class ApprovalSOKirim1 extends AppCompatActivity {
                 }));
     }
 
-    public void responApproval1 (String no_nota, String id_approval){
+    public void responApproval1 (String id_aprv, String id_approval, String alasan_penolakan){
         //Kirim respon approval
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
         JSONBuilder body = new JSONBuilder();
-        body.add("nomor_nota", no_nota);
-        body.add("kode_approval", id_approval);
+        body.add("id_pengiriman", id_aprv);
+        body.add("approval", id_approval);
+        body.add("alasan_penolakan", alasan_penolakan);
 
-        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_PO_APPROVE, ApiVolleyManager.METHOD_POST,
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_SO_KIRIM_APRROVE, ApiVolleyManager.METHOD_POST,
                 Constant.getTokenHeader(AppSharedPreferences.getId(this)), body.create(),
                 new AppRequestCallback(new AppRequestCallback.SimpleRequestListener() {
                     @Override

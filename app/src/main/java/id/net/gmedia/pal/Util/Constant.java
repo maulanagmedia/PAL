@@ -114,6 +114,7 @@ public class Constant {
     public final static String URL_PO_EDIT = BASE_URL + "purchase/update_barang_purchase_order";
     public final static String URL_MASTER_APPROVAL = BASE_URL + "master/kode_approval";
     public final static String URL_PO_APPROVE = BASE_URL + "purchase/approval_request_purchase_order";
+    public final static String URL_SO_KIRIM_APRROVE = BASE_URL + "Gudang/update_approval_kiriman_so";
     public final static String URL_RETUR_CUSTOMER_CREDIT = BASE_URL + "customer/credit_note";
     public final static String URL_UPDATE_FCM = BASE_URL + "authentication/update_fcm_id";
     public final static String URL_GIRO_LIST = BASE_URL + "giro/customer";
