@@ -405,7 +405,7 @@ public class PiutangDetail extends AppCompatActivity {
         });
 
 
-        pht = (ImageView) findViewById(R.id.img_photo);
+       /* pht = (ImageView) findViewById(R.id.img_photo);
         pht.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -413,21 +413,13 @@ public class PiutangDetail extends AppCompatActivity {
                         setAction(Intent.ACTION_GET_CONTENT).
                         setType("image/*"), "Select Image"), UPLOAD_OUTLET );
 
-               /* if(listFotoOutlet.size() < 5){
+               *//* if(listFotoOutlet.size() < 5){
                     Pix.start(PiutangDetail.this, UPLOAD_OUTLET, 5 - listFotoOutlet.size());
-                }*/
+                }*//*
 
             }
-        });
+        });*/
 
-
-        listImgFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //tampilkan foto outlet
-                //initView(listFotoOutlet);
-            }
-        });
 
         //button lunasi piutang
         findViewById(R.id.btn_lunasi).setOnClickListener(new View.OnClickListener() {

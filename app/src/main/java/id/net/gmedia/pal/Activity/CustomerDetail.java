@@ -719,6 +719,7 @@ public class CustomerDetail extends AppCompatActivity implements OnMapReadyCallb
                                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lokasi, 15.0f));
                             }
                         }
+
                         catch (JSONException e){
                             Toast.makeText(CustomerDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
                             Log.e(Constant.TAG, e.getMessage());

@@ -49,6 +49,7 @@ public class PenjualanDetail extends AppCompatActivity {
 
     //Variabel global budget diskon
     private double budget_diskon = 0;
+    private ItemValidation iv = new ItemValidation();
 
     //Variabel Ui
     private Spinner spn_satuan;
@@ -56,7 +57,6 @@ public class PenjualanDetail extends AppCompatActivity {
     private TextView txt_nama_pelanggan, txt_nama_barang, txt_harga_satuan;
     private TextView txt_stok, txt_budget, txt_stok_canvas;
     private EditText edtHargaSatuan;
-    private ItemValidation iv = new ItemValidation();
     private String currentString = "";
     private String total = "0";
     private String hargaBarang = "";
@@ -65,8 +65,8 @@ public class PenjualanDetail extends AppCompatActivity {
     private boolean isTyping = false;
     private HashMap<String, String> listHarga = new HashMap<String, String>();
     private String lastInvalidMessage = "";
-    //TextView txt_total;
 
+    //TextView txt_total;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,7 +219,7 @@ public class PenjualanDetail extends AppCompatActivity {
                                     }
                                 });
                             }
-                        }, 600);
+                        }, 500);
                     }
                 }
             }
@@ -266,7 +266,7 @@ public class PenjualanDetail extends AppCompatActivity {
 
     private void cekTotal(){
         //cek harga total barang yang akan ditambahkan
-        /*AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+       /* AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
         JSONBuilder body = new JSONBuilder();
         body.add("kode_pelanggan", AppKeranjangPenjualan.getInstance().getCustomer().getId());
         body.add("kode_barang", edit == -1?barang.getId():AppKeranjangPenjualan.getInstance().getBarang(edit).getId());
@@ -292,7 +292,7 @@ public class PenjualanDetail extends AppCompatActivity {
                     @Override
                     public void onSuccess(String result) {
                         try{
-                            total = new JSONObject(result).getDouble("total_harga");
+                            total = new JSONObject(result).getString("total_harga");
                             double diskon = txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString());
                             if(total < diskon){
                                 Toast.makeText(PenjualanDetail.this,
@@ -327,6 +327,77 @@ public class PenjualanDetail extends AppCompatActivity {
     }
 
     private void getHargaTotal(){
+        //cek harga total barang yang akan ditambahkan
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+        JSONBuilder body = new JSONBuilder();
+        body.add("kode_pelanggan", AppKeranjangPenjualan.getInstance().getCustomer().getId());
+        body.add("kode_barang", edit == -1 ? barang.getId() : AppKeranjangPenjualan.getInstance().getBarang(edit).getId());
+        if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_SO){
+            int jumlah_potong = txt_jumlah_canvas.getText().toString().equals("")?0: iv.parseNullInteger(txt_jumlah_canvas.getText().toString());
+            body.add("jumlah", iv.parseNullInteger(txt_jumlah.getText().toString()) + jumlah_potong);
+        }
+        else{
+            body.add("jumlah", iv.parseNullInteger(txt_jumlah.getText().toString()));
+        }
+        body.add("satuan", spn_satuan.getSelectedItem().toString());
+        body.add("harga_edit", edtHargaSatuan.getText().toString().replaceAll("[,.]", ""));
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_VALIDASI_EDIT_HARGA, ApiVolleyManager.METHOD_POST,
+                Constant.getTokenHeader(AppSharedPreferences.getId(this)), body.create(),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        isValid = false;
+                        lastInvalidMessage = message;
+                        Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+
+                        try{
+
+                            listHarga.clear();
+                            isValid = true;
+                            hargaBarang = new JSONObject(result).getString("harga_barang");
+                            total = new JSONObject(result).getString("total_harga");
+
+                            JSONArray ja = new JSONObject(result).getJSONArray("harga_satuan");
+
+                            for(int i = 0; i < ja.length(); i++){
+
+                                JSONObject jo = ja.getJSONObject(i);
+
+                                listHarga.put(
+                                        jo.getString("satuan")
+                                        ,jo.getString("harga")
+                                );
+
+                            }
+
+                        }
+                        catch (JSONException e){
+                            Toast.makeText(PenjualanDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                        }
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+
+                        isValid = false;
+                        lastInvalidMessage = message;
+                        Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
+    }
+
+
+    private void validasiHarga(){
         //cek harga total barang yang akan ditambahkan
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
         JSONBuilder body = new JSONBuilder();
@@ -478,6 +549,31 @@ public class PenjualanDetail extends AppCompatActivity {
 
             }
         });
+
+        //set ketika barang sudah ada isinya/edit
+        if (spinnerItem.size()>0 && barang.getSatuan() != null && !barang.getSatuan().equals("")){
+
+            int position = 0;
+
+            for ( String s : spinnerItem){
+                if ( s.equals(barang.getSatuan())){
+                    break;
+                }
+                position++;
+            }
+            spn_satuan.setSelection(position);
+
+            txt_jumlah.setText(String.valueOf(barang.getJumlah()));
+            //ini untuk ngecek potongan ada op orak
+            if (barang.getJumlah_potong()!=0){
+                txt_jumlah_canvas.setText(String.valueOf(barang.getJumlah_potong()));
+            }
+            if (barang.getDiskon()!=0){
+                txt_diskon.setText(iv.doubleToStringRound(barang.getDiskon()));
+            }
+            validasiHarga();
+        }
+
     }
 
     private void tambahBarang(double subtotal){
@@ -497,6 +593,7 @@ public class PenjualanDetail extends AppCompatActivity {
             barang.setDiskon(txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString()));
             barang.setSatuan(spn_satuan.getSelectedItem().toString());
             barang.setSubtotal(subtotal);
+            barang.setHarga(iv.parseNullDouble(hargaBarang));
             barang.setHargaEdit(hargaBarang);
             barang.setTotal(total);
             AppKeranjangPenjualan.getInstance().pakai_budget(txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString()));
@@ -514,11 +611,16 @@ public class PenjualanDetail extends AppCompatActivity {
                 AppKeranjangPenjualan.getInstance().getBarang(edit).setJumlah(Integer.parseInt(txt_jumlah.getText().toString()));
             }
 
+
+            AppKeranjangPenjualan.getInstance().getBarang(edit).setHargaEdit(hargaBarang);
+            AppKeranjangPenjualan.getInstance().getBarang(edit).setHarga(iv.parseNullDouble(hargaBarang));
+            AppKeranjangPenjualan.getInstance().getBarang(edit).setTotal(total);
             AppKeranjangPenjualan.getInstance().getBarang(edit).setDiskon(txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString()));
             AppKeranjangPenjualan.getInstance().getBarang(edit).setSatuan(spn_satuan.getSelectedItem().toString());
             AppKeranjangPenjualan.getInstance().getBarang(edit).setSubtotal(subtotal);
             AppKeranjangPenjualan.getInstance().edit_pakai_budget(AppKeranjangPenjualan.getInstance().getBarang(edit).getDiskon(), txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString()));
         }
+
 
         Intent i = new Intent(PenjualanDetail.this, PenjualanNota.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

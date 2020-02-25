@@ -8,9 +8,15 @@ public class UploadModel {
     private boolean uploaded = false;
     private String id = "";
     private String url;
+    private String encoded="";
 
     public UploadModel(Bitmap bitmap){
         this.bitmap = bitmap;
+    }
+
+    public UploadModel(Bitmap bitmap, String encoded){
+        this.bitmap = bitmap;
+        this.encoded = encoded;
     }
 
     public void setUrl(String url) {
@@ -39,6 +45,14 @@ public class UploadModel {
 
     public void setUploaded(boolean uploaded) {
         this.uploaded = uploaded;
+    }
+
+    public String getEncoded() {
+        return encoded;
+    }
+
+    public void setEncoded(String encoded) {
+        this.encoded = encoded;
     }
 }
 

@@ -91,7 +91,6 @@ public class PenjualanNotaAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                             Intent i = new Intent(activity, PenjualanDetail.class);
                             i.putExtra(Constant.EXTRA_BARANG, gson.toJson(barang));
-
                             i.putExtra(Constant.EXTRA_EDIT, viewHolder.getAdapterPosition());
                             AppKeranjangPenjualan.getInstance().setCara_bayar(((PenjualanNota)activity).spn_bayar.getSelectedItemPosition());
                             AppKeranjangPenjualan.getInstance().setTempo(((PenjualanNota)activity).txt_tempo.getText().toString());

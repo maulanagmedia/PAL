@@ -352,7 +352,7 @@
                             android:layout_height="@dimen/icon_size"
                             android:layout_weight="0.2"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/mutasi" />
+                            android:src="@drawable/send" />
 
                         <TextView
                             android:layout_width="0dp"

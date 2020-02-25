@@ -99,7 +99,7 @@ public class PiutangDetailAdapter extends RecyclerView.Adapter<PiutangDetailAdap
                 }
             });
         }
-        else{
+        else {
             piutangDetailViewHolder.txt_nama_piutang.setBackgroundColor(activity.getResources().getColor(R.color.orange));
             piutangDetailViewHolder.item_piutang_detail.setOnClickListener(new View.OnClickListener() {
                 @Override

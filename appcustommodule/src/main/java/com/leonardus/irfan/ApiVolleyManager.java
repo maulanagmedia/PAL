@@ -88,7 +88,7 @@ public class ApiVolleyManager {
                 } else if (error instanceof TimeoutError) {
                     message = "Tidak dapat menyambungkan dalam batas waktu yang ditentukan";
                 } else{
-                    message = "Terjadi kesalahan koneksi";
+                    message = "Data Tidak Ada";
                 }
 
                 callback.onError(message);

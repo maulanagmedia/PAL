@@ -52,21 +52,6 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/sp14" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp10"
-                android:text="Cara Pembayaran"
-                android:textStyle="bold"
-                android:textColor="@color/light_black"
-                android:textSize="@dimen/sp14"/>
-
-            <TextView
-                android:id="@+id/txt_cara_bayar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/sp14" />
 
             <TextView
                 android:layout_width="match_parent"

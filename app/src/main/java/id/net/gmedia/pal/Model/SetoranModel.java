@@ -6,6 +6,7 @@ public class SetoranModel {
     private String nota;
     private double jumlah;
     private String pembayaran;
+    private boolean selected = false;
 
     private String keterangan = "";
 
@@ -15,6 +16,14 @@ public class SetoranModel {
         this.nota = nota;
         this.jumlah = jumlah;
         this.pembayaran = pembayaran;
+    }
+
+    public boolean isSelected(){
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public SetoranModel(String tanggal, String customer, String nota, double jumlah, String pembayaran, String keterangan){

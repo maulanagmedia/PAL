@@ -127,7 +127,7 @@ public class RiwayatSetoran extends AppCompatActivity {
         body.add("limit", LOAD_SIZE);
         body.add("search", search);
 
-        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_SETORAN_HISTORY,
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_SETORAN_HISTORY2,
                 ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
                 body.create(), new AppRequestCallback(new AppRequestCallback.RequestListener() {
                     @Override
@@ -151,9 +151,9 @@ public class RiwayatSetoran extends AppCompatActivity {
                             JSONArray array = new JSONArray(result);
                             for(int i = 0; i < array.length(); i++){
                                 JSONObject riwayat = array.getJSONObject(i);
-                                listRiwayat.add(new SetoranModel(riwayat.getString("tgl"),
-                                        riwayat.getString("nama_pelanggan"), riwayat.getString("nobukti"),
-                                        riwayat.getDouble("total"), riwayat.getString("cara_bayar"),
+                                listRiwayat.add(new SetoranModel(riwayat.getString("tanggal"),
+                                        riwayat.getString("akun_setor"), riwayat.getString("nobukti"),
+                                        riwayat.getDouble("total_setoran"),
                                         riwayat.getString("keterangan")));
                             }
 

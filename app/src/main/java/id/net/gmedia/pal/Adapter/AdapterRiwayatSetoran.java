@@ -51,7 +51,6 @@ public class AdapterRiwayatSetoran extends RecyclerView.Adapter<AdapterRiwayatSe
             txt_nomor = itemView.findViewById(R.id.txt_nomor);
             txt_tanggal = itemView.findViewById(R.id.txt_tanggal);
             txt_nama_customer = itemView.findViewById(R.id.txt_nama_customer);
-            txt_cara_bayar = itemView.findViewById(R.id.txt_cara_bayar);
             txt_keterangan = itemView.findViewById(R.id.txt_keterangan);
             txt_total = itemView.findViewById(R.id.txt_total);
         }
@@ -59,7 +58,6 @@ public class AdapterRiwayatSetoran extends RecyclerView.Adapter<AdapterRiwayatSe
         void bind(SetoranModel s){
             txt_nomor.setText(s.getNota());
             txt_nama_customer.setText(s.getCustomer());
-            txt_cara_bayar.setText(s.getPembayaran());
             txt_tanggal.setText(s.getTanggal());
             txt_total.setText(Converter.doubleToRupiah(s.getJumlah()));
             txt_keterangan.setText(s.getKeterangan());

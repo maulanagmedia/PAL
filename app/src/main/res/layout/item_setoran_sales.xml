@@ -8,6 +8,12 @@
     android:orientation="vertical"
     android:layout_marginTop="@dimen/dp15">
 
+    <LinearLayout
+        android:id="@+id/tgl_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
     <TextView
         android:id="@+id/txt_tanggal"
         android:layout_width="wrap_content"
@@ -16,23 +22,52 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/sp12"
         android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ln_cs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tgl_1"
+        android:orientation="horizontal"
+        android:weightSum="2">
 
     <TextView
         android:id="@+id/txt_customer"
         android:layout_below="@id/txt_tanggal"
         android:layout_width="match_parent"
         android:text="Agro Mina Tani"
+        android:layout_weight="1"
         android:textColor="#000"
         android:textStyle="bold"
         android:layout_height="wrap_content"
         android:textSize="@dimen/sp18" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <CheckBox
+                android:id="@+id/cb_piutang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginRight="12dp"
+                android:gravity="right"
+                android:layout_gravity="right"
+                android:theme="@style/GreenViewTheme" />
+        </FrameLayout>
+
+    </LinearLayout>
 
     <androidx.gridlayout.widget.GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:columnCount="3"
         app:rowCount="2"
-        android:layout_below="@id/txt_customer"
+        android:layout_below="@id/ln_cs"
         android:layout_marginTop="@dimen/dp2">
 
         <TextView

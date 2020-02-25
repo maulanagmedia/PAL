@@ -150,7 +150,7 @@
 
                         </RelativeLayout>
 
-                       <!-- <TextView
+                        <!--<TextView
                             android:id="@+id/tv_gmb"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -177,27 +177,22 @@
                             android:layout_margin="10dp"
                             android:layout_width="match_parent"
                             android:background="@drawable/style_shadow"
-                            android:layout_height="150dp" >
-
-                        </ImageView>-->
+                            android:layout_height="150dp" />
 
                         <RelativeLayout
-                            android:visibility="gone"
                             android:layout_below="@+id/tv_txt"
                             android:layout_alignParentRight="true"
                             android:layout_marginTop="105dp"
                             android:layout_marginRight="@dimen/dp20"
                             android:layout_width="45dp"
                             android:layout_height="45dp">
-
                             <ImageView
                                 android:id="@+id/img_photo"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:clickable="true"
                                 android:src="@drawable/ic_photo_camera" />
-
-                        </RelativeLayout>
+                        </RelativeLayout>-->
 
                         <include
                             layout="@layout/layout_tipe_penjualan"
@@ -206,6 +201,8 @@
                             android:layout_below="@id/layout_customer" />
 
                     </RelativeLayout>
+
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
