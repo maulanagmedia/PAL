@@ -153,7 +153,7 @@ public class RiwayatSetoran extends AppCompatActivity {
                                 JSONObject riwayat = array.getJSONObject(i);
                                 listRiwayat.add(new SetoranModel(riwayat.getString("tanggal"),
                                         riwayat.getString("akun_setor"), riwayat.getString("nobukti"),
-                                        riwayat.getDouble("total_setoran"),
+                                        riwayat.getDouble("total_setoran"), riwayat.getString("nip"),
                                         riwayat.getString("keterangan")));
                             }
 
