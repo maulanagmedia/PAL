@@ -831,6 +831,7 @@ public class CustomerDetail extends AppCompatActivity implements OnMapReadyCallb
             case UPLOAD_OUTLET:{
                 if(data != null){
                     try{
+
                         pendingFotoOutlet.clear();
 
                         ArrayList<String> listPath = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
@@ -879,7 +880,6 @@ public class CustomerDetail extends AppCompatActivity implements OnMapReadyCallb
                                     upload.setUploaded(true);
                                     upload.setId(jsonresult.getJSONObject("response").getString("id"));
                                     listFotoKtp.add(upload.getUrl());
-
                                     overlay_ktp.setVisibility(View.INVISIBLE);
                                     bar_ktp.setVisibility(View.INVISIBLE);
                                 }
@@ -891,7 +891,6 @@ public class CustomerDetail extends AppCompatActivity implements OnMapReadyCallb
                             catch (JSONException e){
                                 Toast.makeText(CustomerDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
                                 Log.e(Constant.TAG, e.getMessage());
-
                                 bar_ktp.setVisibility(View.INVISIBLE);
                             }
                         }
@@ -931,6 +930,7 @@ public class CustomerDetail extends AppCompatActivity implements OnMapReadyCallb
                             bar_ktp.setVisibility(View.INVISIBLE);
                         }
                     }
+
                     catch (JSONException e){
                         Toast.makeText(CustomerDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
                         Log.e(Constant.TAG, e.getMessage());

@@ -333,7 +333,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
             @Override
             public void onSuccess(String result) {
                 AppLoading.getInstance().stopLoading();
-                Toast.makeText(PenjualanNota.this, "Penjualan berhasil", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PenjualanNota.this, result, Toast.LENGTH_SHORT).show();
                 AppKeranjangPenjualan.getInstance().clearPenjualan();
 
                 if(type == Constant.PENJUALAN_SO){

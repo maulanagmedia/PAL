@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#AA000000"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="@dimen/dp10"
+        android:visibility="invisible">
+
+        <com.otaliastudios.zoom.ZoomLayout
+            android:id="@+id/layout_zoom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical|horizontal"
+            app:overScrollHorizontal="true"
+            app:overScrollVertical="true"
+            app:overPinchable="true"
+            app:horizontalPanEnabled="true"
+            app:verticalPanEnabled="true"
+            app:zoomEnabled="true"
+            app:hasClickableChildren="false">
+
+            <LinearLayout
+                android:id="@+id/layout_galeri_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="@dimen/dp5">
+
+                    <ImageView
+                        android:id="@+id/img_galeri_selected"
+                        android:contentDescription="@null"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btn_next"
+                        app:layout_constraintStart_toEndOf="@+id/btn_previous"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                </androidx.cardview.widget.CardView>
+
+
+            </LinearLayout>
+        </com.otaliastudios.zoom.ZoomLayout>
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="@dimen/customer_navigation_size"
+            android:layout_height="@dimen/customer_navigation_size"
+            android:layout_marginEnd="@dimen/dp10"
+            android:background="@drawable/nextshadow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_previous"
+            android:layout_width="@dimen/customer_navigation_size"
+            android:layout_height="@dimen/customer_navigation_size"
+            android:background="@drawable/previousshadow"
+            android:layout_marginStart="@dimen/dp10"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</RelativeLayout>

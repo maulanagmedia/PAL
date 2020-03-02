@@ -4,32 +4,42 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fxn.pix.Pix;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -40,6 +50,7 @@ import com.leonardus.irfan.Converter;
 import com.leonardus.irfan.DateTimeChooser;
 import com.leonardus.irfan.DialogFactory;
 import com.leonardus.irfan.JSONBuilder;
+import com.otaliastudios.zoom.ZoomLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
@@ -71,6 +82,19 @@ public class SetoranSales extends AppCompatActivity {
     private Dialog dialog_upload;
     //Variabel global upload
     private UploadModel upload;
+    private Button btn_next, btn_previous;
+
+    private List<String> listFotoBukti = new ArrayList<>();
+    private List<String> listImage = new ArrayList<>();
+
+    //Variabel UI galeri (animasi, foto tampil)
+    private Animation anim_popin, anim_popout;
+    private int selectedImage = 0;
+    private ImageView img_galeri_selected;
+    private int imgHeight = 0;
+    private int imgWidth = 0;
+    private ZoomLayout layout_zoom;
+    private ConstraintLayout layout_overlay;
 
     //variabel global total setoran sales
     private double total = 0;
@@ -80,6 +104,9 @@ public class SetoranSales extends AppCompatActivity {
     private String search = "";
     //variabel global flag apakah filter muncul atau tidak
     private boolean panel_filter = false;
+
+    //flag apakah galeri sedang menampilkan foto detail secara popup atau tidak
+    private boolean detail = false;
 
     //Variabel UI
     private TextView txt_total;
@@ -98,6 +125,7 @@ public class SetoranSales extends AppCompatActivity {
     private List<CaraBayarModel> listBank = new ArrayList<>();
     private ArrayAdapter adapterBank;
     private String selectedBank = "";
+    private LinearLayout layout_galeri_selected;
 
 
     @Override
@@ -121,6 +149,8 @@ public class SetoranSales extends AppCompatActivity {
         spn_pembayaran = findViewById(R.id.spn_pembayaran);
         txt_tgl_mulai.setText(Converter.DToString(new Date()));
         txt_tgl_selesai.setText(Converter.DToString(new Date()));
+
+
 
         //button menampilkan datepicker untuk set filter tanggal mulai
         findViewById(R.id.img_tgl_mulai).setOnClickListener(new View.OnClickListener() {
@@ -147,6 +177,9 @@ public class SetoranSales extends AppCompatActivity {
                 });
             }
         });
+
+
+
 
         //button memuat data berdasarkan filter yang sudah diisi
         findViewById(R.id.btn_proses).setOnClickListener(new View.OnClickListener() {
@@ -176,17 +209,20 @@ public class SetoranSales extends AppCompatActivity {
                 txt_nominal = dialog_upload.findViewById(R.id.txt_nominal);
                 txt_keterangan = dialog_upload.findViewById(R.id.txt_keterangan);
                 overlay_bukti = dialog_upload.findViewById(R.id.overlay_bukti);
-                img_bukti = dialog_upload.findViewById(R.id.img_bukti);
+                layout_galeri_selected = findViewById(R.id.layout_galeri_selected);
+                img_galeri_selected = findViewById(R.id.img_galeri_selected);
+                layout_zoom = dialog_upload.findViewById(R.id.layout_zoom);
+                img_bukti =dialog_upload.findViewById(R.id.img_bukti);
                 bar_bukti = dialog_upload.findViewById(R.id.bar_bukti);
                 spn_bank = (Spinner) dialog_upload.findViewById(R.id.spn_bank);
-
+                layout_overlay = dialog_upload.findViewById(R.id.layout_overlay);
+                btn_next = dialog_upload.findViewById(R.id.btn_next);
+                btn_previous = dialog_upload.findViewById(R.id.btn_previous);
                 spn_bank.setAdapter(adapterBank);
 
                 spn_bank.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
                         CaraBayarModel item = (CaraBayarModel) parent.getItemAtPosition(position);
                         selectedBank = item.getId();
                     }
@@ -197,15 +233,34 @@ public class SetoranSales extends AppCompatActivity {
                     }
                 });
 
+               /* dialog_upload.findViewById(R.id.overlay_bukti).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog_upload = new Dialog(activity);
+                        dialog_upload.setContentView(R.layout.popup_galery);
+                        dialog_upload.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    }
+                });*/
                 txt_nominal.setText(String.format(Locale.getDefault(), "%.0f", total));
 
                 //button upload gambar bukti
                 dialog_upload.findViewById(R.id.img_upload_bukti).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Pix.start(SetoranSales.this, UPLOAD_BUKTI, 1);
+                        Pix.start(SetoranSales.this, UPLOAD_BUKTI, 5 - listFotoBukti.size());
                     }
                 });
+
+
+                img_bukti.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                     initView(listFotoBukti);
+                        Toast.makeText(SetoranSales.this, String.valueOf(listFotoBukti), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
                 dialog_upload.findViewById(R.id.btn_batal).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -237,8 +292,9 @@ public class SetoranSales extends AppCompatActivity {
                         }
                     }
                 });
-
                 dialog_upload.show();
+                initGaleri();
+
             }
         });
 
@@ -255,12 +311,107 @@ public class SetoranSales extends AppCompatActivity {
 
         //muat data setoran
         loadSetoran();
+
+    }
+
+    private void initView(List<String> images){
+        //Fungsi untuk menampilkan foto secara popup
+        if(images.size() > 0){
+            if(images.size() == 1){
+                btn_next.setVisibility(View.INVISIBLE);
+                btn_previous.setVisibility(View.INVISIBLE);
+            }
+            else{
+                btn_next.setVisibility(View.VISIBLE);
+                btn_previous.setVisibility(View.VISIBLE);
+            }
+
+            listImage = images;
+            Toast.makeText(SetoranSales.this,String.valueOf(listImage), Toast.LENGTH_SHORT).show();
+            Glide.with(this).load(listImage.get(0)).apply(new RequestOptions().
+                    override(imgWidth, imgHeight)).into(img_galeri_selected);
+            layout_zoom.zoomTo(1, false);
+            layout_overlay.setVisibility(View.VISIBLE);
+           // detail = true;
+
+            layout_galeri_selected.startAnimation(anim_popin);
+            //img_galeri_selected.startAnimation(anim_popin);
+        }
+
+    }
+
+    private void initGaleri(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        imgWidth = displayMetrics.widthPixels - displayMetrics.widthPixels/7;
+        imgHeight = displayMetrics.heightPixels - displayMetrics.heightPixels/5;
+
+        anim_popin = AnimationUtils.loadAnimation(this, R.anim.anim_pop_in);
+        anim_popout = AnimationUtils.loadAnimation(this, R.anim.anim_pop_out);
+
+        anim_popout.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                detail=false;
+                layout_overlay.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        layout_overlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout_galeri_selected.startAnimation(anim_popout);
+
+            }
+        });
+
+        btn_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedImage < listImage.size() - 1){
+                    selectedImage++;
+                }
+                else{
+                    selectedImage = 0;
+                }
+
+                Glide.with(SetoranSales.this).load(listImage.get(selectedImage)).
+                        apply(new RequestOptions().override(imgWidth, imgHeight)).into(img_galeri_selected);
+            }
+        });
+
+        btn_previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(selectedImage > 0){
+                    selectedImage--;
+
+                }
+                else{
+                    selectedImage = listImage.size() - 1;
+                }
+
+                Glide.with(SetoranSales.this).load(listImage.get(selectedImage)).
+                        apply(new RequestOptions().override(imgWidth, imgHeight)).into(img_galeri_selected);
+            }
+        });
+
+
     }
 
     private void getBank() {
 
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
-
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_BANK,
                 ApiVolleyManager.METHOD_GET, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
                 new AppRequestCallback(new AppRequestCallback.RequestListener() {
@@ -402,17 +553,24 @@ public class SetoranSales extends AppCompatActivity {
             if(data != null){
                 //Inisialisasi data upload
                 try{
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),
-                            Uri.fromFile(new File(data.getStringArrayListExtra(Pix.IMAGE_RESULTS).get(0))));
-                    bitmap = Converter.resizeBitmap(bitmap, 750);
+                    ArrayList<String> listPath = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
 
-                    img_bukti.setImageBitmap(bitmap);
-                    //overlay_bukti.setVisibility(View.VISIBLE);
-                    //bar_bukti.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < listPath.size(); i++){
 
-                    upload = new UploadModel(bitmap, convert(bitmap));
-                    upload.setUploaded(true);
-                    upload.setUrl(Uri.fromFile(new File(data.getStringArrayListExtra(Pix.IMAGE_RESULTS).get(0))).toString());
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),
+                                Uri.fromFile(new File(data.getStringArrayListExtra(Pix.IMAGE_RESULTS).get(0))));
+                        bitmap = Converter.resizeBitmap(bitmap, 750);
+
+                        img_bukti.setImageBitmap(bitmap);
+//                        overlay_bukti.setVisibility(View.VISIBLE);
+                        //bar_bukti.setVisibility(View.VISIBLE);
+
+                        upload = new UploadModel(bitmap, convert(bitmap));
+                        upload.setUploaded(true);
+                        upload.setUrl(Uri.fromFile(new File(data.getStringArrayListExtra(Pix.IMAGE_RESULTS).get(0))).toString());
+                        listFotoBukti.add(upload.getUrl());
+                    }
+
                    // uploadFotoBukti(upload);
                 }
                 catch (IOException e){
