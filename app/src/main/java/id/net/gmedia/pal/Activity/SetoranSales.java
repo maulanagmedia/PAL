@@ -202,15 +202,17 @@ public class SetoranSales extends AppCompatActivity {
         findViewById(R.id.btn_transfer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //Inisialisasi dialog upload
+                listFotoBukti.clear();
                 dialog_upload = DialogFactory.getInstance().createDialog(SetoranSales.this, R.layout.popup_setoran_sales,
-                        80, 70);
+                        93, 90);
 
                 txt_nominal = dialog_upload.findViewById(R.id.txt_nominal);
                 txt_keterangan = dialog_upload.findViewById(R.id.txt_keterangan);
                 overlay_bukti = dialog_upload.findViewById(R.id.overlay_bukti);
-                layout_galeri_selected = findViewById(R.id.layout_galeri_selected);
-                img_galeri_selected = findViewById(R.id.img_galeri_selected);
+                layout_galeri_selected = dialog_upload.findViewById(R.id.layout_galeri_selected);
+                img_galeri_selected = dialog_upload.findViewById(R.id.img_galeri_selected);
                 layout_zoom = dialog_upload.findViewById(R.id.layout_zoom);
                 img_bukti =dialog_upload.findViewById(R.id.img_bukti);
                 bar_bukti = dialog_upload.findViewById(R.id.bar_bukti);
@@ -257,7 +259,7 @@ public class SetoranSales extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                      initView(listFotoBukti);
-                        Toast.makeText(SetoranSales.this, String.valueOf(listFotoBukti), Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
@@ -327,7 +329,6 @@ public class SetoranSales extends AppCompatActivity {
             }
 
             listImage = images;
-            Toast.makeText(SetoranSales.this,String.valueOf(listImage), Toast.LENGTH_SHORT).show();
             Glide.with(this).load(listImage.get(0)).apply(new RequestOptions().
                     override(imgWidth, imgHeight)).into(img_galeri_selected);
             layout_zoom.zoomTo(1, false);
