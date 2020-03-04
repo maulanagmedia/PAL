@@ -1,8 +1,12 @@
 package id.net.gmedia.pal.Activity.PenjualanSoCanvas;
 
+import android.app.Dialog;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,11 +14,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.leonardus.irfan.ApiVolleyManager;
 import com.leonardus.irfan.AppLoading;
@@ -52,9 +60,14 @@ public class PenjualanDetail extends AppCompatActivity {
     private ItemValidation iv = new ItemValidation();
 
     //Variabel Ui
-    private Spinner spn_satuan;
-    private EditText txt_jumlah, txt_diskon, txt_jumlah_canvas;
-    private TextView txt_nama_pelanggan, txt_nama_barang, txt_harga_satuan;
+
+    private TextInputLayout btnJumlah;
+    private Spinner spn_satuan, spn_popup;
+    private Button popup_save;
+    private ImageView btn_edit;
+    private EditText  txt_diskon, txt_jumlah_canvas;
+    private EditText popup_hargaAwal, txt_popup_jumlah, txt_popup_diskon;
+    private TextView txt_nama_pelanggan, txt_nama_barang, txt_harga_satuan, txt_jumlah;
     private TextView txt_stok, txt_budget, txt_stok_canvas;
     private EditText edtHargaSatuan;
     private String currentString = "";
@@ -65,6 +78,8 @@ public class PenjualanDetail extends AppCompatActivity {
     private boolean isTyping = false;
     private HashMap<String, String> listHarga = new HashMap<String, String>();
     private String lastInvalidMessage = "";
+
+    int pos_spinnerpop=0;
 
     //TextView txt_total;
     @Override
@@ -78,8 +93,12 @@ public class PenjualanDetail extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+
+
         //Inisialisasi UI
         spn_satuan = findViewById(R.id.spn_satuan);
+        spn_satuan.setEnabled(false);
+
         txt_jumlah = findViewById(R.id.txt_jumlah);
         txt_nama_pelanggan = findViewById(R.id.txt_nama_pelanggan);
         txt_nama_barang = findViewById(R.id.txt_nama_barang);
@@ -90,6 +109,7 @@ public class PenjualanDetail extends AppCompatActivity {
         txt_jumlah_canvas = findViewById(R.id.txt_jumlah_canvas);
         txt_stok_canvas = findViewById(R.id.txt_stok_canvas);
         edtHargaSatuan = (EditText) findViewById(R.id.edt_harga_satuan);
+        btn_edit = findViewById(R.id.btn_edit);
         /*txt_total = findViewById(R.id.txt_total);
         txt_total.setText(Converter.doubleToRupiah(total));*/
 
@@ -106,6 +126,35 @@ public class PenjualanDetail extends AppCompatActivity {
         txt_nama_pelanggan.setText(AppKeranjangPenjualan.getInstance().getCustomer().getNama());
         txt_nama_barang.setText(barang.getNama());
         txt_harga_satuan.setText(Converter.doubleToRupiah(barang.getHarga()));
+
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog popup = new Dialog(PenjualanDetail.this);
+                popup.setContentView(R.layout.popup_edit_canvas);
+                popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                spn_popup = popup.findViewById(R.id.spn_satuan);
+                popup_save = popup.findViewById(R.id.btn_simpan_popup);
+                popup_hargaAwal = popup.findViewById(R.id.edt_harga_satuan);
+                popup_hargaAwal.setText(Converter.doubleToRupiah(barang.getHarga()));
+                txt_popup_jumlah = popup.findViewById(R.id.txt_jumlah);
+                txt_popup_diskon = popup.findViewById(R.id.txt_diskon);
+                final int pos = spn_popup.getSelectedItemPosition();
+                initPopupSatuan();
+
+                popup_save.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        spn_satuan.setSelection(pos_spinnerpop);
+                        edtHargaSatuan.setText(popup_hargaAwal.getText());
+                        txt_jumlah.setText(txt_popup_jumlah.getText());
+                        txt_diskon.setText(txt_popup_diskon.getText());
+                        popup.dismiss();
+                    }
+                });
+                popup.show();
+            }
+        });
 
         //button tambah barang ke nota penjualan
         findViewById(R.id.btn_beli).setOnClickListener(new View.OnClickListener() {
@@ -263,6 +312,15 @@ public class PenjualanDetail extends AppCompatActivity {
             }
         });
     }
+
+
+   /* private void disableEditText(EditText editText) {
+        editText.setFocusable(false);
+        editText.setEnabled(false);
+        editText.setCursorVisible(false);
+        editText.setKeyListener(null);
+        editText.setBackgroundColor(Color.TRANSPARENT);
+    }*/
 
     private void cekTotal(){
         //cek harga total barang yang akan ditambahkan
@@ -562,6 +620,77 @@ public class PenjualanDetail extends AppCompatActivity {
                 position++;
             }
             spn_satuan.setSelection(position);
+
+            txt_jumlah.setText(String.valueOf(barang.getJumlah()));
+            //ini untuk ngecek potongan ada op orak
+            if (barang.getJumlah_potong()!=0){
+                txt_jumlah_canvas.setText(String.valueOf(barang.getJumlah_potong()));
+            }
+            if (barang.getDiskon()!=0){
+                txt_diskon.setText(iv.doubleToStringRound(barang.getDiskon()));
+            }
+            validasiHarga();
+        }
+
+    }
+
+    private void initPopupSatuan(){
+        //Inisialisasi satuan barang
+        List<String> spinnerItem = new ArrayList<>();
+        for(SatuanModel s : barang.getListSatuan()){
+            spinnerItem.add(s.getSatuan());
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                PenjualanDetail.this, android.R.layout.simple_spinner_item, spinnerItem);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spn_popup.setAdapter(adapter);
+
+        spn_popup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String stok = barang.getListSatuan().get(position).getJumlah() + " " + spn_popup.getItemAtPosition(position).toString();
+                txt_stok.setText(stok);
+                pos_spinnerpop = position;
+
+                if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_SO){
+                    String stok_canvas = barang.getListSatuanCanvas().get(position).getJumlah() + " " + spn_popup.getItemAtPosition(position).toString();
+                    txt_stok_canvas.setText(stok_canvas);
+                }
+
+                String selectedHarga = listHarga.get(spn_popup.getItemAtPosition(position).toString());
+
+                if(selectedHarga != null){
+
+                    barang.setHarga(iv.parseNullDouble(selectedHarga));
+                    popup_hargaAwal.setText(Converter.doubleToRupiah(barang.getHarga()));
+                    popup_hargaAwal.setText(selectedHarga);
+                }else{
+
+                    getHargaTotal();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //set ketika barang sudah ada isinya/edit
+        if (spinnerItem.size()>0 && barang.getSatuan() != null && !barang.getSatuan().equals("")){
+
+            int position = 0;
+
+            for ( String s : spinnerItem){
+                if ( s.equals(barang.getSatuan())){
+                    break;
+                }
+                position++;
+            }
+            spn_popup.setSelection(position);
 
             txt_jumlah.setText(String.valueOf(barang.getJumlah()));
             //ini untuk ngecek potongan ada op orak

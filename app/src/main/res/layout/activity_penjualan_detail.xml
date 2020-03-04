@@ -60,97 +60,159 @@
     </LinearLayout>-->
 
     <ScrollView
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/dp15"
+            android:focusableInTouchMode="true"
             android:orientation="vertical"
-            android:focusableInTouchMode="true">
+            android:padding="@dimen/dp15">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/penjualan_detail_nama_pelanggan"
                 android:padding="@dimen/dp5"
-                android:textSize="@dimen/sp14"/>
+                android:text="@string/penjualan_detail_nama_pelanggan"
+                android:textSize="@dimen/sp14" />
 
             <TextView
                 android:id="@+id/txt_nama_pelanggan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp5"
-                android:textStyle="bold"
-                android:textSize="@dimen/sp16"/>
+                android:textSize="@dimen/sp16"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/penjualan_detail_nama_barang"
                 android:padding="@dimen/dp5"
-                android:textSize="@dimen/sp14"/>
+                android:text="@string/penjualan_detail_nama_barang"
+                android:textSize="@dimen/sp14" />
 
             <TextView
                 android:id="@+id/txt_nama_barang"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp5"
-                android:textStyle="bold"
-                android:textSize="@dimen/sp16" />
+                android:textSize="@dimen/sp16"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/harga_satuan_asli"
                 android:padding="@dimen/dp5"
-                android:textSize="@dimen/sp14"/>
+                android:text="@string/harga_satuan_asli"
+                android:textSize="@dimen/sp14" />
 
             <TextView
                 android:id="@+id/txt_harga_satuan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp5"
-                android:textStyle="bold"
-                android:textSize="@dimen/sp16" />
+                android:textSize="@dimen/sp16"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/harga_satuan_edit"
                 android:padding="@dimen/dp5"
-                android:textSize="@dimen/sp14"/>
+                android:text="@string/harga_satuan_edit"
+                android:textSize="@dimen/sp14" />
 
             <EditText
                 android:id="@+id/edt_harga_satuan"
-                android:inputType="number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="@dimen/sp16" />
+                android:enabled="false"
+                android:inputType="number"
+                android:textSize="@dimen/sp16"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/penjualan_detail_satuan"
+                android:layout_marginTop="@dimen/dp10"
                 android:padding="@dimen/dp5"
-                android:textSize="@dimen/sp14"
-                android:layout_marginTop="@dimen/dp10"/>
+                android:text="@string/penjualan_detail_satuan"
+                android:textSize="@dimen/sp14" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spn_satuan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp14"
-                android:padding="@dimen/dp10" />
+                android:padding="@dimen/dp10"
+                android:textSize="@dimen/sp14" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Jumlah" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/dp10">
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dp10"
+                android:layout_marginBottom="@dimen/dp10"
+                android:weightSum="3">
+
+                <!-- <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/btn_jumlah"
+                android:layout_width="0dp"
+                android:focusable="false"
+                android:clickable="true"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.7"
+                android:theme="@style/TextInputLayoutAppearance">-->
+
+                <TextView
+                    android:id="@+id/txt_jumlah"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:hint="@string/penjualan_detail_jumlah"
+                    android:text="1"
+                    android:textSize="@dimen/sp16"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_stok"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp5"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp16"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btn_edit"
+                    android:layout_width="30dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/pencil"
+                    android:layout_weight="1"/>
+
+                <!-- </com.google.android.material.textfield.TextInputLayout>-->
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/green" />
+
+            <LinearLayout
+                android:id="@+id/layout_potong_stok_canvas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp10"
+                android:paddingBottom="@dimen/dp10"
+                android:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
@@ -159,63 +221,26 @@
                     android:theme="@style/TextInputLayoutAppearance">
 
                     <EditText
-                        android:id="@+id/txt_jumlah"
-                        android:hint="@string/penjualan_detail_jumlah"
-                        android:inputType="number"
+                        android:id="@+id/txt_jumlah_canvas"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:text="1"
-                        android:textSize="@dimen/sp16"/>
+                        android:hint="Potong stok Canvas"
+                        android:inputType="number"
+                        android:textSize="@dimen/sp16"
+                        android:textStyle="bold" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/txt_stok"
-                android:layout_width="0dp"
-                android:layout_weight="0.3"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="@dimen/sp16"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txt_stok_canvas"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center"
+                    android:textSize="@dimen/sp16"
+                    android:textStyle="bold" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_potong_stok_canvas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/dp10"
-            android:paddingBottom="@dimen/dp10"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.7"
-                android:theme="@style/TextInputLayoutAppearance">
-
-                <EditText
-                    android:id="@+id/txt_jumlah_canvas"
-                    android:hint="Potong stok Canvas"
-                    android:inputType="number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp16"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/txt_stok_canvas"
-                android:layout_width="0dp"
-                android:layout_weight="0.3"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="@dimen/sp16"
-                android:textStyle="bold" />
-
-        </LinearLayout>
+            </LinearLayout>
             <!--<TextView
                 android:id="@+id/lbl_tempo"
                 android:layout_width="match_parent"
@@ -255,40 +280,41 @@
 
                 <EditText
                     android:id="@+id/txt_diskon"
-                    android:hint="Diskon"
-                    android:inputType="number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/sp16"/>
+                    android:enabled="false"
+                    android:hint="Diskon"
+                    android:inputType="number"
+                    android:textSize="@dimen/sp16"
+                    android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/penjualan_detail_total_harga"
                 android:padding="@dimen/dp5"
+                android:text="@string/penjualan_detail_total_harga"
                 android:textSize="@dimen/sp14"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/txt_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp5"
-                android:textStyle="bold"
                 android:textSize="@dimen/sp16"
-                android:visibility="gone"/>
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btn_beli"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/penjualan_detail_beli"
-                android:textColor="@color/white"
+                android:layout_margin="@dimen/dp30"
                 android:background="@color/green"
-                android:layout_margin="@dimen/dp30" />
+                android:text="@string/penjualan_detail_beli"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 

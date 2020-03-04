@@ -60,7 +60,7 @@ public class Constant {
 
 
     //URL
-    private final static String BASE_URL = "https://gmedia.bz/pal/api/";
+    private final static String BASE_URL = "http://gmedia.bz/pal/api/";
 
     public final static String URL_LOGIN = BASE_URL + "authentication/login";
     public final static String URL_CUSTOMER_REGIONAL = BASE_URL + "customer/";

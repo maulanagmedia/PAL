@@ -202,6 +202,7 @@ public class PenjualanBarang extends AppCompatActivity {
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_PENJUALAN_BARANG_CANVAS + parameter,
                 ApiVolleyManager.METHOD_GET, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
                 new AppRequestCallback(new AppRequestCallback.RequestListener() {
+
             @Override
             public void onEmpty(String message) {
                 if(init){
@@ -239,9 +240,8 @@ public class PenjualanBarang extends AppCompatActivity {
                         b.setListSatuan(satuan);
                         listBarang.add(b);
                     }
-
-                    loadMoreScrollListener.finishLoad(barang.length());
                     adapter.notifyDataSetChanged();
+                    loadMoreScrollListener.finishLoad(barang.length());
                 }
                 catch (JSONException e){
                     loadMoreScrollListener.finishLoad(0);
@@ -250,12 +250,13 @@ public class PenjualanBarang extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                adapter.notifyDataSetChanged();
                 AppLoading.getInstance().stopLoading();
             }
 
             @Override
             public void onFail(String message) {
-                Toast.makeText(PenjualanBarang.this, message, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(PenjualanBarang.this, message, Toast.LENGTH_SHORT).show();
                 AppLoading.getInstance().stopLoading();
                 loadMoreScrollListener.finishLoad(0);
             }
@@ -268,6 +269,7 @@ public class PenjualanBarang extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu_penjualan_barang, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
+
         final SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -279,6 +281,8 @@ public class PenjualanBarang extends AppCompatActivity {
                 }
                 else{
                     loadCanvas(true);
+                    adapter.notifyDataSetChanged();
+                    listBarang.clear();
                 }
 
                 return true;
@@ -293,6 +297,8 @@ public class PenjualanBarang extends AppCompatActivity {
                     }
                     else{
                         loadCanvas(true);
+                        adapter.notifyDataSetChanged();
+                        listBarang.clear();
                     }
                 }
 
