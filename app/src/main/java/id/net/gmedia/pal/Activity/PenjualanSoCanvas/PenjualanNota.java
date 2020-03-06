@@ -291,7 +291,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
             JSONBuilder obj = new JSONBuilder();
             obj.add("kode_barang", b.getId());
             if(type == Constant.PENJUALAN_SO){
-                obj.add("jumlah_gudang", b.getJumlah() - b.getJumlah_potong());
+                obj.add("jumlah_gudang", b.getJumlah());
                 obj.add("jumlah_canvas", b.getJumlah_potong());
             }
             else{

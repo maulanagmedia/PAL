@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.leonardus.irfan.Converter;
+import com.leonardus.irfan.ItemValidation;
 
 import java.util.List;
 
@@ -31,6 +32,7 @@ public class PenjualanNotaAdapter extends RecyclerView.Adapter<RecyclerView.View
     private Activity activity;
     private List<BarangModel> listBarang;
     private int type;
+    private ItemValidation iv = new ItemValidation();
 
     public PenjualanNotaAdapter(Activity activity, List<BarangModel> listBarang, int type){
         this.activity = activity;
@@ -58,7 +60,7 @@ public class PenjualanNotaAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         viewHolder.txt_nama.setText(barang.getNama());
         viewHolder.txt_harga.setText(Converter.doubleToRupiah(barang.getHarga()));
-        String jumlah = barang.getJumlah() + " " + barang.getSatuan();
+        String jumlah = iv.ChangeToCurrencyFormat(barang.getJumlah() + barang.getJumlah_potong()) + " " + barang.getSatuan();
         viewHolder.txt_jumlah.setText(jumlah);
         viewHolder.txt_diskon.setText(Converter.doubleToRupiah(barang.getDiskon()));
         viewHolder.txt_total.setText(Converter.doubleToRupiah(barang.getSubtotal() - barang.getDiskon()));

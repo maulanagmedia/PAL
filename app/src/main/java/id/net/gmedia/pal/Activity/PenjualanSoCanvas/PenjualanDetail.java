@@ -140,11 +140,10 @@ public class PenjualanDetail extends AppCompatActivity {
                 final int pos = spn_popup.getSelectedItemPosition();
 
                 //inisial
-                popup_hargaAwal.setText(Converter.doubleToRupiah(barang.getHarga()));
+                initPopupSatuan();
+                popup_hargaAwal.setText(iv.doubleToStringRound(barang.getHarga()));
                 txt_popup_jumlah.setText(txt_jumlah.getText().toString());
                 txt_popup_diskon.setText(txt_diskon.getText().toString());
-
-                initPopupSatuan();
 
                 popup_save.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -154,6 +153,7 @@ public class PenjualanDetail extends AppCompatActivity {
                         txt_jumlah.setText(txt_popup_jumlah.getText());
                         txt_diskon.setText(txt_popup_diskon.getText());
                         spn_satuan.setSelection(pos_spinnerpop);
+                        getHargaTotal(false);
                         popup.dismiss();
                     }
                 });
@@ -270,7 +270,7 @@ public class PenjualanDetail extends AppCompatActivity {
                                     @Override
                                     public void run() {
 
-                                        //getHargaTotal();
+                                        //getHargaTotal(false);
                                     }
                                 });
                             }
@@ -297,6 +297,30 @@ public class PenjualanDetail extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
 
                 //getHargaTotal();
+
+                if(s.length() > 0){
+                    timerHarga = new Timer();
+                    timerHarga.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+
+                            isTyping = true;
+                            try {
+                                Thread.sleep(400);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    //getHargaTotal(false);
+                                }
+                            });
+                        }
+                    }, 500);
+                }
             }
         });
 
@@ -410,8 +434,6 @@ public class PenjualanDetail extends AppCompatActivity {
 
                             if(firstLoad){
 
-                                barang.setHarga(iv.parseNullDouble(selectedHarga));
-                                txt_harga_satuan.setText(Converter.doubleToRupiah(barang.getHarga()));
                                 edtHargaSatuan.setText(selectedHarga);
                             }
 
@@ -576,7 +598,7 @@ public class PenjualanDetail extends AppCompatActivity {
                     edtHargaSatuan.setText(selectedHarga);
                 }else{
 
-                    getHargaTotal(false);
+                    //getHargaTotal(false);
                 }
 
             }
@@ -612,6 +634,8 @@ public class PenjualanDetail extends AppCompatActivity {
             validasiHarga();
         }else{
 
+            //txt_harga_satuan.setText(Converter.doubleToRupiah(barang.getHarga()));
+            edtHargaSatuan.setText(iv.doubleToStringRound(barang.getHarga()));
             getHargaTotal(true);
         }
 
@@ -650,7 +674,7 @@ public class PenjualanDetail extends AppCompatActivity {
                 if(selectedHarga != null){
 
                     //barang.setHarga(iv.parseNullDouble(selectedHarga));
-                    popup_hargaAwal.setText(Converter.doubleToRupiah(iv.parseNullDouble(selectedHarga)));
+                    //popup_hargaAwal.setText(Converter.doubleToRupiah(iv.parseNullDouble(selectedHarga)));
                     popup_hargaAwal.setText(selectedHarga);
                 }else{
 
@@ -663,6 +687,8 @@ public class PenjualanDetail extends AppCompatActivity {
 
             }
         });
+
+        spn_popup.setSelection(spn_satuan.getSelectedItemPosition());
 
         //set ketika barang sudah ada isinya/edit
         if (spinnerItem.size()>0 && barang.getSatuan() != null && !barang.getSatuan().equals("")){
@@ -701,7 +727,7 @@ public class PenjualanDetail extends AppCompatActivity {
                 int jumlah_potong = txt_jumlah_canvas.getText().toString().equals("")?0:
                         Integer.parseInt(txt_jumlah_canvas.getText().toString());
                 barang.setJumlah_potong(jumlah_potong);
-                barang.setJumlah(Integer.parseInt(txt_jumlah.getText().toString()) + jumlah_potong);
+                barang.setJumlah(Integer.parseInt(txt_jumlah.getText().toString()));
             }
             else if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_CANVAS){
                 barang.setJumlah(Integer.parseInt(txt_jumlah.getText().toString()));
