@@ -251,6 +251,7 @@ public class ApiVolleyManager {
             setDefaultHostnameVerifier(new HostnameVerifier(){
                 public boolean verify(String hostname, SSLSession session) {
                     if (hostname.equalsIgnoreCase("semargres.gmedia.id") ||
+                            hostname.equalsIgnoreCase("gmedia.bz") ||
                             hostname.equalsIgnoreCase("app.midtrans.com") ||
                             hostname.equalsIgnoreCase("api.sandbox.midtrans.com") ||
                             hostname.equalsIgnoreCase("api.crashlytics.com") ||
