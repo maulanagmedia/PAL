@@ -7,6 +7,7 @@ import id.net.gmedia.pal.Model.BarangModel;
 import id.net.gmedia.pal.Model.CustomerModel;
 
 public class AppKeranjangPenjualan {
+
     private static final AppKeranjangPenjualan ourInstance = new AppKeranjangPenjualan();
 
     private boolean penjualan = false;

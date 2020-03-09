@@ -60,7 +60,8 @@ public class Constant {
 
 
     //URL
-    private final static String BASE_URL = "http://gmedia.bz/pal/api/";
+    //private final static String BASE_URL = "http://gmedia.bz/pal/api/";
+    private final static String BASE_URL = "http://primaagrolancar.co.id/api/";
 
     public final static String URL_LOGIN = BASE_URL + "authentication/login";
     public final static String URL_CUSTOMER_REGIONAL = BASE_URL + "customer/";
@@ -134,7 +135,7 @@ public class Constant {
     public final static String URL_DISPENSASI_APPROVE = BASE_URL + "piutang/approval_dispensasi_piutang";
     public final static String URL_DISPENSASI_REQUEST = BASE_URL + "piutang/request_dispensasi_piutang";
     public final static String URL_CUSTOMER_REKAP = BASE_URL + "customer/rekap_jual_bayar";
-    public final static String URL_SURAT_JALAN_DOWNLOAD = "http://gmedia.bz/pal/gudang/Mutasi_sales/cetak_surat_jalan";
+    public final static String URL_SURAT_JALAN_DOWNLOAD = "http://primaagrolancar.co.id/gudang/Mutasi_sales/cetak_surat_jalan";
     public final static String URL_DAFTAR_PELUNASAN_PELANGGAN = BASE_URL + "piutang/list_pelanggan_sales";
     public final static String URL_DAFTAR_PELUNASAN_NOTA = BASE_URL + "piutang/pelunasan_pelanggan";
     public final static String URL_DAFTAR_PELUNASAN_NOTA_DETAIL = BASE_URL + "piutang/nota_pelunasan_piutang";

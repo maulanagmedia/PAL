@@ -80,6 +80,7 @@ public class PenjualanDetail extends AppCompatActivity {
     private String lastInvalidMessage = "";
 
     int pos_spinnerpop=0;
+    private boolean firstDialog = true;
 
     //TextView txt_total;
     @Override
@@ -94,7 +95,7 @@ public class PenjualanDetail extends AppCompatActivity {
         }
 
         //Inisialisasi UI
-        spn_satuan = findViewById(R.id.spn_satuan);
+        spn_satuan = (Spinner) findViewById(R.id.spn_satuan);
         spn_satuan.setEnabled(false);
 
         txt_jumlah = findViewById(R.id.txt_jumlah);
@@ -141,7 +142,9 @@ public class PenjualanDetail extends AppCompatActivity {
 
                 //inisial
                 initPopupSatuan();
-                popup_hargaAwal.setText(iv.doubleToStringRound(barang.getHarga()));
+                firstDialog = true;
+                String hargaSatuan = edtHargaSatuan.getText().toString().replaceAll("[,.]", "");
+                popup_hargaAwal.setText(hargaSatuan);
                 txt_popup_jumlah.setText(txt_jumlah.getText().toString());
                 txt_popup_diskon.setText(txt_diskon.getText().toString());
 
@@ -435,6 +438,8 @@ public class PenjualanDetail extends AppCompatActivity {
                             if(firstLoad){
 
                                 edtHargaSatuan.setText(selectedHarga);
+                            }else{
+                                edtHargaSatuan.setText(hargaBarang);
                             }
 
                         }
@@ -511,6 +516,7 @@ public class PenjualanDetail extends AppCompatActivity {
                             Log.e(Constant.TAG, e.getMessage());
                         }
                         AppLoading.getInstance().stopLoading();
+                        firstDialog = false;
                     }
 
                     @Override
@@ -675,7 +681,15 @@ public class PenjualanDetail extends AppCompatActivity {
 
                     //barang.setHarga(iv.parseNullDouble(selectedHarga));
                     //popup_hargaAwal.setText(Converter.doubleToRupiah(iv.parseNullDouble(selectedHarga)));
-                    popup_hargaAwal.setText(selectedHarga);
+                    if(firstDialog){
+                        firstDialog = false;
+                        String hargaSatuan = edtHargaSatuan.getText().toString().replaceAll("[,.]", "");
+                        popup_hargaAwal.setText(hargaSatuan);
+                    }else{
+
+                        popup_hargaAwal.setText(selectedHarga);
+                    }
+
                 }else{
 
                     //getHargaTotal();
@@ -689,19 +703,20 @@ public class PenjualanDetail extends AppCompatActivity {
         });
 
         spn_popup.setSelection(spn_satuan.getSelectedItemPosition());
+        pos_spinnerpop = spn_satuan.getSelectedItemPosition();
 
         //set ketika barang sudah ada isinya/edit
         if (spinnerItem.size()>0 && barang.getSatuan() != null && !barang.getSatuan().equals("")){
 
-            int position = 0;
+            /*int position = 0;
 
-            for ( String s : spinnerItem){
+            *//*for ( String s : spinnerItem){
                 if ( s.equals(barang.getSatuan())){
                     break;
                 }
                 position++;
             }
-            spn_popup.setSelection(position);
+            spn_popup.setSelection(position);*//*
 
             txt_jumlah.setText(String.valueOf(barang.getJumlah()));
 
@@ -712,7 +727,7 @@ public class PenjualanDetail extends AppCompatActivity {
 
             if (barang.getDiskon()!=0){
                 txt_diskon.setText(iv.doubleToStringRound(barang.getDiskon()));
-            }
+            }*/
 
             validasiHarga();
         }
@@ -748,7 +763,7 @@ public class PenjualanDetail extends AppCompatActivity {
                 int jumlah_potong = txt_jumlah_canvas.getText().toString().equals("")?0:
                         Integer.parseInt(txt_jumlah_canvas.getText().toString());
                 AppKeranjangPenjualan.getInstance().getBarang(edit).setJumlah_potong(jumlah_potong);
-                AppKeranjangPenjualan.getInstance().getBarang(edit).setJumlah(Integer.parseInt(txt_jumlah.getText().toString()) + jumlah_potong);
+                AppKeranjangPenjualan.getInstance().getBarang(edit).setJumlah(Integer.parseInt(txt_jumlah.getText().toString()));
             }
             else if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_CANVAS){
                 AppKeranjangPenjualan.getInstance().getBarang(edit).setJumlah(Integer.parseInt(txt_jumlah.getText().toString()));

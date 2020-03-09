@@ -1081,7 +1081,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onEmpty(String message) {
                         Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
-                        AppLoading.getInstance().showLoading(MainActivity.this, R.layout.popup_loading);
+                        //AppLoading.getInstance().showLoading(MainActivity.this, R.layout.popup_loading);
                     }
 
                     @Override

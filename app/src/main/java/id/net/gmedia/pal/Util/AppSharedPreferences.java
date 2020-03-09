@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class AppSharedPreferences {
+
     private static final String LOGIN_PREF = "login_status";
     private static final String ID_PREF = "nip";
     private static final String GUDANG_PREF = "kode_gudang";
