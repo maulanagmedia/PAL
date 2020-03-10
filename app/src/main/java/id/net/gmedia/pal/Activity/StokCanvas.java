@@ -149,6 +149,7 @@ public class StokCanvas extends AppCompatActivity {
             loadMoreScrollListener.initLoad();
         }
 
+        nip = AppSharedPreferences.getId(StokCanvas.this);
         String parameter = String.format(Locale.getDefault(), "/%s?search=%s&start=%d&limit=%d", nip,
                 Converter.encodeURL(search), loadMoreScrollListener.getLoaded(), 10);
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_PENJUALAN_BARANG_CANVAS + parameter,

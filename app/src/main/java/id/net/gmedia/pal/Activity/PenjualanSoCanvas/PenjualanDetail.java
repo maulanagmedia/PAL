@@ -48,7 +48,7 @@ import id.net.gmedia.pal.Util.AppKeranjangPenjualan;
 import id.net.gmedia.pal.Util.AppSharedPreferences;
 import id.net.gmedia.pal.Util.Constant;
 
-public class PenjualanDetail extends AppCompatActivity {
+public class    PenjualanDetail extends AppCompatActivity {
 
     //Variabel global flag apakah mode edit
     private int edit;
@@ -70,7 +70,7 @@ public class PenjualanDetail extends AppCompatActivity {
     private TextView txt_nama_pelanggan, txt_nama_barang, txt_harga_satuan, txt_jumlah, txt_popup_stok;
     private TextView txt_stok, txt_budget, txt_stok_canvas;
     private EditText edtHargaSatuan;
-    private String currentString = "";
+    private String currentString = "", currentStringPopup = "";
     private String total = "0";
     private String hargaBarang = "";
     private boolean isValid = true;
@@ -147,6 +147,46 @@ public class PenjualanDetail extends AppCompatActivity {
                 popup_hargaAwal.setText(hargaSatuan);
                 txt_popup_jumlah.setText(txt_jumlah.getText().toString());
                 txt_popup_diskon.setText(txt_diskon.getText().toString());
+
+                txt_popup_jumlah.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                        if(s.length() > 0){
+                            timerHarga = new Timer();
+                            timerHarga.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+
+                                    isTyping = true;
+                                    try {
+                                        Thread.sleep(400);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            getHargaTotalPopup();
+                                        }
+                                    });
+                                }
+                            }, 500);
+                        }
+                    }
+                });
 
                 popup_save.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -461,6 +501,74 @@ public class PenjualanDetail extends AppCompatActivity {
                 }));
     }
 
+    private void getHargaTotalPopup(){
+        //cek harga total barang yang akan ditambahkan
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+        JSONBuilder body = new JSONBuilder();
+        body.add("kode_pelanggan", AppKeranjangPenjualan.getInstance().getCustomer().getId());
+        body.add("kode_barang", edit == -1 ? barang.getId() : AppKeranjangPenjualan.getInstance().getBarang(edit).getId());
+        if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_SO){
+            int jumlah_potong = txt_jumlah_canvas.getText().toString().equals("")?0: iv.parseNullInteger(txt_jumlah_canvas.getText().toString());
+            body.add("jumlah", iv.parseNullInteger(txt_popup_jumlah.getText().toString()) + jumlah_potong);
+        }
+        else{
+            body.add("jumlah", iv.parseNullInteger(txt_popup_jumlah.getText().toString()));
+        }
+        body.add("satuan", spn_popup.getSelectedItem().toString());
+        body.add("harga_edit", listHarga.get(spn_popup.getSelectedItem().toString()));
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_VALIDASI_EDIT_HARGA, ApiVolleyManager.METHOD_POST,
+                Constant.getTokenHeader(AppSharedPreferences.getId(this)), body.create(),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        isValid = false;
+                        lastInvalidMessage = message;
+                        Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+
+                        try{
+
+                            isValid = true;
+                            String hargaBarangPopup = new JSONObject(result).getString("harga_barang");
+                            /*total = new JSONObject(result).getString("total_harga");*/
+
+                            JSONArray ja = new JSONObject(result).getJSONArray("harga_satuan");
+
+                            for(int i = 0; i < ja.length(); i++){
+
+                                JSONObject jo = ja.getJSONObject(i);
+
+                                if (jo.getString("satuan").equals(spn_popup.getSelectedItem().toString())){
+
+                                    popup_hargaAwal.setText(jo.getString("harga"));
+                                }
+                            }
+                        }
+                        catch (JSONException e){
+                            Toast.makeText(PenjualanDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                        }
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+
+                        isValid = false;
+                        lastInvalidMessage = message;
+                        Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
+    }
+
     private void validasiHarga(){
         //cek harga total barang yang akan ditambahkan
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
@@ -675,25 +783,11 @@ public class PenjualanDetail extends AppCompatActivity {
                     txt_popup_stok.setText(stok_canvas);
                 }
 
-                String selectedHarga = listHarga.get(spn_popup.getItemAtPosition(position).toString());
-
-                if(selectedHarga != null){
-
-                    //barang.setHarga(iv.parseNullDouble(selectedHarga));
-                    //popup_hargaAwal.setText(Converter.doubleToRupiah(iv.parseNullDouble(selectedHarga)));
-                    if(firstDialog){
-                        firstDialog = false;
-                        String hargaSatuan = edtHargaSatuan.getText().toString().replaceAll("[,.]", "");
-                        popup_hargaAwal.setText(hargaSatuan);
-                    }else{
-
-                        popup_hargaAwal.setText(selectedHarga);
-                    }
-
-                }else{
-
-                    //getHargaTotal();
+                if(!firstDialog){
+                    getHargaTotalPopup();
                 }
+                firstDialog = false;
+
             }
 
             @Override
@@ -707,27 +801,6 @@ public class PenjualanDetail extends AppCompatActivity {
 
         //set ketika barang sudah ada isinya/edit
         if (spinnerItem.size()>0 && barang.getSatuan() != null && !barang.getSatuan().equals("")){
-
-            /*int position = 0;
-
-            *//*for ( String s : spinnerItem){
-                if ( s.equals(barang.getSatuan())){
-                    break;
-                }
-                position++;
-            }
-            spn_popup.setSelection(position);*//*
-
-            txt_jumlah.setText(String.valueOf(barang.getJumlah()));
-
-            //ini untuk ngecek potongan ada op orak
-            if (barang.getJumlah_potong()!=0){
-                txt_jumlah_canvas.setText(String.valueOf(barang.getJumlah_potong()));
-            }
-
-            if (barang.getDiskon()!=0){
-                txt_diskon.setText(iv.doubleToStringRound(barang.getDiskon()));
-            }*/
 
             validasiHarga();
         }
