@@ -131,6 +131,31 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/dp10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nota yang dibayar dengan Giro"
+                    android:textSize="@dimen/sp14"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_setoran"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/dp5"
+                    android:layout_above="@id/layout_footer"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="sfsdf"/>
+            </LinearLayout>
+
             <Button
                 android:id="@+id/btn_tambah"
                 android:layout_width="match_parent"
