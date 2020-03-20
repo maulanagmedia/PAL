@@ -232,47 +232,91 @@
         <LinearLayout
             android:id="@+id/layout_lunasi"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/button_bottom_height"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <Button
-                android:id="@+id/btn_start_lunasi"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:background="@color/green"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:gravity="center"
-                android:text="Lunasi"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp14" />
+                android:padding="@dimen/dp10">
 
-            <TextView
-                android:id="@+id/txt_jumlah"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.6"
-                android:background="@color/gray"
-                android:gravity="center"
-                android:visibility="gone"
-                android:text="Jumlah : Rp 150.000"
-                android:textColor="@color/red"
-                android:textSize="@dimen/sp14" />
+                <ImageView
+                    android:layout_width="@dimen/riwayat_square_size"
+                    android:layout_height="@dimen/riwayat_square_size"
+                    android:contentDescription="@null"
+                    android:background="@color/footer_red"/>
 
-            <Button
-                android:id="@+id/btn_lunasi"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.4"
-                android:background="@color/green"
-                android:gravity="center"
-                android:text="Lunasi"
-                android:visibility="gone"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sp14" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp10"
+                    android:layout_marginEnd="@dimen/dp15"
+                    android:textSize="@dimen/sp10"
+                    android:text="Tunai / Transfer"/>
+
+                <ImageView
+                    android:layout_width="@dimen/riwayat_square_size"
+                    android:layout_height="@dimen/riwayat_square_size"
+                    android:contentDescription="@null"
+                    android:background="@color/footer_blue"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp10"
+                    android:layout_marginEnd="@dimen/dp15"
+                    android:textSize="@dimen/sp10"
+                    android:text="Giro"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_bottom_height"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btn_start_lunasi"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:background="@color/green"
+                    android:gravity="center"
+                    android:text="Lunasi"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp14" />
+
+                <TextView
+                    android:id="@+id/txt_jumlah"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.6"
+                    android:background="@color/gray"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="Jumlah : Rp 150.000"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/sp14" />
+
+                <Button
+                    android:id="@+id/btn_lunasi"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:background="@color/green"
+                    android:gravity="center"
+                    android:text="Lunasi"
+                    android:visibility="gone"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp14" />
+            </LinearLayout>
 
         </LinearLayout>
 

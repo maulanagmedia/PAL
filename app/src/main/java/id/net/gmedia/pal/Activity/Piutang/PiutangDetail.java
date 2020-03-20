@@ -255,8 +255,6 @@ public class PiutangDetail extends AppCompatActivity {
             }
         };
 
-
-
         //button upload bukti transfer piutang
         findViewById(R.id.img_upload_bukti).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -277,6 +275,7 @@ public class PiutangDetail extends AppCompatActivity {
         findViewById(R.id.btn_peta).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if(outlet_location == null){
                     return;
                 }
@@ -403,23 +402,6 @@ public class PiutangDetail extends AppCompatActivity {
                 dialog.show();
             }
         });
-
-
-       /* pht = (ImageView) findViewById(R.id.img_photo);
-        pht.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivityForResult(Intent.createChooser(new Intent().
-                        setAction(Intent.ACTION_GET_CONTENT).
-                        setType("image/*"), "Select Image"), UPLOAD_OUTLET );
-
-               *//* if(listFotoOutlet.size() < 5){
-                    Pix.start(PiutangDetail.this, UPLOAD_OUTLET, 5 - listFotoOutlet.size());
-                }*//*
-
-            }
-        });*/
-
 
         //button lunasi piutang
         findViewById(R.id.btn_lunasi).setOnClickListener(new View.OnClickListener() {
@@ -579,99 +561,6 @@ public class PiutangDetail extends AppCompatActivity {
         getCaraBayar();
     }
 
-   /* private void initGaleri(){
-        //Inisialisasi popup detail foto galeri
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        imgWidth = displayMetrics.widthPixels - displayMetrics.widthPixels/7;
-        imgHeight = displayMetrics.heightPixels - displayMetrics.heightPixels/5;
-
-        //Inisialisasi animasi popup
-        anim_popin = AnimationUtils.loadAnimation(this, R.anim.anim_pop_in);
-        anim_popout = AnimationUtils.loadAnimation(this, R.anim.anim_pop_out);
-
-        anim_popout.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                detail=false;
-                layout_overlay.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        layout_overlay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                layout_galeri_selected.startAnimation(anim_popout);
-                //img_galeri_selected.startAnimation(anim_popout);
-            }
-        });
-
-        //Next foto dalam galeri
-        btn_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(selectedImage < listImage.size() - 1){
-                    selectedImage++;
-                }
-                else{
-                    selectedImage = 0;
-                }
-
-                Glide.with(PiutangDetail.this).load(listImage.get(selectedImage)).
-                        apply(new RequestOptions().override(imgWidth, imgHeight)).into(img_galeri_selected);
-            }
-        });
-
-        //Previous foto dalam galeri
-        btn_previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(selectedImage > 0){
-                    selectedImage--;
-
-                }
-                else{
-                    selectedImage = listImage.size() - 1;
-                }
-
-                Glide.with(PiutangDetail.this).load(listImage.get(selectedImage)).
-                        apply(new RequestOptions().override(imgWidth, imgHeight)).into(img_galeri_selected);
-            }
-        });
-    }
-*/
-   /* private void initView(List<String> images){
-        //Fungsi untuk menampilkan foto secara popup
-        if(images.size() > 0){
-            if(images.size() == 1){
-                btn_next.setVisibility(View.INVISIBLE);
-                btn_previous.setVisibility(View.INVISIBLE);
-            }
-            else{
-                btn_next.setVisibility(View.VISIBLE);
-                btn_previous.setVisibility(View.VISIBLE);
-            }
-
-            listImage = images;
-            Glide.with(this).load(listImage.get(0)).apply(new RequestOptions().
-                    override(imgWidth, imgHeight)).into(img_galeri_selected);
-            layout_zoom.zoomTo(1, false);
-            layout_overlay.setVisibility(View.VISIBLE);
-            detail = true;
-
-            layout_galeri_selected.startAnimation(anim_popin);
-            //img_galeri_selected.startAnimation(anim_popin);
-        }
-    }*/
     private void getCaraBayar() {
 
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
@@ -828,38 +717,6 @@ public class PiutangDetail extends AppCompatActivity {
         }
     }
 
-    /*private void cetakPiutang(){
-        Bitmap logo = BitmapFactory.decodeResource(getResources(), R.drawable.logo_pal_nota);
-        printerManager = new NotaPrinter(this, Bitmap.createScaledBitmap(
-                logo, 170, 170, false));
-        printerManager.startService();
-        printerManager.setListener(new BluetoothPrinter.BluetoothListener() {
-            @Override
-            public void onBluetoothConnected() {
-                List<Item> listItem = new ArrayList<>();
-                double total_diskon = 0;
-
-                for(BarangModel b : listBarang){
-                    listItem.add(new Item(b.getNama(), b.getJumlah(), b.getHarga()));
-                    total_diskon += b.getDiskon();
-                }
-
-                Transaksi transaksi = new Transaksi(txt_nama.getText().toString(),
-                        AppSharedPreferences.getNama(DaftarSODetail.this),
-                        txt_nota.getText().toString(), new Date(), new Date(), listItem);
-                transaksi.setTunai(nota.getTotal());
-                transaksi.setDiskon(total_diskon);
-
-                printerManager.print(transaksi);
-            }
-
-            @Override
-            public void onBluetoothFailed(String message) {
-                Toast.makeText(DaftarSODetail.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }*/
-
     private void loadPiutang(final boolean init){
         //membaca data piutang dari Web Service
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
@@ -911,9 +768,17 @@ public class PiutangDetail extends AppCompatActivity {
                                 JSONObject nota = array.getJSONObject(i);
 
                                 int type = nota.getString("tipe").equals("canvas")?Constant.PENJUALAN_CANVAS:Constant.PENJUALAN_SO;
-                                listPiutang.add(new PiutangModel(nota.getString("nomor_nota"),
-                                        nota.getString("nomor_nota"), nota.getDouble("piutang"), nota.getDouble("bayar"),
-                                        nota.getString("tanggal"), nota.getString("tanggal_tempo"), nota.getDouble("sisa_piutang"), type));
+                                listPiutang.add(
+                                        new PiutangModel(nota.getString("nomor_nota")
+                                        ,nota.getString("nomor_nota")
+                                        ,nota.getDouble("piutang")
+                                        ,nota.getDouble("bayar")
+                                        ,nota.getString("tanggal")
+                                        ,nota.getString("tanggal_tempo")
+                                        ,nota.getDouble("sisa_piutang")
+                                        ,type
+                                        ,nota.getString("cover_giro"))
+                                );
                             }
 
                             loadMoreScrollListener.finishLoad(array.length());
@@ -963,18 +828,6 @@ public class PiutangDetail extends AppCompatActivity {
                 return false;
             }
         });
-
-        /*dialog.findViewById(R.id.layout_tgl_terbit).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DateTimeChooser.getInstance().selectDate(PiutangDetail.this, new DateTimeChooser.DateTimeListener() {
-                    @Override
-                    public void onFinished(String dateString) {
-                        txt_tgl_terbit.setText(dateString);
-                    }
-                });
-            }
-        });*/
 
         dialog.findViewById(R.id.layout_tgl_kadaluarsa).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1040,53 +893,6 @@ public class PiutangDetail extends AppCompatActivity {
                     }
                 }));
     }
-
-    /*private void updateLayoutPembayaran(int id){
-        switch (id){
-            case R.id.rb_tunai:
-                layout_tunai.setVisibility(View.VISIBLE);
-                layout_bank.setVisibility(View.GONE);
-                layout_giro.setVisibility(View.GONE);
-                type = "tunai";
-
-                if(listAkunTunai == null){
-                    loadAkun();
-                }
-                break;
-            case R.id.rb_bank:
-                layout_tunai.setVisibility(View.GONE);
-                layout_bank.setVisibility(View.VISIBLE);
-                layout_giro.setVisibility(View.GONE);
-                type = "bank";
-
-                if(listAkunBank == null){
-                    loadAkun();
-                }
-                break;
-            case R.id.rb_giro:
-                type = "giro";
-                layout_tunai.setVisibility(View.GONE);
-                layout_bank.setVisibility(View.GONE);
-                layout_giro.setVisibility(View.VISIBLE);
-
-                if(listNomorGiro == null){
-                    loadGiro();
-                }
-                break;
-            case R.id.rb_retur:
-                type = "retur";
-                layout_tunai.setVisibility(View.GONE);
-                layout_bank.setVisibility(View.GONE);
-                layout_giro.setVisibility(View.GONE);
-                break;
-            default:
-                layout_tunai.setVisibility(View.VISIBLE);
-                layout_bank.setVisibility(View.GONE);
-                layout_giro.setVisibility(View.GONE);
-                type = "";
-                break;
-        }
-    }*/
 
     private void initPembayaranPiutang(){
         //Inisialisasi jumlah piutang
@@ -1204,51 +1010,6 @@ public class PiutangDetail extends AppCompatActivity {
             txt_jumlah.setText(jum);
         }
     }
-
-    /*private void loadAkun(){
-        //Membaca data akun dari Web Service
-        String parameter = String.format(Locale.getDefault(), "?tipe=%s", type);
-        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_MASTER_AKUN + parameter,
-                ApiVolleyManager.METHOD_GET, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
-                new AppRequestCallback(new AppRequestCallback.SimpleRequestListener() {
-                    @Override
-                    public void onSuccess(String result) {
-                        try{
-                            if(type.equals("tunai")){
-                                listAkunTunai = new ArrayList<>();
-                                JSONArray array = new JSONObject(result).getJSONArray("akun_list");
-                                for(int i = 0; i < array.length(); i++){
-                                    listAkunTunai.add(new SimpleObjectModel(array.getJSONObject(i).getString("kode_akun"),
-                                            array.getJSONObject(i).getString("nama_akun")));
-                                    spinner_item_tunai.add(array.getJSONObject(i).getString("nama_akun"));
-                                }
-
-                                spinner_adapter_tunai.notifyDataSetChanged();
-                            }
-                            else if(type.equals("bank")){
-                                listAkunBank = new ArrayList<>();
-                                JSONArray array = new JSONObject(result).getJSONArray("akun_list");
-                                for(int i = 0; i < array.length(); i++){
-                                    listAkunBank.add(new SimpleObjectModel(array.getJSONObject(i).getString("kode_akun"),
-                                            array.getJSONObject(i).getString("nama_akun")));
-                                    spinner_item_bank.add(array.getJSONObject(i).getString("nama_akun"));
-                                }
-
-                                spinner_adapter_bank.notifyDataSetChanged();
-                            }
-                        }
-                        catch (JSONException e){
-                            Toast.makeText(PiutangDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
-                            Log.e(Constant.TAG, e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void onFail(String message) {
-                        Toast.makeText(PiutangDetail.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                }));
-    }*/
 
     private void loadGiro(){
         //Membaca data nomor giro dari Web Service

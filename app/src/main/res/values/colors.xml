@@ -29,4 +29,6 @@
     <color name="red">#9b3533</color>
     <color name="light_red">#E90A0A</color>
     <color name="yellow">#FFD500</color>
+    <color name="footer_red">#F44336</color>
+    <color name="footer_blue">#2196F3</color>
 </resources>

@@ -14,6 +14,7 @@ public class PiutangModel {
     private String tanggal_tempo;
     private double terbayar;
     private int type;
+    private String coverGiro;
 
     private boolean selected = false;
 
@@ -26,6 +27,18 @@ public class PiutangModel {
         this.tanggal_tempo = tanggal_tempo;
         this.sisa_piutang = sisa_piutang;
         this.type = type;
+    }
+
+    public PiutangModel(String id, String nama, double jumlah, double terbayar, String tanggal, String tanggal_tempo, double sisa_piutang, int type, String coverGiro){
+        this.id = id;
+        this.nama = nama;
+        this.jumlah = jumlah;
+        this.terbayar = terbayar;
+        this.tanggal = tanggal;
+        this.tanggal_tempo = tanggal_tempo;
+        this.sisa_piutang = sisa_piutang;
+        this.type = type;
+        this.coverGiro = coverGiro;
     }
 
     public boolean isSelected(){
@@ -85,5 +98,13 @@ public class PiutangModel {
 
     public String getTanggal_tempo() {
         return tanggal_tempo;
+    }
+
+    public String getCoverGiro() {
+        return coverGiro;
+    }
+
+    public void setCoverGiro(String coverGiro) {
+        this.coverGiro = coverGiro;
     }
 }

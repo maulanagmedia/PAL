@@ -35,7 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import id.net.gmedia.pal.Adapter.ListGiroAdapter;
+import id.net.gmedia.pal.Adapter.NotaGiroAdapter;
 import id.net.gmedia.pal.Model.GiroModel;
+import id.net.gmedia.pal.Model.PiutangModel;
 import id.net.gmedia.pal.R;
 import id.net.gmedia.pal.Util.AppSharedPreferences;
 import id.net.gmedia.pal.Util.Constant;
@@ -46,9 +48,12 @@ public class ListGiroDetail extends AppCompatActivity{
     private ListGiroAdapter adapter;
 
     private String search = "";
-    private LoadMoreScrollListener loadMoreScrollListener;
+    private LoadMoreScrollListener loadMoreScrollListener, loadMoreScrollListenerPiutang;
 
-    List<GiroModel> listGiro = new ArrayList<>();
+    private List<GiroModel> listGiro = new ArrayList<>();
+    private RecyclerView rvNota;
+    private List<PiutangModel> listPiutang = new ArrayList<>();
+    private NotaGiroAdapter adapterNota;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +86,7 @@ public class ListGiroDetail extends AppCompatActivity{
         findViewById(R.id.fab_tambah).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = DialogFactory.getInstance().createDialog(ListGiroDetail.this, R.layout.popup_tambah_giro,
-                        85, 80);
+                final Dialog dialog = DialogFactory.getInstance().createDialog(ListGiroDetail.this, R.layout.popup_tambah_giro, 100);
 
                 final EditText txt_nomor, txt_bank, txt_nominal;
                 final TextView txt_tgl_kadaluarsa;
@@ -93,6 +97,20 @@ public class ListGiroDetail extends AppCompatActivity{
                 txt_nominal = dialog.findViewById(R.id.txt_nominal);
                 //txt_tgl_terbit = dialog.findViewById(R.id.txt_tgl_terbit);
                 txt_tgl_kadaluarsa = dialog.findViewById(R.id.txt_tgl_kadaluarsa);
+                rvNota = (RecyclerView) dialog.findViewById(R.id.rv_nota);
+                rvNota.setItemAnimator(new DefaultItemAnimator());
+                rvNota.setLayoutManager(new LinearLayoutManager(ListGiroDetail.this, LinearLayoutManager.VERTICAL, false));
+                listPiutang = new ArrayList<>();
+                adapterNota = new NotaGiroAdapter(ListGiroDetail.this, listPiutang);
+                rvNota.setAdapter(adapterNota);
+                loadMoreScrollListenerPiutang = new LoadMoreScrollListener() {
+                    @Override
+                    public void onLoadMore() {
+                        loadPiutang(false);
+                    }
+                };
+
+                loadPiutang(true);
 
                 txt_nominal.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                     @Override
@@ -115,8 +133,8 @@ public class ListGiroDetail extends AppCompatActivity{
                             }
                         });
                     }
-                });
-*/
+                });*/
+
                 dialog.findViewById(R.id.layout_tgl_kadaluarsa).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -152,6 +170,14 @@ public class ListGiroDetail extends AppCompatActivity{
                             body.add("tanggal_expired", tgl_kadaluarsa);
                             body.add("total", nominal);
 
+                            JSONArray jNonota = new JSONArray();
+                            for(PiutangModel data: listPiutang){
+                                if(data.isSelected()){
+                                    jNonota.put(data.getId());
+                                }
+                            }
+                            body.add("nonota", jNonota);
+
                             tambahGiro(dialog, body.create());
                         }
                     }
@@ -183,8 +209,78 @@ public class ListGiroDetail extends AppCompatActivity{
                 }));
     }
 
+    private void loadPiutang(final boolean init){
+        //membaca data piutang dari Web Service
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+        if(init){
+            loadMoreScrollListenerPiutang.initLoad();
+        }
+
+        JSONBuilder body = new JSONBuilder();
+        body.add("kode_pelanggan", id_customer);
+        body.add("filter", "");
+        body.add("status", "");
+        body.add("start", loadMoreScrollListenerPiutang.getLoaded());
+        body.add("limit", 10);
+        body.add("search", "");
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_GET_NOTA_GIRO,
+                ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                body.create(), new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+                        if(init){
+                            listPiutang.clear();
+                            adapterNota.notifyDataSetChanged();
+                        }
+
+                        AppLoading.getInstance().stopLoading();
+                        loadMoreScrollListenerPiutang.finishLoad(0);
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        try{
+                            if(init){
+                                listPiutang.clear();
+                            }
+
+                            JSONObject obj = new JSONObject(result);
+                            JSONArray array = obj.getJSONArray("nota_list");
+                            for(int i = 0; i < array.length(); i++){
+                                JSONObject nota = array.getJSONObject(i);
+
+                                int type = nota.getString("tipe").equals("canvas")?Constant.PENJUALAN_CANVAS:Constant.PENJUALAN_SO;
+                                listPiutang.add(new PiutangModel(nota.getString("nomor_nota"),
+                                        nota.getString("nomor_nota"), nota.getDouble("piutang"), nota.getDouble("bayar"),
+                                        nota.getString("tanggal"), nota.getString("tanggal_tempo"), nota.getDouble("sisa_piutang"), type));
+                            }
+
+                            loadMoreScrollListenerPiutang.finishLoad(array.length());
+                            adapterNota.notifyDataSetChanged();
+                        }
+                        catch (JSONException e){
+                            loadMoreScrollListenerPiutang.finishLoad(0);
+                            Toast.makeText(ListGiroDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        Toast.makeText(ListGiroDetail.this, message, Toast.LENGTH_SHORT).show();
+
+                        AppLoading.getInstance().stopLoading();
+                        loadMoreScrollListenerPiutang.finishLoad(0);
+                    }
+                }));
+    }
+
     private void loadGiro(final boolean init){
-        final int LOAD_COUNT = 9;
+        final int LOAD_COUNT = 10;
         if(init){
             loadMoreScrollListener.initLoad();
         }

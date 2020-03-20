@@ -185,6 +185,15 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_footer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp10"
+            android:background="@color/footer_red"
+            android:padding="@dimen/dp10"
+            android:textSize="@dimen/sp14"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

@@ -474,13 +474,6 @@ public class SetoranSales extends AppCompatActivity {
                         listSetoran.clear();
                         adapter.notifyDataSetChanged();
 
-                        /*for (SetoranModel setor: listSetoran){
-                            setor.isSelected();
-                            if (setor.isSelected())total= setor.getJumlah()+total;
-                        }
-                        String str_total = "Total : " + Converter.doubleToRupiah(total);
-                        txt_total.setText(str_total);*/
-
                         total = 0;
                         String str_total = "Total : " + Converter.doubleToRupiah(total);
                         txt_total.setText(str_total);

@@ -59,6 +59,13 @@ public class PiutangDetailAdapter extends RecyclerView.Adapter<PiutangDetailAdap
             piutangDetailViewHolder.cb_piutang.setChecked(false);
         }
 
+        if(piutang.getCoverGiro().equals("1")){
+
+            piutangDetailViewHolder.tvFooter.setBackgroundColor(activity.getResources().getColor(R.color.footer_blue));
+        }else{
+            piutangDetailViewHolder.tvFooter.setBackgroundColor(activity.getResources().getColor(R.color.footer_red));
+        }
+
         piutangDetailViewHolder.cb_piutang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,7 +154,7 @@ public class PiutangDetailAdapter extends RecyclerView.Adapter<PiutangDetailAdap
     class PiutangDetailViewHolder extends RecyclerView.ViewHolder {
 
         MaterialCardView item_piutang_detail;
-        TextView txt_nama_piutang, txt_piutang, txt_tanggal, txt_tanggal_tempo, txt_tempo, txt_terbayar, txt_sisa;
+        TextView txt_nama_piutang, txt_piutang, txt_tanggal, txt_tanggal_tempo, txt_tempo, txt_terbayar, txt_sisa, tvFooter;
         CheckBox cb_piutang;
 
         PiutangDetailViewHolder(@NonNull View itemView) {
@@ -161,6 +168,7 @@ public class PiutangDetailAdapter extends RecyclerView.Adapter<PiutangDetailAdap
             txt_tempo = itemView.findViewById(R.id.txt_tempo);
             cb_piutang = itemView.findViewById(R.id.cb_piutang);
             txt_sisa = itemView.findViewById(R.id.txt_sisa);
+            tvFooter = (TextView) itemView.findViewById(R.id.tv_footer);
         }
     }
 }
