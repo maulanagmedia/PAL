@@ -637,29 +637,56 @@ public class PiutangDetail extends AppCompatActivity {
                     public void onSuccess(String result) {
 
                         AppLoading.getInstance().stopLoading();
+                        int selectedPosition = 0;
+
                         try{
                             if(kode.equals("T")){
                                 listAkunTunai = new ArrayList<>();
                                 JSONArray array = new JSONArray(result);
                                 for(int i = 0; i < array.length(); i++){
+
                                     listAkunTunai.add(new SimpleObjectModel(array.getJSONObject(i).getString("kode_akun"),
                                             array.getJSONObject(i).getString("nama_akun")));
                                     spinner_item_tunai.add(array.getJSONObject(i).getString("nama_akun"));
+
+                                    String namaAkun = array.getJSONObject(i).getString("nama_akun");
+                                    String namaSales = AppSharedPreferences.getNama(PiutangDetail.this);
+                                    String[] namaPecah = namaSales.split(" ");
+                                    if(namaPecah.length > 0) namaSales = namaPecah[0];
+                                    if(namaAkun.trim().toLowerCase().contains(namaSales)){
+
+                                        selectedPosition = i;
+                                    }
                                 }
 
                                 spinner_adapter_tunai.notifyDataSetChanged();
                             }
                             else if(kode.equals("TF")){
+
                                 listAkunBank = new ArrayList<>();
                                 JSONArray array = new JSONArray(result);
+
                                 for(int i = 0; i < array.length(); i++){
+
                                     listAkunBank.add(new SimpleObjectModel(array.getJSONObject(i).getString("kode_akun"),
                                             array.getJSONObject(i).getString("nama_akun")));
                                     spinner_item_bank.add(array.getJSONObject(i).getString("nama_akun"));
+                                    String namaAkun = array.getJSONObject(i).getString("nama_akun");
+
+                                    String namaSales = AppSharedPreferences.getNama(PiutangDetail.this);
+                                    String[] namaPecah = namaSales.split(" ");
+                                    if(namaPecah.length > 0) namaSales = namaPecah[0];
+                                    if(namaAkun.trim().toLowerCase().contains(namaSales)){
+
+                                        selectedPosition = i;
+                                    }
                                 }
 
                                 spinner_adapter_bank.notifyDataSetChanged();
+
                             }
+
+                            spn_akun_bank.setSelection(selectedPosition);
                         }
                         catch (JSONException e){
                             Toast.makeText(PiutangDetail.this, R.string.error_json, Toast.LENGTH_SHORT).show();
