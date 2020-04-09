@@ -151,6 +151,7 @@ public class Constant {
     public final static String URL_SETORAN_HISTORY = BASE_URL + "piutang/histori_setoran";
     public final static String URL_SETORAN_HISTORY2 = BASE_URL + "piutang/histori_setoran_v2";
     public final static String URL_CARA_BAYAR = BASE_URL + "master/cara_bayar";
+    public final static String URL_PAKET = BASE_URL + "penjualan/daftar_harga_paket";
     public final static String URL_CARA_BAYAR_PIUTANG= BASE_URL + "master/cara_bayar_bayar_piutang";
     public final static String URL_AKUN_BAYAR_PIUTANG= BASE_URL + "master/akun_by_tipe_bayar";
     public final static String URL_BANK = BASE_URL + "master/bank_akun";

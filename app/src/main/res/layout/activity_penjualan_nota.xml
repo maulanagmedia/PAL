@@ -222,6 +222,56 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_total"
+        android:padding="@dimen/dp10"
+        android:background="@color/gray"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Paket"
+            android:textColor="@color/black"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp5"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="2">
+            
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:id="@+id/sp_paket"
+                android:layout_margin="@dimen/dp5"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+                
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:text="Gunakan"
+                    android:textColor="@color/white"
+                    android:id="@+id/btn_gunakan_paket"
+                    android:background="@drawable/bg_orange_round"/>
+                
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layout_total"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,7 @@ import com.leonardus.irfan.AppLoading;
 import id.net.gmedia.pal.Util.AppSharedPreferences;
 import id.net.gmedia.pal.Util.Constant;
 import id.net.gmedia.pal.Util.GoogleLocationManager;
+import id.net.gmedia.pal.Util.OptionItem;
 
 import com.leonardus.irfan.AppRequestCallback;
 import com.leonardus.irfan.Converter;
@@ -65,12 +67,16 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
     public AppCompatSpinner spn_bayar;
     private ProgressBar pb_map;
     private List<CaraBayarModel> listCaraBayar = new ArrayList<>();
+    private List<OptionItem> listPaket = new ArrayList<>();
 
     //Variabel lokasi
     private GoogleLocationManager manager;
     private Location current_location;
     private ArrayAdapter adapterCB;
     private String crBayar = "";
+    private Spinner spPaket;
+    private ArrayAdapter adapterPaket;
+    private String selectedKodePaket = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +98,10 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         spn_bayar = findViewById(R.id.spn_bayar);
         txt_tempo = findViewById(R.id.txt_tempo);
         pb_map = findViewById(R.id.pb_map);
+
+        spPaket = (Spinner) findViewById(R.id.sp_paket);
+        adapterPaket = new ArrayAdapter(PenjualanNota.this, android.R.layout.simple_list_item_1, listPaket);
+        spPaket.setAdapter(adapterPaket);
 
         adapterCB = new ArrayAdapter(PenjualanNota.this,
                 R.layout.simple_list, R.id.text1, listCaraBayar);
@@ -195,6 +205,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         });
 
         getCaraBayar();
+        getPaket();
     }
 
     private void getCaraBayar() {
@@ -230,6 +241,60 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                             }
 
                             adapterCB.notifyDataSetChanged();
+                        }
+                        catch (JSONException e){
+
+                            Toast.makeText(PenjualanNota.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e(Constant.TAG, e.getMessage());
+                            e.printStackTrace();
+                        }
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
+    }
+
+    private void getPaket() {
+
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_PAKET,
+                ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+                        try{
+                            //Inisialisasi Header
+                            listPaket.clear();
+                            JSONObject response = new JSONObject(result);
+                            JSONArray array = response.getJSONArray("data");
+
+                            for(int i = 0; i < array.length(); i++){
+                                JSONObject item = array.getJSONObject(i);
+                                listPaket.add(new OptionItem(
+                                        item.getString("kode_paket")
+                                        ,item.getString("nama_paket")
+                                ));
+
+                                if(i == 0){
+
+                                    selectedKodePaket = item.getString("kode_paket");
+                                }
+                            }
+
+                            adapterPaket.notifyDataSetChanged();
                         }
                         catch (JSONException e){
 
