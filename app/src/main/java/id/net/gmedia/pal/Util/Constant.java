@@ -166,6 +166,7 @@ public class Constant {
     public final static String URL_MASTER_APPROVAL_CUSTOMER = BASE_URL+"master/kode_approval/customer";
     public final static String URL_MASTER_APPROV_PELANGGAN = BASE_URL+"customer/approve_pelanggan/";
     public final static String URL_GET_NOTA_GIRO = BASE_URL+"giro/nota_piutang_cover/";
+    public final static String URL_GUNAKAN_PAKET = BASE_URL+"penjualan/gunakan_kode_paket_harga/";
 
 
     //Token heaader dengan enkripsi

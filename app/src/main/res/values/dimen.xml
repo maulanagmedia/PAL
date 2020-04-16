@@ -4,6 +4,7 @@
     <dimen name="dp15">15dp</dimen>
     <dimen name="dp20">20dp</dimen>
     <dimen name="dp2">2dp</dimen>
+    <dimen name="dp4">4dp</dimen>
     <dimen name="dp5">5dp</dimen>
     <dimen name="dp30">30dp</dimen>
 

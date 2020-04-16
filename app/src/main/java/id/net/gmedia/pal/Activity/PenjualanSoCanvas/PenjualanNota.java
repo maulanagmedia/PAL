@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -76,7 +77,9 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
     private String crBayar = "";
     private Spinner spPaket;
     private ArrayAdapter adapterPaket;
-    private String selectedKodePaket = "";
+    private String selectedKodePaket = "", selectedNamaPaket = "";
+    private Button btnGunakanPaket;
+    private TextView txt_nama, txt_alamat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +93,6 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         }
 
         //Inisialisasi UI
-        TextView txt_nama, txt_alamat;
         txt_nama = findViewById(R.id.txt_nama);
         txt_alamat = findViewById(R.id.txt_alamat);
         txt_total = findViewById(R.id.txt_total);
@@ -98,14 +100,16 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         spn_bayar = findViewById(R.id.spn_bayar);
         txt_tempo = findViewById(R.id.txt_tempo);
         pb_map = findViewById(R.id.pb_map);
+        btnGunakanPaket = (Button) findViewById(R.id.btn_gunakan_paket);
 
+        // Paket
         spPaket = (Spinner) findViewById(R.id.sp_paket);
         adapterPaket = new ArrayAdapter(PenjualanNota.this, android.R.layout.simple_list_item_1, listPaket);
         spPaket.setAdapter(adapterPaket);
 
+        // Cara Bayar
         adapterCB = new ArrayAdapter(PenjualanNota.this,
                 R.layout.simple_list, R.id.text1, listCaraBayar);
-
         spn_bayar.setAdapter(adapterCB);
         //listCaraBayar.add("pilih salah satu..");
 
@@ -127,6 +131,18 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
 
         //Muat data barang
         initBarang();
+
+        //Inisialisasi manager lokasi
+        manager = new GoogleLocationManager(this, this);
+        manager.startLocationUpdates();
+        pb_map.setVisibility(View.VISIBLE);
+
+        initEvent();
+        getCaraBayar();
+        getPaket();
+    }
+
+    private void initEvent() {
 
         //Button tambah barang baru
         findViewById(R.id.img_tambah).setOnClickListener(new View.OnClickListener() {
@@ -167,7 +183,24 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                 }*/
                 else{
                     //checkout barang
-                    checkoutBarang(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN());
+                    AlertDialog dialog = new AlertDialog.Builder(PenjualanNota.this)
+                            .setTitle("Konfirmasi")
+                            .setMessage("Apakah anda yakin ingin memproses penjualan?")
+                            .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                    checkoutBarang(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN());
+                                }
+                            })
+                            .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+
                 }
             }
         });
@@ -185,11 +218,6 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
             }
         });
 
-        //Inisialisasi manager lokasi
-        manager = new GoogleLocationManager(this, this);
-        manager.startLocationUpdates();
-        pb_map.setVisibility(View.VISIBLE);
-
         spn_bayar.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -204,8 +232,115 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
             }
         });
 
-        getCaraBayar();
-        getPaket();
+        spPaket.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                OptionItem item = (OptionItem) parent.getItemAtPosition(position);
+                selectedKodePaket = item.getValue();
+                selectedNamaPaket = item.getText();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        btnGunakanPaket.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!selectedKodePaket.equals("0")){
+
+                    AlertDialog dialog = new AlertDialog.Builder(PenjualanNota.this)
+                            .setTitle("Konfirmasi")
+                            .setMessage("Gunakan kode paket "+selectedNamaPaket+" ?")
+                            .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    GunakanPaket();
+                                }
+                            })
+                            .setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            })
+                            .show();
+                }
+
+            }
+        });
+    }
+
+    private void GunakanPaket(){
+
+        //simpan nota checkout ke Web service
+        JSONObject jBody = new JSONObject();
+        JSONArray jBarang = new JSONArray();
+
+        for(BarangModel barang : AppKeranjangPenjualan.getInstance().getBarang()){
+            JSONObject jBar = new JSONObject();
+            try {
+                jBar.put("kode_barang", barang.getId());
+                jBar.put("jumlah", barang.getJumlah() + barang.getJumlah_potong());
+                jBar.put("satuan", barang.getSatuan());
+                jBar.put("diskon", barang.getDiskon());
+                jBar.put("no_batch", barang.getNo_batch());
+                jBar.put("harga", barang.getHargaEdit());
+                jBar.put("total_harga", barang.getTotal());
+                jBarang.put(jBar);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            jBody.put("kode_paket", selectedKodePaket);
+            jBody.put("kode_pelanggan", AppKeranjangPenjualan.getInstance().getCustomer().getId());
+            jBody.put("barang", jBarang);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading, new AppLoading.CancelListener() {
+            @Override
+            public void onCancel() {
+                ApiVolleyManager.getInstance().cancelRequest();
+            }
+        });
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_GUNAKAN_PAKET, ApiVolleyManager.METHOD_POST,
+                Constant.getTokenHeader(AppSharedPreferences.getId(this)),
+                jBody, new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+                        AppLoading.getInstance().stopLoading();
+                        Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+
+                        AppLoading.getInstance().stopLoading();
+                        Toast.makeText(PenjualanNota.this, result, Toast.LENGTH_SHORT).show();
+                        try {
+                            JSONObject response = new JSONObject(result);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+                        AppLoading.getInstance().stopLoading();
+                        Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                }));
     }
 
     private void getCaraBayar() {
@@ -264,9 +399,22 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
 
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
 
-        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_PAKET,
-                ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(this)),
-                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+        JSONObject jBody = new JSONObject();
+        try {
+            jBody.put("kode_pelanggan", AppKeranjangPenjualan.getInstance().getCustomer().getId());
+            /*jBody.put("start", "");
+            jBody.put("limit", "");
+            jBody.put("search", "")*/;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        ApiVolleyManager.getInstance().addRequest(this
+                , Constant.URL_PAKET
+                , ApiVolleyManager.METHOD_POST
+                , Constant.getTokenHeader(AppSharedPreferences.getId(this))
+                , jBody
+                , new AppRequestCallback(new AppRequestCallback.RequestListener() {
                     @Override
                     public void onEmpty(String message) {
 
@@ -278,20 +426,19 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                         try{
                             //Inisialisasi Header
                             listPaket.clear();
+                            listPaket.add(new OptionItem("0", "Pilih Paket"));
+                            selectedKodePaket = "0";
+
                             JSONObject response = new JSONObject(result);
                             JSONArray array = response.getJSONArray("data");
 
                             for(int i = 0; i < array.length(); i++){
                                 JSONObject item = array.getJSONObject(i);
+
                                 listPaket.add(new OptionItem(
                                         item.getString("kode_paket")
                                         ,item.getString("nama_paket")
                                 ));
-
-                                if(i == 0){
-
-                                    selectedKodePaket = item.getString("kode_paket");
-                                }
                             }
 
                             adapterPaket.notifyDataSetChanged();

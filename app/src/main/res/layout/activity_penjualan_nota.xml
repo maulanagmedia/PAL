@@ -259,8 +259,9 @@
                 
                 <Button
                     android:layout_width="match_parent"
-                    android:layout_height="35dp"
+                    android:layout_height="34dp"
                     android:text="Gunakan"
+                    android:layout_marginBottom="@dimen/dp4"
                     android:textColor="@color/white"
                     android:id="@+id/btn_gunakan_paket"
                     android:background="@drawable/bg_orange_round"/>
