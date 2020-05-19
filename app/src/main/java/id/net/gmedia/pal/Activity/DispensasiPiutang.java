@@ -26,7 +26,7 @@ public class DispensasiPiutang extends AppCompatActivity {
 
     //Variabel global id Customer
     private String id_customer;
-    private EditText nominal;
+    private EditText edtNominal;
 
     //Variabel UI
     private EditText txt_keterangan;
@@ -58,6 +58,7 @@ public class DispensasiPiutang extends AppCompatActivity {
         txt_maksimal_pembayaran = findViewById(R.id.txt_maksimal_pembayaran);
         txt_rata_pembayaran = findViewById(R.id.txt_rata_pembayaran);
         txt_customer = findViewById(R.id.txt_customer);
+        edtNominal = (EditText) findViewById(R.id.edt_nominal);
 
         findViewById(R.id.btn_simpan).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +127,7 @@ public class DispensasiPiutang extends AppCompatActivity {
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
         JSONBuilder body = new JSONBuilder();
         body.add("kode_pelanggan", id_customer);
-        body.add("nominal_dispensasi", nominal.getText().toString());
+        body.add("nominal_dispensasi", edtNominal.getText().toString());
         body.add("keterangan_dispensasi", txt_keterangan.getText().toString());
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_DISPENSASI_REQUEST,
                 ApiVolleyManager.METHOD_POST, Constant.getTokenHeader(AppSharedPreferences.getId(this)),

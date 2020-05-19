@@ -213,6 +213,7 @@
                 android:textColor="@color/light_green"
                 android:hint="Isi Nominal Di Sini"
                 android:inputType="number"
+                android:id="@+id/edt_nominal"
                 android:elevation="@dimen/dp20"
                 android:textSize="@dimen/sp18"/>
 

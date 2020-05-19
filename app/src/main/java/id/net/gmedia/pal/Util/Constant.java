@@ -80,6 +80,7 @@ public class Constant {
     public final static String URL_GANTI_PASSWORD = BASE_URL + "authentication/change_password";
     public final static String URL_DAFTAR_SO = BASE_URL + "penjualan/list_sales_order";
     public final static String URL_DAFTAR_SO_STATUS = BASE_URL + "master/status_so";
+    public final static String URL_GET_BARANG_BY_CODE = BASE_URL + "master/getBarangByCode";
     public final static String URL_DAFTAR_SO_DETAIL = BASE_URL + "penjualan/view_sales_order/";
     public final static String URL_MASTER_AKUN = BASE_URL + "master/akun";
     public final static String URL_PIUTANG_PELUNASAN = BASE_URL + "piutang/pembayaran";

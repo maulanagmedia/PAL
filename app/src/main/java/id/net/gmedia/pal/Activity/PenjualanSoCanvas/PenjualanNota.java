@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -58,6 +59,7 @@ import com.leonardus.irfan.AppRequestCallback;
 import com.leonardus.irfan.Converter;
 import com.leonardus.irfan.DateTimeChooser;
 import com.leonardus.irfan.Haversine;
+import com.leonardus.irfan.ItemValidation;
 import com.leonardus.irfan.JSONBuilder;
 
 public class PenjualanNota extends AppCompatActivity implements GoogleLocationManager.LocationUpdateListener {
@@ -77,9 +79,14 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
     private String crBayar = "";
     private Spinner spPaket;
     private ArrayAdapter adapterPaket;
-    private String selectedKodePaket = "", selectedNamaPaket = "";
+    private String selectedKodePaket = "", selectedNamaPaket = "", selectedTokenPaket = "";
     private Button btnGunakanPaket;
     private TextView txt_nama, txt_alamat;
+    public boolean isPaket = false;
+    public boolean isPaketValid = false;
+    private LinearLayout llPaket;
+    private TextView tvPotongan, tvTotalAkhir;
+    private ItemValidation iv = new ItemValidation();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +113,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         spPaket = (Spinner) findViewById(R.id.sp_paket);
         adapterPaket = new ArrayAdapter(PenjualanNota.this, android.R.layout.simple_list_item_1, listPaket);
         spPaket.setAdapter(adapterPaket);
+        paketStatus(false, false);
 
         // Cara Bayar
         adapterCB = new ArrayAdapter(PenjualanNota.this,
@@ -120,6 +128,9 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         txt_nama.setText(AppKeranjangPenjualan.getInstance().getCustomer().getNama());
         txt_alamat.setText(AppKeranjangPenjualan.getInstance().getCustomer().getAlamat());
         txt_jarak.setText(R.string.penjualan_detail_jarak);
+        llPaket = (LinearLayout) findViewById(R.id.ll_paket);
+        tvPotongan = (TextView) findViewById(R.id.tv_potongan);
+        tvTotalAkhir = (TextView) findViewById(R.id.tv_akhir);
 
         //Inisialisasi RecyclerView & Adapter
         RecyclerView rv_nota = findViewById(R.id.rv_nota);
@@ -239,6 +250,10 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                 OptionItem item = (OptionItem) parent.getItemAtPosition(position);
                 selectedKodePaket = item.getValue();
                 selectedNamaPaket = item.getText();
+
+                if(position == 0){
+                    paketStatus(false, false);
+                }
             }
 
             @Override
@@ -275,11 +290,18 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         });
     }
 
+    private void paketStatus(boolean isPaket, boolean isPaketValid){
+
+        this.isPaket = isPaket;
+        this.isPaketValid = isPaketValid;
+    }
+
     private void GunakanPaket(){
 
         //simpan nota checkout ke Web service
         JSONObject jBody = new JSONObject();
         JSONArray jBarang = new JSONArray();
+        paketStatus(false, false);
 
         for(BarangModel barang : AppKeranjangPenjualan.getInstance().getBarang()){
             JSONObject jBar = new JSONObject();
@@ -313,22 +335,31 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
             }
         });
 
+        selectedTokenPaket = "";
+        tvPotongan.setText("");
+        tvTotalAkhir.setText("");
+
         ApiVolleyManager.getInstance().addRequest(this, Constant.URL_GUNAKAN_PAKET, ApiVolleyManager.METHOD_POST,
                 Constant.getTokenHeader(AppSharedPreferences.getId(this)),
                 jBody, new AppRequestCallback(new AppRequestCallback.RequestListener() {
                     @Override
                     public void onEmpty(String message) {
                         AppLoading.getInstance().stopLoading();
-                        Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_LONG).show();
+                        spPaket.setSelection(0);
                     }
 
                     @Override
                     public void onSuccess(String result) {
 
                         AppLoading.getInstance().stopLoading();
-                        Toast.makeText(PenjualanNota.this, result, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PenjualanNota.this, result, Toast.LENGTH_LONG).show();
+                        paketStatus(true, true);
                         try {
                             JSONObject response = new JSONObject(result);
+                            selectedTokenPaket = selectedKodePaket;
+                            tvPotongan.setText(iv.ChangeToCurrencyFormat(response.getString("total_saving")));
+                            tvTotalAkhir.setText(iv.ChangeToCurrencyFormat(response.getString("total_harga_paket")));
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -338,7 +369,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                     @Override
                     public void onFail(String message) {
                         AppLoading.getInstance().stopLoading();
-                        Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_LONG).show();
                     }
                 }));
     }
@@ -524,6 +555,7 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
         body.add("user_latitude", current_location.getLatitude());
         body.add("user_longitude", current_location.getLongitude());
         body.add("cara_bayar", crBayar);
+        body.add("kode_paket", selectedTokenPaket);
 
         Log.d(Constant.TAG, body.create().toString());
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading, new AppLoading.CancelListener() {
@@ -539,13 +571,13 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
             @Override
             public void onEmpty(String message) {
                 AppLoading.getInstance().stopLoading();
-                Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PenjualanNota.this, message, Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void onSuccess(String result) {
                 AppLoading.getInstance().stopLoading();
-                Toast.makeText(PenjualanNota.this, result, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PenjualanNota.this, "Data berhasil disimpan", Toast.LENGTH_LONG).show();
                 AppKeranjangPenjualan.getInstance().clearPenjualan();
 
                 if(type == Constant.PENJUALAN_SO){
@@ -648,17 +680,10 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                     AppKeranjangPenjualan.getInstance().getCustomer().getLongitude());
             String string_lokasi = "( Jarak dengan outlet : ";
 
-            if(distance * 1000 > 100){
-
-                string_lokasi += "lokasi belum di setting";
+            if(distance >= 1){
+                string_lokasi +=  String.format(Locale.getDefault(), "%.2f Km )", distance);
             }else{
-
-                if(distance >= 1){
-                    string_lokasi +=  String.format(Locale.getDefault(), "%.2f Km )", distance);
-                }
-                else{
-                    string_lokasi +=  String.format(Locale.getDefault(), "%.2f m )", distance * 1000);
-                }
+                string_lokasi +=  String.format(Locale.getDefault(), "%.2f m )", distance * 1000);
             }
 
             txt_jarak.setText(string_lokasi);

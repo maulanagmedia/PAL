@@ -48,7 +48,7 @@ import id.net.gmedia.pal.Util.AppKeranjangPenjualan;
 import id.net.gmedia.pal.Util.AppSharedPreferences;
 import id.net.gmedia.pal.Util.Constant;
 
-public class    PenjualanDetail extends AppCompatActivity {
+public class PenjualanDetail extends AppCompatActivity {
 
     //Variabel global flag apakah mode edit
     private int edit;
@@ -81,6 +81,8 @@ public class    PenjualanDetail extends AppCompatActivity {
 
     int pos_spinnerpop=0;
     private boolean firstDialog = true;
+    private boolean isLoading = false;
+    private Double isiPCS = Double.valueOf(0);
 
     //TextView txt_total;
     @Override
@@ -126,6 +128,9 @@ public class    PenjualanDetail extends AppCompatActivity {
         txt_nama_barang.setText(barang.getNama());
         txt_harga_satuan.setText(Converter.doubleToRupiah(barang.getHarga()));
 
+        // Inisialisasi data
+        getDetailBarang();
+
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,29 +167,27 @@ public class    PenjualanDetail extends AppCompatActivity {
                     @Override
                     public void afterTextChanged(Editable s) {
 
-                        if(s.length() > 0){
-                            timerHarga = new Timer();
-                            timerHarga.schedule(new TimerTask() {
-                                @Override
-                                public void run() {
+                        timerHarga = new Timer();
+                        timerHarga.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
 
-                                    isTyping = true;
-                                    try {
-                                        Thread.sleep(400);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-                                            getHargaTotalPopup();
-                                        }
-                                    });
+                                isTyping = true;
+                                try {
+                                    Thread.sleep(400);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
                                 }
-                            }, 500);
-                        }
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        getHargaTotalPopup();
+                                    }
+                                });
+                            }
+                        }, 500);
                     }
                 });
 
@@ -209,6 +212,12 @@ public class    PenjualanDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //cek validasi input
+
+                if(isLoading){
+
+                    Toast.makeText(PenjualanDetail.this, "Harap tunggu proses selesai", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 double diskon = txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString());
                 int jumlah_canvas = txt_jumlah_canvas.getText().toString().equals("")?0:Integer.parseInt(txt_jumlah_canvas.getText().toString());
 
@@ -222,29 +231,29 @@ public class    PenjualanDetail extends AppCompatActivity {
                     Toast.makeText(PenjualanDetail.this, "Diskon tidak boleh melebihi budget diskon", Toast.LENGTH_SHORT).show();
                 }
                 else if(!barang.getTipe().equals("move") && diskon > 0){
+
                     Toast.makeText(PenjualanDetail.this, "Maaf, barang ini tidak bisa di-diskon", Toast.LENGTH_SHORT).show();
                     txt_diskon.setText("0");
                 }
                 else if(Integer.parseInt(txt_jumlah.getText().toString()) > barang.getListSatuan().get(spn_satuan.getSelectedItemPosition()).getJumlah()){
+
                     txt_jumlah.setText(String.valueOf(barang.getListSatuan().get(spn_satuan.getSelectedItemPosition()).getJumlah()));
-                    //txt_total.setText(Converter.doubleToRupiah(Integer.parseInt(txt_jumlah.getText().toString()) * barang.getHarga()));
                     Toast.makeText(PenjualanDetail.this, "Jumlah barang tidak boleh melebihi stok barang", Toast.LENGTH_SHORT).show();
                 }
                 else if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_SO &&
                         jumlah_canvas > barang.getListSatuanCanvas().get(spn_satuan.getSelectedItemPosition()).getJumlah()){
+
                     txt_jumlah_canvas.setText(String.valueOf(barang.getListSatuanCanvas().get(spn_satuan.getSelectedItemPosition()).getJumlah()));
-                    //txt_total.setText(Converter.doubleToRupiah(Integer.parseInt(txt_jumlah.getText().toString()) * barang.getHarga()));
                     Toast.makeText(PenjualanDetail.this, "Jumlah barang tidak boleh melebihi stok canvas", Toast.LENGTH_SHORT).show();
                 }
                 else if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_SO &&
-                        diskon > 0 && /*AppKeranjangPenjualan.getInstance().getTotalBarangDiskon(edit)
-                        +*/ Integer.parseInt(txt_jumlah.getText().toString()) + jumlah_canvas > 20){
-                    //txt_total.setText(Converter.doubleToRupiah(Integer.parseInt(txt_jumlah.getText().toString()) * barang.getHarga()));
-                    Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari 20", Toast.LENGTH_SHORT).show();
+                        diskon > 0 && Integer.parseInt(txt_jumlah.getText().toString()) + jumlah_canvas > isiPCS){
+
+                    Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari "+ iv.ChangeToCurrencyFormat(isiPCS), Toast.LENGTH_SHORT).show();
                 }
-                else if(diskon > 0 && /*AppKeranjangPenjualan.getInstance().getTotalBarangDiskon(edit)
-                        +*/ Integer.parseInt(txt_jumlah.getText().toString()) > 20){
-                    Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari 20", Toast.LENGTH_SHORT).show();
+                else if(diskon > 0 && Integer.parseInt(txt_jumlah.getText().toString()) > isiPCS){
+
+                    Toast.makeText(PenjualanDetail.this, "Jumlah seluruh barang diskon tidak boleh lebih dari "+ iv.ChangeToCurrencyFormat(isiPCS), Toast.LENGTH_SHORT).show();
                 }
                 else if(!isValid){
                     if(lastInvalidMessage.isEmpty()){
@@ -295,53 +304,6 @@ public class    PenjualanDetail extends AppCompatActivity {
 
                     edtHargaSatuan.addTextChangedListener(this);
 
-
-                    if(s.length() > 0){
-                        timerHarga = new Timer();
-                        timerHarga.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-
-                                isTyping = true;
-                                try {
-                                    Thread.sleep(400);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-
-                                        //getHargaTotal(false);
-                                    }
-                                });
-                            }
-                        }, 500);
-                    }
-                }
-            }
-        });
-
-        edtHargaSatuan.setText(iv.doubleToStringRound(barang.getHarga()));
-
-        txt_jumlah.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                //getHargaTotal();
-
-                if(s.length() > 0){
                     timerHarga = new Timer();
                     timerHarga.schedule(new TimerTask() {
                         @Override
@@ -367,6 +329,48 @@ public class    PenjualanDetail extends AppCompatActivity {
             }
         });
 
+        edtHargaSatuan.setText(iv.doubleToStringRound(barang.getHarga()));
+
+        txt_jumlah.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                //getHargaTotal();
+
+                timerHarga = new Timer();
+                timerHarga.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+
+                        isTyping = true;
+                        try {
+                            Thread.sleep(400);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                //getHargaTotal(false);
+                            }
+                        });
+                    }
+                }, 500);
+            }
+        });
+
         txt_jumlah_canvas.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -381,29 +385,27 @@ public class    PenjualanDetail extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if(s.length() > 0){
-                    timerHarga = new Timer();
-                    timerHarga.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
+                timerHarga = new Timer();
+                timerHarga.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
 
-                            isTyping = true;
-                            try {
-                                Thread.sleep(400);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    getHargaTotal(false);
-                                }
-                            });
+                        isTyping = true;
+                        try {
+                            Thread.sleep(400);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    }, 500);
-                }
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                getHargaTotal(false);
+                            }
+                        });
+                    }
+                }, 500);
             }
         });
     }
@@ -422,6 +424,7 @@ public class    PenjualanDetail extends AppCompatActivity {
 
     private void getHargaTotal(final boolean firstLoad){
         //cek harga total barang yang akan ditambahkan
+        isLoading = true;
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
         JSONBuilder body = new JSONBuilder();
         body.add("kode_pelanggan", AppKeranjangPenjualan.getInstance().getCustomer().getId());
@@ -442,6 +445,7 @@ public class    PenjualanDetail extends AppCompatActivity {
                     @Override
                     public void onEmpty(String message) {
 
+                        isLoading = false;
                         isValid = false;
                         lastInvalidMessage = message;
                         Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
@@ -453,6 +457,7 @@ public class    PenjualanDetail extends AppCompatActivity {
 
                         try{
 
+                            isLoading = false;
                             listHarga.clear();
                             isValid = true;
                             hargaBarang = new JSONObject(result).getString("harga_barang");
@@ -493,8 +498,47 @@ public class    PenjualanDetail extends AppCompatActivity {
                     @Override
                     public void onFail(String message) {
 
+                        isLoading = false;
                         isValid = false;
                         lastInvalidMessage = message;
+                        Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+                }));
+    }
+
+    private void getDetailBarang(){
+
+        AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
+        JSONBuilder body = new JSONBuilder();
+        body.add("kode", barang.getId());
+
+        ApiVolleyManager.getInstance().addRequest(this, Constant.URL_GET_BARANG_BY_CODE, ApiVolleyManager.METHOD_POST,
+                Constant.getTokenHeader(AppSharedPreferences.getId(this)), body.create(),
+                new AppRequestCallback(new AppRequestCallback.RequestListener() {
+                    @Override
+                    public void onEmpty(String message) {
+
+                        Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(String result) {
+
+                        try {
+                            JSONObject response = new JSONObject(result);
+                            isiPCS = iv.parseNullDouble(response.getString("isi_kecil"));
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        AppLoading.getInstance().stopLoading();
+                    }
+
+                    @Override
+                    public void onFail(String message) {
+
                         Toast.makeText(PenjualanDetail.this, message, Toast.LENGTH_SHORT).show();
                         AppLoading.getInstance().stopLoading();
                     }
