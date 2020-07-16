@@ -52,6 +52,7 @@ public class PenjualanDetail extends AppCompatActivity {
 
     //Variabel global flag apakah mode edit
     private int edit;
+
     //Variabel global data barang
     private BarangModel barang;
 
@@ -60,7 +61,6 @@ public class PenjualanDetail extends AppCompatActivity {
     private ItemValidation iv = new ItemValidation();
 
     //Variabel Ui
-
     private TextInputLayout btnJumlah;
     private Spinner spn_satuan, spn_popup;
     private Button popup_save;
@@ -83,6 +83,7 @@ public class PenjualanDetail extends AppCompatActivity {
     private boolean firstDialog = true;
     private boolean isLoading = false;
     private Double isiPCS = Double.valueOf(0);
+    private int currentStok = 0;
 
     //TextView txt_total;
     @Override
@@ -218,17 +219,32 @@ public class PenjualanDetail extends AppCompatActivity {
                     Toast.makeText(PenjualanDetail.this, "Harap tunggu proses selesai", Toast.LENGTH_LONG).show();
                     return;
                 }
+
                 double diskon = txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString());
                 int jumlah_canvas = txt_jumlah_canvas.getText().toString().equals("")?0:Integer.parseInt(txt_jumlah_canvas.getText().toString());
 
+                // cek canvas dan stok 0
+                if(AppKeranjangPenjualan.getInstance().getJENIS_PENJUALAN() == Constant.PENJUALAN_CANVAS){
+
+                    if(barang.getListSatuan().get(spn_satuan.getSelectedItemPosition()).getJumlah() <= 0){
+
+                        Toast.makeText(PenjualanDetail.this, "Stok barang ini kosong", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                }
+
                 if(txt_jumlah.getText().toString().equals("")){
                     Toast.makeText(PenjualanDetail.this, "Jumlah barang tidak boleh kosong", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 else if(spn_satuan.getSelectedItem() == null || spn_satuan.getSelectedItem().toString().equals("")){
                     Toast.makeText(PenjualanDetail.this, "Satuan barang belum dipilih", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 else if(diskon > budget_diskon){
                     Toast.makeText(PenjualanDetail.this, "Diskon tidak boleh melebihi budget diskon", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 else if(!barang.getTipe().equals("move") && diskon > 0){
 
@@ -363,7 +379,7 @@ public class PenjualanDetail extends AppCompatActivity {
                             @Override
                             public void run() {
 
-                                //getHargaTotal(false);
+                                getHargaTotalPopup();
                             }
                         });
                     }
@@ -739,6 +755,8 @@ public class PenjualanDetail extends AppCompatActivity {
         spn_satuan.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                currentStok = barang.getListSatuan().get(position).getJumlah();
                 String stok = barang.getListSatuan().get(position).getJumlah() + " " + spn_satuan.getItemAtPosition(position).toString();
                 txt_stok.setText(stok);
 
@@ -818,6 +836,7 @@ public class PenjualanDetail extends AppCompatActivity {
         spn_popup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentStok = barang.getListSatuan().get(position).getJumlah();
                 String stok = barang.getListSatuan().get(position).getJumlah() + " " + spn_popup.getItemAtPosition(position).toString();
                 txt_popup_stok.setText(stok);
                 pos_spinnerpop = position;
@@ -865,13 +884,13 @@ public class PenjualanDetail extends AppCompatActivity {
                 barang.setJumlah(Integer.parseInt(txt_jumlah.getText().toString()));
             }
 
-            barang.setDiskon(txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString()));
+            barang.setDiskon(txt_diskon.getText().toString().equals("") ? 0 : Double.parseDouble(txt_diskon.getText().toString()));
             barang.setSatuan(spn_satuan.getSelectedItem().toString());
             barang.setSubtotal(subtotal);
             barang.setHarga(iv.parseNullDouble(hargaBarang));
             barang.setHargaEdit(hargaBarang);
             barang.setTotal(total);
-            AppKeranjangPenjualan.getInstance().pakai_budget(txt_diskon.getText().toString().equals("")?0:Double.parseDouble(txt_diskon.getText().toString()));
+            AppKeranjangPenjualan.getInstance().pakai_budget(txt_diskon.getText().toString().equals("") ? 0 : Double.parseDouble(txt_diskon.getText().toString()));
 
             AppKeranjangPenjualan.getInstance().addBarang(barang);
         }

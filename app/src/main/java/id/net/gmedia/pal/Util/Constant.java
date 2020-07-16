@@ -168,7 +168,10 @@ public class Constant {
     public final static String URL_MASTER_APPROV_PELANGGAN = BASE_URL+"customer/approve_pelanggan/";
     public final static String URL_GET_NOTA_GIRO = BASE_URL+"giro/nota_piutang_cover/";
     public final static String URL_GUNAKAN_PAKET = BASE_URL+"penjualan/gunakan_kode_paket_harga/";
-
+    public final static String URL_GET_HISTORY_STOK = BASE_URL+"pengajuan_stok/header_list_pengajuan_stok/";
+    public final static String URL_GET_DETAIL_STOK = BASE_URL+"pengajuan_stok/detail_list_pengajuan_stok/";
+    public final static String URL_GET_HISTORY_RETUR = BASE_URL+"retur_canvas/header_list_retur_canvas/";
+    public final static String URL_GET_DETAIL_RETUR = BASE_URL+"retur_canvas/detail_list_retur_canvas/";
 
     //Token heaader dengan enkripsi
     public static Map<String, String> getTokenHeader(String id){

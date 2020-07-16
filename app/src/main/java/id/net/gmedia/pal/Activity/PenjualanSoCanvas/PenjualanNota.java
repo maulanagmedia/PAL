@@ -186,6 +186,11 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
                 if(current_location == null){
                     Toast.makeText(PenjualanNota.this, "Lokasi tidak terdeteksi", Toast.LENGTH_SHORT).show();
                 }
+
+                if(crBayar.equals("0")){
+                    Toast.makeText(PenjualanNota.this, "Silahkan pilih Cara Bayar terlebih dahulu", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 /*else if(spn_bayar.getSelectedItemPosition() == 0){
                     Toast.makeText(PenjualanNota.this, "Pilih cara bayar terlebih dahulu", Toast.LENGTH_SHORT).show();
                 }*/
@@ -389,6 +394,11 @@ public class PenjualanNota extends AppCompatActivity implements GoogleLocationMa
 
                     @Override
                     public void onSuccess(String result) {
+
+                        listCaraBayar.add(new CaraBayarModel(
+                                "0"
+                                ,"- Pilih Pembayaran -"
+                        ));
                         try{
                             //Inisialisasi Header
 

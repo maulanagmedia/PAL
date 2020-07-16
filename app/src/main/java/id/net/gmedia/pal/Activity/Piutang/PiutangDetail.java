@@ -175,6 +175,7 @@ public class PiutangDetail extends AppCompatActivity {
     private String crBayar;
     private ImageView pht;
     private Button btn_next, btn_previous;
+    private int selectedPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,6 +255,8 @@ public class PiutangDetail extends AppCompatActivity {
                 loadPiutang(false);
             }
         };
+
+        rv_piutang.setOnScrollListener(loadMoreScrollListener);
 
         //button upload bukti transfer piutang
         findViewById(R.id.img_upload_bukti).setOnClickListener(new View.OnClickListener() {
@@ -478,6 +481,8 @@ public class PiutangDetail extends AppCompatActivity {
                     //tampilkan panel pelunasan piutang
                     slidingpanel.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                     lunasi = true;
+
+                    //spn_akun_bank.setSelection(selectedPosition);
                 }
             }
         });
@@ -637,7 +642,6 @@ public class PiutangDetail extends AppCompatActivity {
                     public void onSuccess(String result) {
 
                         AppLoading.getInstance().stopLoading();
-                        int selectedPosition = 0;
 
                         try{
                             if(kode.equals("T")){
@@ -650,10 +654,11 @@ public class PiutangDetail extends AppCompatActivity {
                                     spinner_item_tunai.add(array.getJSONObject(i).getString("nama_akun"));
 
                                     String namaAkun = array.getJSONObject(i).getString("nama_akun");
+                                    String nikSales = AppSharedPreferences.getId(PiutangDetail.this);
                                     String namaSales = AppSharedPreferences.getNama(PiutangDetail.this);
                                     String[] namaPecah = namaSales.split(" ");
                                     if(namaPecah.length > 0) namaSales = namaPecah[0];
-                                    if(namaAkun.trim().toLowerCase().contains(namaSales)){
+                                    if(nikSales.equals(array.getJSONObject(i).getString("nip"))){
 
                                         selectedPosition = i;
                                     }
@@ -674,9 +679,10 @@ public class PiutangDetail extends AppCompatActivity {
                                     String namaAkun = array.getJSONObject(i).getString("nama_akun");
 
                                     String namaSales = AppSharedPreferences.getNama(PiutangDetail.this);
+                                    String nikSales = AppSharedPreferences.getId(PiutangDetail.this);
                                     String[] namaPecah = namaSales.split(" ");
                                     if(namaPecah.length > 0) namaSales = namaPecah[0];
-                                    if(namaAkun.trim().toLowerCase().contains(namaSales)){
+                                    if(nikSales.equals(array.getJSONObject(i).getString("nip"))){
 
                                         selectedPosition = i;
                                     }
@@ -686,6 +692,7 @@ public class PiutangDetail extends AppCompatActivity {
 
                             }
 
+                            spn_akun_tunai.setSelection(selectedPosition);
                             spn_akun_bank.setSelection(selectedPosition);
                         }
                         catch (JSONException e){

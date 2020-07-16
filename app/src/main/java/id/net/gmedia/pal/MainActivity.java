@@ -41,6 +41,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import id.net.gmedia.pal.Activity.ActivityRetur.HistoryPengajuanRetur;
+import id.net.gmedia.pal.Activity.ActivityStok.HistoryPengajuanStok;
 import id.net.gmedia.pal.Activity.Approval.ApprovalDispensasiPiutang;
 import id.net.gmedia.pal.Activity.Approval.ApprovalLoginPengganti;
 import id.net.gmedia.pal.Activity.Approval.ApprovalPO;
@@ -558,10 +560,11 @@ public class MainActivity extends AppCompatActivity {
                         createDialog(MainActivity.this,
                                 R.layout.popup_main_retur, 90);
 
-                View btn_customer, btn_canvas, btn_konfirmasi;
+                View btn_customer, btn_canvas, btn_konfirmasi, btn_hsitory_retur;
                 btn_customer = sub_menu.findViewById(R.id.btn_customer);
                 btn_canvas = sub_menu.findViewById(R.id.btn_canvas);
                 btn_konfirmasi = sub_menu.findViewById(R.id.btn_konfirmasi);
+                btn_hsitory_retur = sub_menu.findViewById(R.id.btn_history_retur);
 
                 btn_customer.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -587,6 +590,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+                btn_hsitory_retur.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MainActivity.this, HistoryPengajuanRetur.class));
+                        sub_menu.dismiss();
+                    }
+                });
+
                 sub_menu.show();
             }
         });
@@ -599,9 +610,10 @@ public class MainActivity extends AppCompatActivity {
                         createDialog(MainActivity.this,
                                 R.layout.popup_main_stok, 90);
 
-                View btn_stok, btn_pengajuan;
+                View btn_stok, btn_pengajuan, btnHistoryPengajuanStok;
                 btn_stok = sub_menu.findViewById(R.id.btn_stok);
                 btn_pengajuan = sub_menu.findViewById(R.id.btn_pengajuan);
+                btnHistoryPengajuanStok = sub_menu.findViewById(R.id.btn_history_stok);
 
                 btn_stok.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -615,6 +627,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(MainActivity.this, PengajuanMutasiActivity.class));
+                        sub_menu.dismiss();
+                    }
+                });
+
+                btnHistoryPengajuanStok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MainActivity.this, HistoryPengajuanStok.class));
                         sub_menu.dismiss();
                     }
                 });

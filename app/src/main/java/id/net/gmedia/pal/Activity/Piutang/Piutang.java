@@ -73,6 +73,7 @@ public class Piutang extends AppCompatActivity {
     }
 
     private void loadPiutang(final boolean init){
+
         //Membaca data piutang dari Web Service
         AppLoading.getInstance().showLoading(this, R.layout.popup_loading);
         if(init){

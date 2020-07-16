@@ -27,9 +27,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activity.ActivityRetur.DetailPengajuanReturActivity"></activity>
+        <activity android:name=".Activity.ActivityRetur.HistoryPengajuanRetur" />
+        <activity
+            android:name=".Activity.ActivityStok.DetailPengajuanStokActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Activity.ActivityStok.HistoryPengajuanStok"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.DispensasiPiutangAct.RiwayatDispensasiPiutang"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.RiwayatSetoran"
             android:screenOrientation="portrait" />

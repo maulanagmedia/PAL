@@ -3,6 +3,8 @@ package id.net.gmedia.pal;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,8 +60,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(imei.equals("")){
-                    Toast.makeText(LoginActivity.this, "Gagal membaca informasi IMEI", Toast.LENGTH_SHORT).show();
-                    return;
+
+                    if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.P){
+                        // Do something for lollipop and above versions
+                        Toast.makeText(LoginActivity.this, "Gagal membaca informasi IMEI", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
                 /*else if(fcm_id.equals("")){
                     Toast.makeText(LoginActivity.this, "Gagal mendapat id notifikasi", Toast.LENGTH_SHORT).show();
